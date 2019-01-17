@@ -26,7 +26,7 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
-require "openstudio/extension/version"
+require 'openstudio/extension/version'
 
 module OpenStudio
   module Extension
@@ -59,7 +59,7 @@ module OpenStudio
 
     # Base method
     # returns a minimum openstudio version or nil
-    # need something like this because can’t restrict os version via gemfile
+    # need something like this because cannot restrict os version via gemfile
     # Not sure how to do this yet
     def minimum_openstudio_version
       puts 'return the minimum openstudio version'

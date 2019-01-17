@@ -27,7 +27,7 @@
 ########################################################################################################################
 
 RSpec.describe OpenStudio::Extension do
-  it "has a version number" do
+  it 'has a version number' do
     expect(OpenStudio::Extension::VERSION).not_to be nil
   end
 end

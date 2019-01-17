@@ -29,7 +29,6 @@
 require 'rake'
 require 'rake/tasklib'
 require 'rake/testtask'
-# require 'rubocop/rake_task'
 
 module OpenStudio
   module Extension

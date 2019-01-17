@@ -26,16 +26,15 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
-
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
-require "openstudio/extension/rake_task"
+require 'openstudio/extension/rake_task'
 OpenStudio::Extension::RakeTask.new
 
-require "rubocop/rake_task"
+require 'rubocop/rake_task'
 RuboCop::RakeTask.new
 
-task :default => :spec
+task default: :spec

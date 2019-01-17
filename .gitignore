@@ -1,0 +1,18 @@
+/.bundle/
+/.yardoc
+/.ruby-version
+/Gemfile.lock
+/gems
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+# rspec failure tracking
+.rspec_status
+
+# Ignore IDE files
+/.idea
+/.rubocop-http*

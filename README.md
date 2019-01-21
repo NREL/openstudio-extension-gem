@@ -23,6 +23,23 @@ Or install it yourself as:
 
 To be filled out later. 
 
+## TODO
+
+* Add test measure to BuildingSync
+* Add test measure to OS-Ext
+* run measure tests for each repo
+* gather measures 
+* push to bcl
+* system tests with OSW
+    * discover measure paths
+    * data paths
+    * call OSW with a bundle exec [buildingsync]
+    * need to track the path to the CLI
+    * have the CLI make its own bundle (OpenStudio)
+* 3rd repo that is not a gem. 
+    * gemfile, bundle,
+    * create osw that doesn't do anything except find buildingsync gem
+
 # Releasing
 
 * Update change log

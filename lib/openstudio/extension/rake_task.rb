@@ -48,11 +48,17 @@ module OpenStudio
           desc 'Run the CLI task to check for measure updates'
           task :update_measures do
             puts 'updating measures...'
+            runner = OpenStudio::Extension::Runner.new
+            runner.update_measures
             exit 0
           end
 
-          desc 'Use openstudio’s system ruby to run tests'
+          desc 'Use openstudios system ruby to run tests'
           task :test_with_openstudio do
+            puts Dir.pwd
+            puts Rake.original_dir
+            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+            runner.test_measures_with_openstudio
             puts 'testing with openstudio'
             exit 0
           end

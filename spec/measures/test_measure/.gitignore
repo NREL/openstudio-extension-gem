@@ -1,0 +1,4 @@
+.rubocop*
+test_results
+test/
+tests/output/

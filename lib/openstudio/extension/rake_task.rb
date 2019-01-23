@@ -29,6 +29,7 @@
 require 'rake'
 require 'rake/tasklib'
 require 'rake/testtask'
+require_relative '../extension'
 
 module OpenStudio
   module Extension
@@ -55,11 +56,12 @@ module OpenStudio
 
           desc 'Use openstudios system ruby to run tests'
           task :test_with_openstudio do
-            puts Dir.pwd
-            puts Rake.original_dir
-            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-            runner.test_measures_with_openstudio
+            #puts Dir.pwd
+            #puts Rake.original_dir
             puts 'testing with openstudio'
+            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+            runner.test_measures_with_cli
+
             exit 0
           end
 

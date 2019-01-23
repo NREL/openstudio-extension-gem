@@ -27,6 +27,7 @@
 ########################################################################################################################
 
 require 'openstudio/extension/version'
+require 'openstudio/extension/runner'
 
 module OpenStudio
   module Extension

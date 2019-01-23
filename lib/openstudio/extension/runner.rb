@@ -18,16 +18,16 @@ module OpenStudio
         gem_path = gem_path + '/gems'
         puts "GEM PATH: #{gem_path}"
 
+        File.delete('Gemfile.lock') if File.exist?('Gemfile.lock')
+        #FileUtils.remove_dir('./test_gems',true) if File.exist?('./test_gems')
+        #FileUtils.remove_dir('./bundle', true) if File.exist?('./bundle')
 
-        #Dir.chdir(File.join(File.dirname(__FILE__), 'bundle'))
-        #rm_if_exist('Gemfile.lock')
-        #rm_if_exist('./test_gems')
-        #rm_if_exist('./bundle')
 
-        system 'bundle install --path ./test_gems'
+        test_gems_path = @path + '/test_gems'
+        system "bundle install --path #{test_gems_path}"
         system 'bundle lock --add_platform ruby'
 
-        the_call = "openstudio --verbose --bundle Gemfile --bundle_path .test_gems/ measure -r #{measures_dir}"
+        the_call = "openstudio --verbose --bundle Gemfile --bundle_path #{test_gems_path} measure -r #{measures_dir}"
         puts "SYSTEM CALL:"
         puts the_call
         system "#{the_call}"

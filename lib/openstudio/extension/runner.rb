@@ -19,10 +19,10 @@ module OpenStudio
         puts "GEM PATH: #{gem_path}"
 
 
-        Dir.chdir(File.join(File.dirname(__FILE__), 'bundle'))
-        rm_if_exist('Gemfile.lock')
-        rm_if_exist('./test_gems')
-        rm_if_exist('./bundle')
+        #Dir.chdir(File.join(File.dirname(__FILE__), 'bundle'))
+        #rm_if_exist('Gemfile.lock')
+        #rm_if_exist('./test_gems')
+        #rm_if_exist('./bundle')
 
         system 'bundle install --path ./test_gems'
         system 'bundle lock --add_platform ruby'

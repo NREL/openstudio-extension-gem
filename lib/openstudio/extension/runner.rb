@@ -41,17 +41,19 @@ module OpenStudio
         return new_env
       end
       
-      def run_command(command)
-        stdout_str, stderr_str, status = Open3.capture3(get_run_env(), command)
+      def run_command(command, env = ENV)
+        stdout_str, stderr_str, status = Open3.capture3(env, command)
         if status.success?
           puts "Command completed successfully"
           puts "stdout: #{stdout_str}"
           puts "stderr: #{stderr_str}"
+          STDOUT.flush
           return true
         else
           puts "Error running command: '#{command}'"
           puts "stdout: #{stdout_str}"
           puts "stderr: #{stderr_str}"
+          STDOUT.flush
           return false 
         end
       end
@@ -59,26 +61,27 @@ module OpenStudio
       # test measures of calling gem with OpenStudio CLI system call
       def test_measures_with_cli
         puts "Testing measures with CLI system call"
-        measures_dir = @path + '/lib/measures'
+        measures_dir = File.join(@path, 'lib/measures/')
         puts "measures path: #{measures_dir}"
         gem_path = `gem environment gempath`
         gem_path = gem_path.split(':')[0]
-        gem_path = File.join(gem_path, 'gems')
+        gem_path = File.join(gem_path, 'gems/')
         puts "GEM PATH: #{gem_path}"
 
-        File.delete('Gemfile.lock') if File.exist?('Gemfile.lock')
+        #File.delete('Gemfile.lock') if File.exist?('Gemfile.lock')
         #FileUtils.remove_dir('./test_gems',true) if File.exist?('./test_gems')
         #FileUtils.remove_dir('./bundle', true) if File.exist?('./bundle')
 
 
-        test_gems_path = @path + '/test_gems'
-        system "bundle install --path #{test_gems_path}"
-        system 'bundle lock --add_platform ruby'
+        test_gems_path = File.join(@path, 'test_gems/')
+        run_command("bundle install --path #{test_gems_path}", {})
+        run_command('bundle lock --add_platform ruby', {})
+        run_command('bundle update', {})
         
         cli = OpenStudio.getOpenStudioCLI
         puts "CLI: #{cli}"
 
-        the_call = "#{cli} --verbose --bundle Gemfile --bundle_path ./test_gems/ measure -r #{measures_dir}"
+        the_call = "#{cli} --verbose --bundle Gemfile --bundle_path #{test_gems_path} measure -r #{measures_dir}"
         puts "SYSTEM CALL:"
         puts the_call
         STDOUT.flush

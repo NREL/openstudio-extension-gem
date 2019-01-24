@@ -47,7 +47,7 @@ module OpenStudio
           
           puts "needs_config = #{needs_config}"
           if needs_config
-            run_command("bundle config --local path '#{@bundle_install_path}'", get_clean_env())
+            run_command("bundle config --local --path '#{@bundle_install_path}'", get_clean_env())
           end
           
           puts "needs_platform = #{needs_platform}"

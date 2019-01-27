@@ -31,40 +31,43 @@ require 'openstudio/extension/runner'
 
 module OpenStudio
   module Extension
-    # Return the version of the OpenStudio Extension Gem
-    def openstudio_extension_version
-      OpenStudio::Extension::VERSION
-    end
+    class Extension
+      
+      # Return the version of the OpenStudio Extension Gem
+      def openstudio_extension_version
+        OpenStudio::Extension::VERSION
+      end
 
-    # Base method
-    # Return the absolute path of the measures or nil if there is none, can be used when configuring OSWs
-    def measures_dir
-      puts 'return directory'
-      return 'unknown directory'
-    end
+      # Base method
+      # Return the absolute path of the measures or nil if there is none, can be used when configuring OSWs
+      def measures_dir
+        puts 'return directory'
+        return 'unknown directory'
+      end
 
-    # Base method
-    # List the names (and versions?) of the measures.
-    def list_measures
-      puts 'return the list of measures'
-      return 'unknown measures'
-    end
+      # Base method
+      # List the names (and versions?) of the measures.
+      def list_measures
+        puts 'return the list of measures'
+        return 'unknown measures'
+      end
 
-    # Base method
-    # Relevant files such as weather data, design days, etc.
-    # return the absolute path of the files or nil if there is none, can be used when configuring OSWs
-    def files_dir
-      puts 'return the files directory'
-      return 'unknown files dir'
-    end
+      # Base method
+      # Relevant files such as weather data, design days, etc.
+      # return the absolute path of the files or nil if there is none, can be used when configuring OSWs
+      def files_dir
+        puts 'return the files directory'
+        return 'unknown files dir'
+      end
 
-    # Base method
-    # returns a minimum openstudio version or nil
-    # need something like this because cannot restrict os version via gemfile
-    # Not sure how to do this yet
-    def minimum_openstudio_version
-      puts 'return the minimum openstudio version'
-      return 'unknown minimum openstudio version'
+      # Base method
+      # returns a minimum openstudio version or nil
+      # need something like this because cannot restrict os version via gemfile
+      # Not sure how to do this yet
+      def minimum_openstudio_version
+        puts 'return the minimum openstudio version'
+        return 'unknown minimum openstudio version'
+      end
     end
   end
 end

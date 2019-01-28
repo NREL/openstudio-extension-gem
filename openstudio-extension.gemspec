@@ -7,6 +7,7 @@ Gem::Specification.new do |spec|
   spec.version       = OpenStudio::Extension::VERSION
   spec.authors       = ['Nicholas Long', 'Dan Macumber']
   spec.email         = ['nicholas.long@nrel.gov', 'daniel.macumber@nrel.gov']
+  spec.platform      = Gem::Platform::RUBY
 
   spec.summary       = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
   spec.description   = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
@@ -21,9 +22,10 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.14'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 0.63.0'
-  spec.add_development_dependency 'rubocop-checkstyle_formatter', '0.4.0'
+  spec.add_development_dependency 'bundler', '~> 1.9'
+  spec.add_development_dependency 'rake', '~> 12.3'
+  spec.add_development_dependency 'rspec', '~> 3.7'
+  spec.add_development_dependency 'rubocop', '~> 0.54.0'
+  
+  spec.add_dependency "openstudio_measure_tester", "~> 0.1"
 end

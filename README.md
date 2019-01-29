@@ -52,6 +52,7 @@ From the command line, run these with ```bundle exec rake #{task_name}```
 - [ ] Rake task ```stage_bcl``` _DLM: BCL gem should be a development dependency only until we can reduce its dependencies and remove native dependencies? should probably put it into a special group so we can bundle without it in openstudio-gems._
 - [ ] Rake task ```push_bcl``` _DLM: how do we want to test this?
 - [X] Get all rake tasks working on Travis
+- [ ] Capture useful output from Travis (measure dashboard results, log files, zip of build products, etc) and put it somewhere (s3?  naming convention?)
 - [X] ```Extension::openstudio_extension_version``` _DLM: should we rename? should people overwrite this in their class?_
 - [X] ```Extension::measures_dir``` _DLM: I think this can have a default implementation, right? If something does not need to be overridden should it be a module method rather than a class one?  KAF: this is in rake task for now
 - [X] ```Extension::list_measures``` _DLM: I think this can have a default implementation, right?_KAF: In Rake task for now

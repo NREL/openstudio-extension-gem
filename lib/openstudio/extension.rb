@@ -41,25 +41,29 @@ module OpenStudio
       # Base method
       # Return the absolute path of the measures or nil if there is none, can be used when configuring OSWs
       def measures_dir
-        puts 'return directory'
-        return 'unknown directory'
+        return File.absolute_path(File.join(File.dirname(__FILE__), '../measures/'))
       end
 
       # Base method
       # List the names (and versions?) of the measures.
+      # DLM: do we need this? if we do, what format should it return?  I would prefer to remove this
       def list_measures
-        puts 'return the list of measures'
-        return 'unknown measures'
+        return []
       end
 
       # Base method
       # Relevant files such as weather data, design days, etc.
       # return the absolute path of the files or nil if there is none, can be used when configuring OSWs
       def files_dir
-        puts 'return the files directory'
-        return 'unknown files dir'
+        return File.absolute_path(File.join(File.dirname(__FILE__), '../files/'))
       end
-
+      
+      # Base method
+      # return the absolute path of root of this gem
+      def root_dir
+        return File.absolute_path(File.join(File.dirname(__FILE__), '../../'))
+      end
+      
       # Base method
       # returns a minimum openstudio version or nil
       # need something like this because cannot restrict os version via gemfile
@@ -68,6 +72,36 @@ module OpenStudio
         puts 'return the minimum openstudio version'
         return 'unknown minimum openstudio version'
       end
+    end
+    
+    ##
+    # Module method used to configure an input OSW with paths to all OpenStudio::Extension measure and file directories
+    ##
+    #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized
+    #
+    #  @return [Hash]  Output OSW with measure and file paths configured
+    def self.configure_osw(in_osw)
+      measure_dirs = []
+      file_dirs = []
+      ObjectSpace.each_object(::Class) do |obj|
+        next if !obj.ancestors.include?(OpenStudio::Extension::Extension)
+
+        begin
+          measure_dirs << obj.new.measures_dir
+        rescue
+        end
+        
+        begin
+          file_dirs << obj.new.files_dir
+        rescue
+        end
+        
+      end
+      
+      in_osw[:measure_paths] = in_osw[:measure_paths].concat(measure_dirs).uniq
+      in_osw[:file_paths] = in_osw[:file_paths].concat(file_dirs).uniq
+      
+      return in_osw
     end
   end
 end

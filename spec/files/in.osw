@@ -1,0 +1,16 @@
+{
+	"seed_file": null,
+	"weather_file": "openstudio-extension-gem-test.epw",
+	"measure_paths": [],
+	"file_paths": [],
+	"run_directory": "./run",
+	"steps": [{
+			"measure_dir_name": "Rotate Building",
+			"arguments": {
+				"relative_building_rotation": "0"
+			}
+		}
+	],
+	"name": "Test File",
+	"description": "Test File"
+}

@@ -117,6 +117,19 @@ module OpenStudio
               runner.add_measure_readme(@measures_dir)
               exit
             end
+
+            desc 'Update copyright on measure files'
+            task :update_copyright do
+              puts 'Adding README.md.erb to measures where it and README.md do not exist.'
+              puts 'Only files that have actually been changed will be listed.'
+
+              # copy README.md.erb file
+              puts 'Updating COPYRIGHT in measures files'
+              runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+              runner.update_measure_copyright(@measures_dir)
+              exit
+            end
+
           end
 
           desc 'Copy the measures to a location that can be uploaded to BCL'

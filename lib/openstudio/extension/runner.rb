@@ -298,6 +298,10 @@ module OpenStudio
         license_file = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/LICENSE.md')
         puts "License file path: #{license_file}"
         measures = Dir["#{measures_dir}/**/measure.rb"]
+        if measures.length == 0
+          # also try nested 2-deep
+          measures = Dir["#{measures_dir}/**/**/measure.rb"]
+        end
         measures.each do |measure|
           FileUtils.cp(license_file, "#{File.dirname(measure)}/LICENSE.md")
         end
@@ -316,6 +320,10 @@ module OpenStudio
         readme_file = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/README.md.erb')
         puts "Readme file path: "
         measures = Dir["#{measures_dir}/**/measure.rb"]
+        if measures.length == 0
+          # also try nested 2-deep
+          measures = Dir["#{measures_dir}/**/**/measure.rb"]
+        end
         measures.each do |measure|
           next if File.exist?("#{File.dirname(measure)}/README.md.erb")
           next if File.exist?("#{File.dirname(measure)}/README.md")
@@ -324,6 +332,73 @@ module OpenStudio
         end
         result = true
         return result
+      end
+
+      def update_measure_copyright(measures_dir)
+
+        ruby_regex = /^#.\*{79}.*#.\*{79}$/m
+        erb_regex = /^<%.*#.\*{79}.*#.\*{79}.%>$/m
+        js_regex = /^\/\* @preserve.*Copyright.*license.{2}\*\//m
+
+
+        filename = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/copyright_ruby.txt')
+        file = File.open(filename, "rb")
+        ruby_header_text = file.read
+        file.close
+        ruby_header_text.strip!
+
+
+        filename = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/copyright_erb.txt')
+        file = File.open(filename, "rb")
+        erb_header_text =  file.read
+        file.close
+        erb_header_text.strip!
+
+        filename = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/copyright_js.txt')
+        file = File.open(filename, "rb")
+        js_header_text = file.read
+        file.close
+        js_header_text.strip!
+
+        # test if you're in a gem or in the OpenStudio-measures repo
+        # OpenStudio-measures can be nested in an extra directory if operating at root of repo vs. within a measures dir
+        measures = Dir["#{measures_dir}/**/measure.rb"]
+        measures_full_dir = File.join(measures_dir, '**')
+        if measures.length == 0
+          # also try nested 2-deep
+          measures = Dir["#{measures_dir}/**/**/measure.rb"]
+          if measures.length > 0
+            # update measures_full_dir
+            measures_full_dir = File.join(measures_dir, '**/**')
+          end
+        end
+
+        puts "Using measures full dir: #{measures_full_dir}"
+
+        # look for .rb, .html.erb, and .js.erb
+        paths = [
+          { glob: "#{measures_full_dir}/*.rb", license: ruby_header_text, regex: ruby_regex },
+          { glob: "#{measures_full_dir}/*.html.erb", license: erb_header_text, regex: erb_regex },
+          { glob: "#{measures_full_dir}/*.js.erb", license: js_header_text, regex: js_regex }
+        ]
+
+        paths.each do |path|
+          Dir[path[:glob]].each do |file|
+            puts "Updating license in file #{file}"
+            f = File.read(file)
+            if f =~ path[:regex]
+              puts '  License found -- updating'
+              File.open(file, 'w') { |write| write << f.gsub(path[:regex], path[:license]) }
+            else
+              puts '  No license found -- adding'
+              if f =~ /#!/
+                puts '  CANNOT add license to file automatically, add it manually and it will update automatically in the future'
+                next
+              end
+              File.open(file, 'w') { |write| write << f.insert(0, path[:license] + "\n\n") }
+            end
+          end
+        end
       end
 
       ##

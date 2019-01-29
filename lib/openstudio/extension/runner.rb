@@ -121,7 +121,7 @@ module OpenStudio
       end
       
       ##
-      # Run a command after merging the current environment with env.  Command is run in @dirnamem, returns to Dir.pwd after completion.  
+      # Run a command after merging the current environment with env.  Command is run in @dirname, returns to Dir.pwd after completion.
       # Returns true if the command completes successfully, false otherwise.
       # Standard Out, Standard Error, and Status Code are collected and printed, but not returned.
       ##
@@ -155,11 +155,11 @@ module OpenStudio
       ##
       # Run the OpenStudio CLI command to test measures on given directory
       # Returns true if the command completes successfully, false otherwise.
+      # measures_dir configured in rake_task
       ##
       #  @return [Boolean] 
-      def test_measures_with_cli
+      def test_measures_with_cli(measures_dir)
         puts "Testing measures with CLI system call"
-        measures_dir = File.join(@dirname, 'lib/measures/') # DLM: measures_dir should be a method of the extension mixin?
         puts "measures path: #{measures_dir}"
 
         cli = OpenStudio.getOpenStudioCLI
@@ -182,10 +182,47 @@ module OpenStudio
         return result
       end
 
-      def copy_measure_resource_files(measures_path)
+      ##
+      # Run the OpenStudio CLI command to update measures on given directory
+      # Returns true if the command completes successfully, false otherwise.
+      ##
+      #  @return [Boolean]
+      def update_measures(measures_dir)
+        puts "Updating measures with CLI system call"
+        puts "measures path: #{measures_dir}"
 
-        puts 'Copying updated resource files in /lib/measure_resources directory to individual measures.'
-        puts 'Only files that have actually been changed will be listed.'
+        cli = OpenStudio.getOpenStudioCLI
+        puts "CLI: #{cli}"
+
+        the_call = ''
+        if @gemfile_path
+          the_call = "#{cli} --verbose --bundle #{@gemfile_path} --bundle_path #{@bundle_path} measure -t #{measures_dir}"
+        else
+          the_call = "#{cli} --verbose measure -t #{measures_dir}"
+        end
+
+        puts "SYSTEM CALL:"
+        puts the_call
+        STDOUT.flush
+        result = run_command(the_call, get_clean_env())
+        puts "DONE"
+        STDOUT.flush
+
+        return result
+
+      end
+
+      ##
+      # Update measures by copying in the latest resource files from the Extension gem into
+      # the measures' respective resources folders.
+      # measures_dir configured in rake_task
+      # Returns true if the command completes successfully, false otherwise.
+      ##
+      #  @return [Boolean]
+      def copy_measure_resource_files(measures_dir)
+        result = false
+        puts "Copying updated resource files in /lib/measure_resources directory to individual measures."
+        puts "Only files that have actually been changed will be listed."
 
         # get resource files relative to this file
         resource_path = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_resources')
@@ -195,13 +232,13 @@ module OpenStudio
 
         # this is to accommodate a single measures dir (like most gems)
         # or a repo with multiple directories fo measures (like OpenStudio-measures)
-        measures = Dir.glob(File.join(measures_path, '**/resources/*.rb'))
+        measures = Dir.glob(File.join(measures_dir, '**/resources/*.rb'))
         if measures.length == 0
           # also try nested 2-deep
-          measures = Dir.glob(File.join(measures_path, '**/**/resources/*.rb'))
+          measures = Dir.glob(File.join(measures_dir, '**/**/resources/*.rb'))
         end
 
-        # note some older measures like AEDG use 'OsLib_SomeName' instead of 'os_lib_some_name'
+        # Note: some older measures like AEDG use 'OsLib_SomeName' instead of 'os_lib_some_name'
         # this script isn't replacing those copies
 
         # loop through resource files
@@ -214,6 +251,9 @@ module OpenStudio
             FileUtils.cp(resource_file, File.path(measure_resource))
           end
         end
+        result = true
+
+        return result
       end
     end
   end

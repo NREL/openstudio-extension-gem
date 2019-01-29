@@ -55,7 +55,9 @@ module OpenStudio
             if File.exists?('./.bundle/config')
               puts "config exists"
               config = YAML.load_file('./.bundle/config')
-              if config['BUNDLE_PATH'] == @bundle_install_path
+              
+              if config['BUNDLE_PATH'] == @bundle_install_path || 
+                 config['BUNDLE_--PATH'] == @bundle_install_path 
                 # already been configured, might not be up to date
                 needs_config = false
               end

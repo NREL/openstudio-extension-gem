@@ -22,5 +22,3 @@ script:
   - bundle exec rake openstudio:test_with_openstudio
   - bundle exec rake   
   
-  
-  

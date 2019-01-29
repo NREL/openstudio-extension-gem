@@ -51,14 +51,14 @@ From the command line, run these with ```bundle exec rake #{task_name}```
 - [X] Rake task ```openstudio:test_with_openstudio```
 - [ ] Rake task ```stage_bcl``` _DLM: BCL gem should be a development dependency only until we can reduce its dependencies and remove native dependencies? should probably put it into a special group so we can bundle without it in openstudio-gems._
 - [ ] Rake task ```push_bcl``` _DLM: how do we want to test this?
-- [ ] Get all rake tasks working on Travis
+- [X] Get all rake tasks working on Travis
 - [X] ```Extension::openstudio_extension_version``` _DLM: should we rename? should people overwrite this in their class?_
 - [X] ```Extension::measures_dir``` _DLM: I think this can have a default implementation, right? If something does not need to be overridden should it be a module method rather than a class one?  KAF: this is in rake task for now
 - [X] ```Extension::list_measures``` _DLM: I think this can have a default implementation, right?_KAF: In Rake task for now
 - [ ] ```Extension::files_dir``` _DLM: I think this can have a default implementation, right?_
 - [ ] ```Extension::minimum_openstudio_version``` _DLM: should we rename? should people overwrite this in their class?_
 - [X] ```Runner::initialize``` _DLM: should say that the path argument should be for a dir with a Gemfile right?_
-- [ ] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
+- [X] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
 
 # Releasing
 

@@ -1,4 +1,5 @@
 require 'bundler'
+require 'fileutils'
 require 'open3'
 require 'openstudio'
 require 'yaml'
@@ -17,6 +18,10 @@ module OpenStudio
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
       def initialize(dirname = Dir.pwd)
+      
+        # DLM: I am not sure if we want to use the main root directory to create these bundles
+        # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
+        
         puts "Initializing runner with dirname: '#{dirname}'"
         @dirname = File.absolute_path(dirname)
         @gemfile_path = File.join(@dirname, 'Gemfile')
@@ -280,6 +285,59 @@ module OpenStudio
 
         return result
       end
+      
+      ##
+      # Run the OpenStudio CLI on an OSW.  The OSW is configured to include measure and file locations for all loaded OpenStudio Extensions.
+      ##
+      #  @param [String, Hash] in_osw If string this is the path to an OSW file on disk, if Hash it is loaded JSON with symbolized keys
+      #  @param [String] run_dir Directory to run the OSW in, will be created if does not exist
+      ##
+      #  @return [Boolean] True if command succeeded, false otherwise # DLM: should this return path to out.osw instead?
+      def run_osw(in_osw, run_dir)
+      
+        run_dir = File.absolute_path(run_dir)
+
+        if in_osw.is_a?(String)
+          in_osw_path = in_osw
+          raise "'#{in_osw_path}' does not exist" if !File.exists?(in_osw_path)
+          
+          in_osw = {}
+          File.open(in_osw_path, 'r') do |file|
+            in_osw = JSON.parse(file.read, {symbolize_names: true})
+          end
+        end 
+        
+        osw = OpenStudio::Extension.configure_osw(in_osw)
+        osw[:run_directory] = run_dir
+        
+        FileUtils.mkdir_p(run_dir)
+        
+        run_osw_path = File.join(run_dir, 'in.osw')
+        File.open(run_osw_path, 'w') do |file|
+          file.puts JSON.pretty_generate(osw)
+        end
+        
+        cli = OpenStudio.getOpenStudioCLI
+        puts "CLI: #{cli}"
+        
+        the_call = ''
+        if @gemfile_path
+          the_call = "#{cli} --verbose --bundle #{@gemfile_path} --bundle_path #{@bundle_path} run -w #{run_osw_path}"
+        else
+          the_call = "#{cli} --verbose run -w '#{run_osw_path}'"
+        end
+        
+        puts "SYSTEM CALL:"
+        puts the_call
+        STDOUT.flush
+        result = run_command(the_call, get_clean_env())
+        puts "DONE"
+        STDOUT.flush
+      
+        return result
+      end
+      
+      
     end
   end
 end

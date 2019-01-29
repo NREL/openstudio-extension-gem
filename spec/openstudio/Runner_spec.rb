@@ -26,41 +26,13 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
-RSpec.describe OpenStudio::Extension do
-  it 'has a version number' do
-    expect(OpenStudio::Extension::VERSION).not_to be nil
-  end
-  
-  it 'has a measures directory' do
+require 'json'
+require 'fileutils'
+
+RSpec.describe OpenStudio::Extension::Runner do
+  it 'can run an OSW' do
     extension = OpenStudio::Extension::Extension.new
-    measures_dir = extension.measures_dir
-    expect(measures_dir).not_to be nil
-    expect(File.directory?(measures_dir)).to be true
-    expect(File.exists?(measures_dir)).to be true
-    expect(File.exists?(File.join(measures_dir, 'Rotate Building/measure.rb'))).to be true
-  end
-  
-  it 'has a files directory' do
-    extension = OpenStudio::Extension::Extension.new
-    files_dir = extension.files_dir
-    expect(files_dir).not_to be nil
-    expect(File.directory?(files_dir)).to be true
-    expect(File.exists?(files_dir)).to be true
-    expect(File.exists?(File.join(files_dir, 'openstudio-extension-gem-test.epw'))).to be true
-  end
-  
-  it 'has a root directory' do
-    extension = OpenStudio::Extension::Extension.new
-    root_dir = extension.root_dir
-    expect(root_dir).not_to be nil
-    expect(File.directory?(root_dir)).to be true
-    expect(File.exists?(root_dir)).to be true
-    expect(File.exists?(File.join(root_dir, 'Gemfile'))).to be true
-  end
-  
-  it 'configures an OSW' do
-    #extension = OpenStudio::Extension::Extension.new
-    #runner = OpenStudio::Extension::Runner.new(extension.root_dir)
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir)
     in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
     expect(File.exists?(in_osw_path)).to be true
     
@@ -73,18 +45,24 @@ RSpec.describe OpenStudio::Extension do
     expect(in_osw[:measure_paths]).to be_empty
     expect(in_osw[:file_paths]).to be_empty
     
-    run_osw = OpenStudio::Extension.configure_osw(in_osw)
-    expect(run_osw[:seed_file]).to be nil
-    expect(run_osw[:weather_file]).to eq("openstudio-extension-gem-test.epw")
-    expect(run_osw[:measure_paths]).not_to be_empty
-    expect(run_osw[:file_paths]).not_to be_empty
+    run_dir = File.join(File.dirname(__FILE__), '../test/runner/')
+    run_osw_path = File.join(run_dir, 'in.osw')
+    out_osw_path = File.join(run_dir, 'out.osw')
     
-    run_osw[:measure_paths].each do |p| 
-      expect(File.exists?(p)).to be true
+    if File.exists?(run_dir)
+      FileUtils.rm_rf(run_dir)
     end
-    run_osw[:file_paths].each do |p| 
-      expect(File.exists?(p)).to be true
-    end
+    expect(File.exists?(run_dir)).to be false
+    expect(File.exists?(run_osw_path)).to be false
+    
+    FileUtils.mkdir_p(run_dir)
+    expect(File.exists?(run_dir)).to be true
+
+    result = runner.run_osw(in_osw, run_dir)
+    
+    expect(File.exists?(run_osw_path)).to be true
+    expect(File.exists?(out_osw_path)).to be true
     
   end
+  
 end

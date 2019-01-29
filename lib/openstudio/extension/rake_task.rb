@@ -59,6 +59,14 @@ module OpenStudio
             exit 0
           end
 
+          desc 'List measures'
+          task :list_measures do
+            puts 'Listing measures...'
+            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+            runner.list_measures(@measures_dir)
+            exit
+          end
+
           desc 'Use openstudios system ruby to run tests'
           task :test_with_openstudio do
             #puts Dir.pwd

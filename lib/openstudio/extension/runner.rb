@@ -213,6 +213,31 @@ module OpenStudio
       end
 
       ##
+      # List measures in given directory
+      # Returns true if the command completes successfully, false otherwise.
+      ##
+      #  @return [Boolean]
+
+      ##
+      def list_measures(measures_dir)
+        puts "Listing measures"
+        puts "measures path: #{measures_dir}"
+
+        # this is to accommodate a single measures dir (like most gems)
+        # or a repo with multiple directories fo measures (like OpenStudio-measures)
+        measures = Dir.glob(File.join(measures_dir, '**/measure.rb'))
+        if measures.length == 0
+          # also try nested 2-deep
+          measures = Dir.glob(File.join(measures_dir, '**/**/measure.rb'))
+        end
+        puts "#{measures.length} MEASURES FOUND"
+        measures.each do |measure|
+          name = measure.split('/')[-2]
+          puts "#{name}"
+        end
+
+      end
+
       # Update measures by copying in the latest resource files from the Extension gem into
       # the measures' respective resources folders.
       # measures_dir configured in rake_task

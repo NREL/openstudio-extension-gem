@@ -67,7 +67,7 @@ module OpenStudio
             exit
           end
 
-          desc 'Use openstudios system ruby to run tests'
+          desc 'Use openstudio system ruby to run tests'
           task :test_with_openstudio do
             #puts Dir.pwd
             #puts Rake.original_dir
@@ -84,15 +84,39 @@ module OpenStudio
             exit 0
           end
 
-          desc 'Copy the resources files to individual measures'
-          task :copy_measure_resources do
+          # namespace for measure operations
+          namespace 'measures' do
+            desc 'Copy the resources files to individual measures'
+            task :copy_resources do
 
-            puts 'Copying resource files from lib/measure_resources to individual measures'
-            puts "measures_dir set to #{@measures_dir}"
-            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-            runner.copy_measure_resource_files(@measures_dir)
+              puts 'Copying resource files from lib/measure_resources to individual measures'
+              puts "measures_dir set to #{@measures_dir}"
+              runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+              runner.copy_measure_resource_files(@measures_dir)
+              exit
+            end
 
-            exit
+            desc 'Add License File to measures'
+            task :add_license do
+              # copy license file
+              puts 'Adding license file to measures'
+              runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+              runner.add_measure_license(@measures_dir)
+              exit
+            end
+
+            desc 'Add README.md.erb file if it and README.md do not already exist for a measure'
+            task :add_readme do
+
+              puts 'Adding README.md.erb to measures where it and README.md do not exist.'
+              puts 'Only files that have actually been changed will be listed.'
+
+              # copy README.md.erb file
+              puts 'Adding license file to measures'
+              runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+              runner.add_measure_readme(@measures_dir)
+              exit
+            end
           end
 
           desc 'Copy the measures to a location that can be uploaded to BCL'

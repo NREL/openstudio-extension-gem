@@ -280,6 +280,44 @@ module OpenStudio
 
         return result
       end
+
+      # Update measures by adding license file
+      # measures_dir configured in rake_task
+      # Returns true if the command completes successfully, false otherwise.
+      ##
+      #  @return [Boolean]
+      def add_measure_license(measures_dir)
+        result = false
+        license_file = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/LICENSE.md')
+        puts "License file path: #{license_file}"
+        measures = Dir["#{measures_dir}/**/measure.rb"]
+        measures.each do |measure|
+          FileUtils.cp(license_file, "#{File.dirname(measure)}/LICENSE.md")
+        end
+        result = true
+        return result
+      end
+
+
+      # Update measures by adding license file
+      # measures_dir configured in rake_task
+      # Returns true if the command completes successfully, false otherwise.
+      ##
+      #  @return [Boolean]
+      def add_measure_readme(measures_dir)
+        result = false
+        readme_file = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/README.md.erb')
+        puts "Readme file path: "
+        measures = Dir["#{measures_dir}/**/measure.rb"]
+        measures.each do |measure|
+          next if File.exist?("#{File.dirname(measure)}/README.md.erb")
+          next if File.exist?("#{File.dirname(measure)}/README.md")
+          puts "adding template README to #{measure}"
+          FileUtils.cp(readme_file, "#{File.dirname(measure)}/README.md.erb")
+        end
+        result = true
+        return result
+      end
     end
   end
 end

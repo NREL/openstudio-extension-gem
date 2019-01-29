@@ -121,4 +121,8 @@ class TestMeasureTest < Minitest::Test
     output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
     model.save(output_file_path, true)
   end
+
+  # TODO: add test to test copy_measure_resources on a measure
+  # This measure must contain a resources folder and an out-of-date/different .rb resource file than what is in the lib/measure_resources folder to test replacement
+
 end

@@ -2,6 +2,7 @@ require 'bundler'
 require 'open3'
 require 'openstudio'
 require 'yaml'
+require 'fileutils'
 
 module OpenStudio
   module Extension
@@ -20,6 +21,7 @@ module OpenStudio
         @dirname = File.absolute_path(dirname)
         @gemfile_path = File.join(@dirname, 'Gemfile')
         @bundle_install_path = File.join(@dirname, '.bundle/install/')
+        @original_dir = Dir.pwd
         
         raise "#{@dirname} does not exist" if !File.exists?(@dirname)
         raise "#{@dirname} is not a directory" if !File.directory?(@dirname)
@@ -77,7 +79,7 @@ module OpenStudio
             end
             
           ensure
-            Dir.chdir(original_dir)
+            Dir.chdir(@original_dir)
           end
         end
         
@@ -178,6 +180,40 @@ module OpenStudio
         STDOUT.flush
         
         return result
+      end
+
+      def copy_measure_resource_files(measures_path)
+
+        puts 'Copying updated resource files in /lib/measure_resources directory to individual measures.'
+        puts 'Only files that have actually been changed will be listed.'
+
+        # get resource files relative to this file
+        resource_path = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_resources')
+        resource_files = Dir.glob(File.join(resource_path, '/*.*'))
+
+        puts "Measure Resources Filepath: #{resource_path}"
+
+        # this is to accommodate a single measures dir (like most gems)
+        # or a repo with multiple directories fo measures (like OpenStudio-measures)
+        measures = Dir.glob(File.join(measures_path, '**/resources/*.rb'))
+        if measures.length == 0
+          # also try nested 2-deep
+          measures = Dir.glob(File.join(measures_path, '**/**/resources/*.rb'))
+        end
+
+        # note some older measures like AEDG use 'OsLib_SomeName' instead of 'os_lib_some_name'
+        # this script isn't replacing those copies
+
+        # loop through resource files
+        resource_files.each do |resource_file|
+          # loop through measure dirs looking for matching file
+          measures.each do |measure_resource|
+            next unless File.basename(measure_resource) == File.basename(resource_file)
+            next if FileUtils.identical?(resource_file, File.path(measure_resource))
+            puts "Replacing #{measure_resource} with #{resource_file}."
+            FileUtils.cp(resource_file, File.path(measure_resource))
+          end
+        end
       end
     end
   end

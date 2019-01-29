@@ -34,12 +34,17 @@ require_relative '../extension'
 module OpenStudio
   module Extension
     class RakeTask < Rake::TaskLib
-      attr_accessor :name
+      attr_accessor :name, :measures_dir
 
       def initialize(*args, &task_block)
         @name = args.shift || :openstudio
+        @measures_dir = File.join(File.expand_path(File.dirname(__FILE__)), '../../measures')
 
         setup_subtasks(@name)
+      end
+
+      def set_measures_dir(measures_dir)
+        @measures_dir = measures_dir
       end
 
       private
@@ -69,6 +74,17 @@ module OpenStudio
           task :test_with_docker do
             puts 'testing with docker'
             exit 0
+          end
+
+          desc 'Copy the resources files to individual measures'
+          task :copy_measure_resources do
+
+            puts 'Copying resource files from lib/measure_resources to individual measures'
+            puts "measures_dir set to #{@measures_dir}"
+            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+            runner.copy_measure_resource_files(@measures_dir)
+
+            exit
           end
 
           desc 'Copy the measures to a location that can be uploaded to BCL'

@@ -16,7 +16,7 @@ before_script:
   - curl -sLO https://raw.githubusercontent.com/NREL/OpenStudio-server/develop/docker/deployment/scripts/install_openstudio.sh
   - chmod +x install_openstudio.sh
   - sudo ./install_openstudio.sh $OPENSTUDIO_VERSION $OPENSTUDIO_SHA  
-  - ls /usr/Ruby
+  - ls /usr/
   - ls /usr/local
   - ls /usr/local/openstudio-2.7.0
   - ls /usr/local/openstudio-2.7.0/Ruby

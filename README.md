@@ -49,7 +49,7 @@ From the command line, run these with ```bundle exec rake #{task_name}```
 - [X] Add test measure
 - [ ] Rake task ```openstudio:update_measures```
 - [X] Rake task ```openstudio:test_with_openstudio```
-- [ ] Rake task ```stage_bcl```
+- [ ] Rake task ```stage_bcl``` _DLM: BCL gem should be a development dependency only until we can reduce its dependencies and remove native dependencies? should probably put it into a special group so we can bundle without it in openstudio-gems._
 - [ ] Rake task ```push_bcl``` _DLM: how do we want to test this?_
 - [ ] Get all rake tasks working on Travis
 - [X] ```Extension::openstudio_extension_version``` _DLM: should we rename? should people overwrite this in their class?_

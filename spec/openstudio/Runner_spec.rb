@@ -48,20 +48,24 @@ RSpec.describe OpenStudio::Extension::Runner do
     run_dir = File.join(File.dirname(__FILE__), '../test/runner/')
     run_osw_path = File.join(run_dir, 'in.osw')
     out_osw_path = File.join(run_dir, 'out.osw')
+    failed_job_path = File.join(run_dir, 'failed.job')
     
     if File.exists?(run_dir)
       FileUtils.rm_rf(run_dir)
     end
     expect(File.exists?(run_dir)).to be false
     expect(File.exists?(run_osw_path)).to be false
+    expect(File.exists?(failed_job_path)).to be false
     
     FileUtils.mkdir_p(run_dir)
     expect(File.exists?(run_dir)).to be true
 
     result = runner.run_osw(in_osw, run_dir)
+    expect(result).to be true
     
     expect(File.exists?(run_osw_path)).to be true
     expect(File.exists?(out_osw_path)).to be true
+    expect(File.exists?(failed_job_path)).to be false
     
   end
   

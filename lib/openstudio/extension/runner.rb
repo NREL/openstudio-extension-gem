@@ -215,6 +215,8 @@ module OpenStudio
         result = run_command(the_call, get_clean_env())
         puts "DONE"
         STDOUT.flush
+        
+        # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
 
         return result
 

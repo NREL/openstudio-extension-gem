@@ -37,7 +37,7 @@ RSpec.describe OpenStudio::Extension do
     expect(measures_dir).not_to be nil
     expect(File.directory?(measures_dir)).to be true
     expect(File.exists?(measures_dir)).to be true
-    expect(File.exists?(File.join(measures_dir, 'Rotate Building/measure.rb'))).to be true
+    expect(File.exists?(File.join(measures_dir, 'openstudio_extension_test_measure/measure.rb'))).to be true
   end
   
   it 'has a files directory' do

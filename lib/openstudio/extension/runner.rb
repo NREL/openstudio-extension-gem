@@ -1,5 +1,6 @@
 require 'bundler'
 require 'fileutils'
+require 'json'
 require 'open3'
 require 'openstudio'
 require 'yaml'

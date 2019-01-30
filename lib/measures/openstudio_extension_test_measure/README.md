@@ -2,7 +2,7 @@
 
 ###### (Automatically generated documentation)
 
-# Rotate Building
+# OpenStudio Extension Test Measure
 
 ## Description
 
@@ -19,13 +19,8 @@ ModelMeasure
 ## Arguments
 
 
-### Number of Degrees to Rotate Building (positive value is clockwise).
 
-**Name:** relative_building_rotation,
-**Type:** Double,
-**Units:** ,
-**Required:** true,
-**Model Dependent:** false
 
+This measure does not have any user arguments
 
 

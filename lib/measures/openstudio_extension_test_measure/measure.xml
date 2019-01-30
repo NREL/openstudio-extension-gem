@@ -1,96 +1,77 @@
-<measure xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://bcl.nrel.gov/xsd/measures/version/1.0.xsd">
- <schema_version>3.0</schema_version>
- <name>rotate_building</name>
- <uid>b2742307-bce7-4747-8f94-977718217305</uid>
- <version_id>cce4c219-b44d-458e-a5ca-6f8d25196967</version_id>
- <version_modified>20180712T011843Z</version_modified>
- <xml_checksum>49BEF039</xml_checksum>
- <class_name>RotateBuilding</class_name>
- <display_name>Rotate Building</display_name>
- <description>Rotate your building relative to its current orientation. This will not rotate site shading objects.</description>
- <modeler_description>Get the North Axis field for the  OS:Building object and adjusted it based on the user specified value. If the starting value is 20 degrees and the user value is 5 degrees, then the resulting value is 25 degrees.</modeler_description>
- <arguments>
-  <argument>
-   <name>relative_building_rotation</name>
-   <display_name>Number of Degrees to Rotate Building (positive value is clockwise).</display_name>
-   <type>Double</type>
-   <required>true</required>
-   <model_dependent>false</model_dependent>
-   <default_value>90</default_value>
-  </argument>
- </arguments>
- <tags>
-  <tag>Envelope.Form</tag>
- </tags>
- <attributes>
-  <attribute>
-   <name>Measure Type</name>
-   <value>ModelMeasure</value>
-   <datatype>string</datatype>
-  </attribute>
-  <attribute>
-   <name>Measure Function</name>
-   <value>Measure</value>
-   <datatype>string</datatype>
-  </attribute>
-  <attribute>
-   <name>Requires EnergyPlus Results</name>
-   <value>false</value>
-   <datatype>boolean</datatype>
-  </attribute>
-  <attribute>
-   <name>Uses SketchUp API</name>
-   <value>false</value>
-   <datatype>boolean</datatype>
-  </attribute>
- </attributes>
- <files>
-  <file>
-   <filename>RotateBuilding_TestModel_01.osm</filename>
-   <filetype>osm</filetype>
-   <usage_type>test</usage_type>
-   <checksum>550314F1</checksum>
-  </file>
-  <file>
-   <version>
-    <software_program>OpenStudio</software_program>
-    <identifier>2.0.0</identifier>
-    <min_compatible>2.0.0</min_compatible>
-   </version>
-   <filename>measure.rb</filename>
-   <filetype>rb</filetype>
-   <usage_type>script</usage_type>
-   <checksum>DC5A87EB</checksum>
-  </file>
-  <file>
-   <filename>RotateBuilding_Test.rb</filename>
-   <filetype>rb</filetype>
-   <usage_type>test</usage_type>
-   <checksum>E9F1EDAC</checksum>
-  </file>
-  <file>
-   <filename>LICENSE.md</filename>
-   <filetype>md</filetype>
-   <usage_type>license</usage_type>
-   <checksum>9640B6CB</checksum>
-  </file>
-  <file>
-   <filename>README.md.erb</filename>
-   <filetype>erb</filetype>
-   <usage_type>readmeerb</usage_type>
-   <checksum>703C9964</checksum>
-  </file>
-  <file>
-   <filename>README.md</filename>
-   <filetype>md</filetype>
-   <usage_type>readme</usage_type>
-   <checksum>98DBF98D</checksum>
-  </file>
-  <file>
-   <filename>design.md</filename>
-   <filetype>md</filetype>
-   <usage_type>doc</usage_type>
-   <checksum>B256482B</checksum>
-  </file>
- </files>
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>openstudio_extension_test_measure</name>
+  <uid>36b99a29-41e1-4d85-9272-85d43b966e5a</uid>
+  <version_id>2de3875b-475c-4e43-8ed1-1e474bd67461</version_id>
+  <version_modified>20190130T192957Z</version_modified>
+  <xml_checksum>49BEF039</xml_checksum>
+  <class_name>OpenStudioExtensionTestMeasure</class_name>
+  <display_name>OpenStudio Extension Test Measure</display_name>
+  <description>Rotate your building relative to its current orientation. This will not rotate site shading objects.</description>
+  <modeler_description>Get the North Axis field for the  OS:Building object and adjusted it based on the user specified value. If the starting value is 20 degrees and the user value is 5 degrees, then the resulting value is 25 degrees.</modeler_description>
+  <arguments/>
+  <outputs/>
+  <provenances/>
+  <tags>
+    <tag>Envelope.Form</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>LICENSE.md</filename>
+      <filetype>md</filetype>
+      <usage_type>license</usage_type>
+      <checksum>9640B6CB</checksum>
+    </file>
+    <file>
+      <filename>README.md.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>readmeerb</usage_type>
+      <checksum>703C9964</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>2.0.0</identifier>
+        <min_compatible>2.0.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>960302DA</checksum>
+    </file>
+    <file>
+      <filename>OpenStudioExtensionTestMeasure_Test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>868767FA</checksum>
+    </file>
+    <file>
+      <filename>README.md</filename>
+      <filetype>md</filetype>
+      <usage_type>readme</usage_type>
+      <checksum>7258830F</checksum>
+    </file>
+  </files>
 </measure>

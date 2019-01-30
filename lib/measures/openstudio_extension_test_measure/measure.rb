@@ -36,7 +36,7 @@
 # start the measure
 class OpenStudioExtensionTestMeasure < OpenStudio::Measure::ModelMeasure
   # define the name that a user will see
-  def name
+  def name 
     return 'OpenStudio Extension Test Measure'
   end
 

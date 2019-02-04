@@ -105,7 +105,7 @@ module OpenStudio
         next if !obj.ancestors.include?(OpenStudio::Extension::Extension)
         result << obj
       end
-      return result
+      return result.uniq
     end
     
     ##
@@ -120,7 +120,7 @@ module OpenStudio
         rescue
         end
       end
-      return result
+      return result.uniq
     end
     
     ##
@@ -135,7 +135,7 @@ module OpenStudio
         rescue
         end
       end
-      return result
+      return result.uniq
     end
     
     ##
@@ -150,7 +150,7 @@ module OpenStudio
         rescue
         end
       end
-      return result
+      return result.uniq
     end
     
     ##
@@ -168,6 +168,9 @@ module OpenStudio
       measure_dir_names = {}
       measure_dirs.each do |dir|
         Dir.glob(File.join(dir, '*')).each do |file|
+          next if !File.directory?(file)
+          next if !File.exists?(File.join(file, 'measure.rb'))
+          
           #puts file
           file_name = File.basename(file).downcase 
           if measure_dir_names[file_name]
@@ -181,6 +184,8 @@ module OpenStudio
       measure_resource_dir_names = {}
       measure_resource_dirs.each do |dir|
         Dir.glob(File.join(dir, '*')).each do |file|
+          next if !File.file?(file)
+          
           #puts file
           file_name = File.basename(file).downcase 
           if measure_resource_dir_names[file_name]
@@ -194,6 +199,8 @@ module OpenStudio
       file_names = {}
       file_dirs.each do |dir|
         Dir.glob(File.join(dir, '*')).each do |file|
+          next if !File.file?(file)
+          
           #puts file
           file_name = File.basename(file).downcase 
           if measure_resource_dir_names[file_name]

@@ -76,6 +76,18 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exists?(File.join(root_dir, 'Gemfile'))).to be true
   end
   
+  it 'has module methods' do
+    expect(OpenStudio::Extension.check_for_name_conflicts).to be false
+    expect(OpenStudio::Extension.all_extensions.size).to eq(1)
+    expect(OpenStudio::Extension.all_measure_dirs.size).to eq(1)
+    expect(OpenStudio::Extension.all_measure_resource_dirs.size).to eq(1)
+    expect(OpenStudio::Extension.all_file_dirs.size).to eq(1)
+    
+    expect(File.exists?(File.join(OpenStudio::Extension.all_measure_dirs[0], 'openstudio_extension_test_measure/measure.rb'))).to be true
+    expect(File.exists?(File.join(OpenStudio::Extension.all_measure_resource_dirs[0], 'os_lib_helper_methods.rb'))).to be true
+    expect(File.exists?(File.join(OpenStudio::Extension.all_file_dirs, 'openstudio-extension-gem-test.epw'))).to be true
+  end
+  
   it 'configures an OSW' do
     #extension = OpenStudio::Extension::Extension.new
     #runner = OpenStudio::Extension::Runner.new(extension.root_dir)

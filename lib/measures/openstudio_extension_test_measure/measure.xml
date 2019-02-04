@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>openstudio_extension_test_measure</name>
   <uid>36b99a29-41e1-4d85-9272-85d43b966e5a</uid>
-  <version_id>2de3875b-475c-4e43-8ed1-1e474bd67461</version_id>
-  <version_modified>20190130T192957Z</version_modified>
+  <version_id>1f227c98-0e29-4ed2-a813-a410380423cc</version_id>
+  <version_modified>20190204T205056Z</version_modified>
   <xml_checksum>49BEF039</xml_checksum>
   <class_name>OpenStudioExtensionTestMeasure</class_name>
   <display_name>OpenStudio Extension Test Measure</display_name>
@@ -51,17 +51,6 @@
       <checksum>703C9964</checksum>
     </file>
     <file>
-      <version>
-        <software_program>OpenStudio</software_program>
-        <identifier>2.0.0</identifier>
-        <min_compatible>2.0.0</min_compatible>
-      </version>
-      <filename>measure.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>script</usage_type>
-      <checksum>960302DA</checksum>
-    </file>
-    <file>
       <filename>OpenStudioExtensionTestMeasure_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
@@ -72,6 +61,23 @@
       <filetype>md</filetype>
       <usage_type>readme</usage_type>
       <checksum>7258830F</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>2.0.0</identifier>
+        <min_compatible>2.0.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>3614085F</checksum>
+    </file>
+    <file>
+      <filename>os_lib_helper_methods.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>9CFC43FB</checksum>
     </file>
   </files>
 </measure>

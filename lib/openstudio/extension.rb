@@ -38,7 +38,7 @@ module OpenStudio
     class Extension
       
       # Return the version of the OpenStudio Extension Gem
-      def openstudio_extension_version
+      def version
         OpenStudio::Extension::VERSION
       end
 

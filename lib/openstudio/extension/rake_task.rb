@@ -34,17 +34,21 @@ require_relative '../extension'
 module OpenStudio
   module Extension
     class RakeTask < Rake::TaskLib
-      attr_accessor :name, :measures_dir
+      attr_accessor :name, :measures_dir, :measure_resources_dir, :measure_files_dir, :files_dir
 
       def initialize(*args, &task_block)
         @name = args.shift || :openstudio
-        @measures_dir = File.join(File.expand_path(File.dirname(__FILE__)), '../../measures')
 
         setup_subtasks(@name)
       end
 
-      def set_measures_dir(measures_dir)
-        @measures_dir = measures_dir
+      def set_extension_class(extension_class)
+        @extension_class = extension_class
+        @extension = extension_class.new
+        @measures_dir = @extension.measures_dir
+        @measure_resources_dir = @extension.measure_resources_dir
+        @measure_files_dir = @extension.measure_files_dir
+        @files_dir = @extension.files_dir
       end
 
       private
@@ -52,11 +56,10 @@ module OpenStudio
       def setup_subtasks(name)
         namespace name do
           desc 'Run the CLI task to check for measure updates'
-          task :update_measures do
+          task :update_measures => ['measures:add_license', 'measures:add_readme', 'measures:copy_resources', 'measures:update_copyright'] do
             puts 'updating measures...'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_measures(@measures_dir)
-            exit 0
           end
 
           desc 'List measures'
@@ -64,7 +67,6 @@ module OpenStudio
             puts 'Listing measures...'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.list_measures(@measures_dir)
-            exit
           end
 
           desc 'Use openstudio system ruby to run tests'
@@ -73,27 +75,29 @@ module OpenStudio
             #puts Rake.original_dir
             puts 'testing with openstudio'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-            runner.test_measures_with_cli(@measures_dir)
-
-            exit 0
+            result = runner.test_measures_with_cli(@measures_dir)
+            
+            if !result
+              exit 1
+            end
           end
 
           desc 'Use openstudio docker image to run tests'
           task :test_with_docker do
             puts 'testing with docker'
-            exit 0
           end
 
           # namespace for measure operations
           namespace 'measures' do
             desc 'Copy the resources files to individual measures'
             task :copy_resources do
+            
+              # make sure we don't have conflicting resource file names
+              OpenStudio::Extension.check_for_name_conflicts
 
-              puts 'Copying resource files from lib/measure_resources to individual measures'
-              puts "measures_dir set to #{@measures_dir}"
+              puts 'Copying resource files from measure_resources to individual measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.copy_measure_resource_files(@measures_dir)
-              exit
+              runner.copy_measure_resource_files(@measures_dir, OpenStudio::Extension.all_measure_resource_dirs)
             end
 
             desc 'Add License File to measures'
@@ -101,8 +105,7 @@ module OpenStudio
               # copy license file
               puts 'Adding license file to measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.add_measure_license(@measures_dir)
-              exit
+              runner.add_measure_license(@measures_dir, @measure_files_dir)
             end
 
             desc 'Add README.md.erb file if it and README.md do not already exist for a measure'
@@ -114,8 +117,7 @@ module OpenStudio
               # copy README.md.erb file
               puts 'Adding license file to measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.add_measure_readme(@measures_dir)
-              exit
+              runner.add_measure_readme(@measures_dir, @measure_files_dir)
             end
 
             desc 'Update copyright on measure files'
@@ -126,8 +128,7 @@ module OpenStudio
               # copy README.md.erb file
               puts 'Updating COPYRIGHT in measures files'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.update_measure_copyright(@measures_dir)
-              exit
+              runner.update_measure_copyright(@measures_dir, @measure_files_dir)
             end
 
           end
@@ -135,13 +136,11 @@ module OpenStudio
           desc 'Copy the measures to a location that can be uploaded to BCL'
           task :stage_bcl do
             puts 'Staging measures for BCL'
-            exit 0
           end
 
           desc 'Upload measures from the specified location.'
           task :push_bcl do
             puts 'Push measures to BCL'
-            exit 0
           end
         end
       end

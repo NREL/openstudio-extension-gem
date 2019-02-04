@@ -184,7 +184,7 @@ module OpenStudio
         puts the_call
         STDOUT.flush
         result = run_command(the_call, get_clean_env())
-        puts "DONE"
+        puts "DONE, result = #{result}"
         STDOUT.flush
         
         return result
@@ -213,10 +213,8 @@ module OpenStudio
         puts the_call
         STDOUT.flush
         result = run_command(the_call, get_clean_env())
-        puts "DONE"
+        puts "DONE, result = #{result}"
         STDOUT.flush
-        
-        # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
 
         return result
 
@@ -237,7 +235,7 @@ module OpenStudio
         # or a repo with multiple directories fo measures (like OpenStudio-measures)
         measures = Dir.glob(File.join(measures_dir, '**/measure.rb'))
         if measures.length == 0
-          # also try nested 2-deep
+          # also try nested 2-deep to support openstudio-measures
           measures = Dir.glob(File.join(measures_dir, '**/**/measure.rb'))
         end
         puts "#{measures.length} MEASURES FOUND"
@@ -250,26 +248,26 @@ module OpenStudio
 
       # Update measures by copying in the latest resource files from the Extension gem into
       # the measures' respective resources folders.
-      # measures_dir configured in rake_task
+      # measures_dir and all_measure_resource_dirs configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       ##
       #  @return [Boolean]
-      def copy_measure_resource_files(measures_dir)
+      def copy_measure_resource_files(measures_dir, all_measure_resource_dirs)
         result = false
-        puts "Copying updated resource files in /lib/measure_resources directory to individual measures."
+        puts "Copying updated resource files from measure_resources directories to individual measures."
         puts "Only files that have actually been changed will be listed."
 
-        # get resource files relative to this file
-        resource_path = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_resources')
-        resource_files = Dir.glob(File.join(resource_path, '/*.*'))
-
-        puts "Measure Resources Filepath: #{resource_path}"
-
+        # get all resource files relative to this file
+        resource_files = []
+        all_measure_resource_dirs.each do |resource_path|
+          resource_files.concat(Dir.glob(File.join(resource_path, '/*.*')))
+        end
+        
         # this is to accommodate a single measures dir (like most gems)
         # or a repo with multiple directories fo measures (like OpenStudio-measures)
         measures = Dir.glob(File.join(measures_dir, '**/resources/*.rb'))
         if measures.length == 0
-          # also try nested 2-deep
+          # also try nested 2-deep to support openstudio-measures
           measures = Dir.glob(File.join(measures_dir, '**/**/resources/*.rb'))
         end
 
@@ -292,17 +290,20 @@ module OpenStudio
       end
 
       # Update measures by adding license file
-      # measures_dir configured in rake_task
+      # measures_dir and measure_files_dir configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       ##
       #  @return [Boolean]
-      def add_measure_license(measures_dir)
+      def add_measure_license(measures_dir, measure_files_dir)
         result = false
-        license_file = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/LICENSE.md')
+        license_file = File.join(measure_files_dir, 'LICENSE.md')
         puts "License file path: #{license_file}"
+    
+        raise "License file not found '#{license_file}'" if !File.exists?(license_file)
+        
         measures = Dir["#{measures_dir}/**/measure.rb"]
         if measures.length == 0
-          # also try nested 2-deep
+          # also try nested 2-deep to support openstudio-measures
           measures = Dir["#{measures_dir}/**/**/measure.rb"]
         end
         measures.each do |measure|
@@ -314,17 +315,20 @@ module OpenStudio
 
 
       # Update measures by adding license file
-      # measures_dir configured in rake_task
+      # measures_dir and measure_files_dir configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       ##
       #  @return [Boolean]
-      def add_measure_readme(measures_dir)
+      def add_measure_readme(measures_dir, measure_files_dir)
         result = false
-        readme_file = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/README.md.erb')
-        puts "Readme file path: "
+        readme_file = File.join(measure_files_dir, 'README.md.erb')
+        puts "Readme file path: #{readme_file}"
+        
+        raise "Readme file not found '#{readme_file}'" if !File.exists?(readme_file)
+        
         measures = Dir["#{measures_dir}/**/measure.rb"]
         if measures.length == 0
-          # also try nested 2-deep
+          # also try nested 2-deep to support openstudio-measures
           measures = Dir["#{measures_dir}/**/**/measure.rb"]
         end
         measures.each do |measure|
@@ -337,28 +341,33 @@ module OpenStudio
         return result
       end
 
-      def update_measure_copyright(measures_dir)
+      def update_measure_copyright(measures_dir, measure_files_dir)
 
         ruby_regex = /^#.\*{79}.*#.\*{79}$/m
         erb_regex = /^<%.*#.\*{79}.*#.\*{79}.%>$/m
         js_regex = /^\/\* @preserve.*Copyright.*license.{2}\*\//m
 
 
-        filename = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/copyright_ruby.txt')
-        file = File.open(filename, "rb")
+        filename = File.join(measure_files_dir, 'copyright_ruby.txt')
+        puts "Copyright file path: #{filename}"
+        raise "Copyright file not found '#{filename}'" if !File.exists?(filename)
+        file = File.open(filename, "r")
         ruby_header_text = file.read
         file.close
         ruby_header_text.strip!
 
-
-        filename = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/copyright_erb.txt')
-        file = File.open(filename, "rb")
+        filename = File.join(measure_files_dir, 'copyright_erb.txt')
+        puts "Copyright file path: #{filename}"
+        raise "Copyright file not found '#{filename}'" if !File.exists?(filename)        
+        file = File.open(filename, "r")
         erb_header_text =  file.read
         file.close
         erb_header_text.strip!
 
-        filename = File.join(File.expand_path(File.dirname(__FILE__)), '../../measure_files/copyright_js.txt')
-        file = File.open(filename, "rb")
+        filename = File.join(measure_files_dir, 'copyright_js.txt')
+        puts "Copyright file path: #{filename}"
+        raise "Copyright file not found '#{filename}'" if !File.exists?(filename)         
+        file = File.open(filename, "r")
         js_header_text = file.read
         file.close
         js_header_text.strip!
@@ -368,7 +377,7 @@ module OpenStudio
         measures = Dir["#{measures_dir}/**/measure.rb"]
         measures_full_dir = File.join(measures_dir, '**')
         if measures.length == 0
-          # also try nested 2-deep
+          # also try nested 2-deep to support openstudio-measures
           measures = Dir["#{measures_dir}/**/**/measure.rb"]
           if measures.length > 0
             # update measures_full_dir
@@ -449,8 +458,10 @@ module OpenStudio
         puts the_call
         STDOUT.flush
         result = run_command(the_call, get_clean_env())
-        puts "DONE"
+        puts "DONE, result = #{result}"
         STDOUT.flush
+        
+        # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
       
         return result
       end

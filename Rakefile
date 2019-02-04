@@ -32,7 +32,9 @@ require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
 require 'openstudio/extension/rake_task'
-OpenStudio::Extension::RakeTask.new
+require 'openstudio/extension'
+rake_task = OpenStudio::Extension::RakeTask.new
+rake_task.set_extension_class(OpenStudio::Extension::Extension)
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new

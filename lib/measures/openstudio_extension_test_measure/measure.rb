@@ -33,6 +33,14 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # *******************************************************************************
 
+begin
+  #load OpenStudio measure libraries from common location
+  require 'measure_resources/os_lib_helper_methods'
+rescue LoadError
+  # common location unavailable, load from local resources
+  require_relative 'resources/os_lib_helper_methods'
+end
+
 # start the measure
 class OpenStudioExtensionTestMeasure < OpenStudio::Measure::ModelMeasure
   # define the name that a user will see
@@ -43,7 +51,6 @@ class OpenStudioExtensionTestMeasure < OpenStudio::Measure::ModelMeasure
   # define the arguments that the user will input
   def arguments(model)
     args = OpenStudio::Measure::OSArgumentVector.new
-
 
     return args
   end

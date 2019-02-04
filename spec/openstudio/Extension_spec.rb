@@ -40,6 +40,24 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exists?(File.join(measures_dir, 'openstudio_extension_test_measure/measure.rb'))).to be true
   end
   
+  it 'has a measure resources directory' do
+    extension = OpenStudio::Extension::Extension.new
+    measure_resources_dir = extension.measure_resources_dir
+    expect(measure_resources_dir).not_to be nil
+    expect(File.directory?(measure_resources_dir)).to be true
+    expect(File.exists?(measure_resources_dir)).to be true
+    expect(File.exists?(File.join(measure_resources_dir, 'os_lib_helper_methods.rb'))).to be true
+  end
+  
+  it 'has a measure files directory' do
+    extension = OpenStudio::Extension::Extension.new
+    measure_files_dir = extension.measure_files_dir
+    expect(measure_files_dir).not_to be nil
+    expect(File.directory?(measure_files_dir)).to be true
+    expect(File.exists?(measure_files_dir)).to be true
+    expect(File.exists?(File.join(measure_files_dir, 'LICENSE.md'))).to be true
+  end  
+  
   it 'has a files directory' do
     extension = OpenStudio::Extension::Extension.new
     files_dir = extension.files_dir

@@ -159,6 +159,43 @@ module OpenStudio
         
         return result
       end
+      
+      ##
+      # Get path to all measures found under measure dir.
+      ##
+      #  @param [String] measures_dir Measures directory
+      ##
+      #  @return [Array] returns path to all measure directories found under measure dir
+      def get_measures_in_dir(measures_dir)
+        measures = Dir.glob(File.join(measures_dir, '**/measure.rb'))
+        if measures.length == 0
+          # also try nested 2-deep to support openstudio-measures
+          measures = Dir.glob(File.join(measures_dir, '**/**/measure.rb'))
+        end
+        
+        result = []
+        measures.each {|m| result << File.dirname(m)}
+        return result
+      end
+      
+      ##
+      # Get path to all measures dirs found under measure dir.
+      ##
+      #  @param [String] measures_dir Measures directory
+      ##
+      #  @return [Array] returns path to all directories containing measures found under measure dir
+      def get_measure_dirs_in_dir(measures_dir)
+        measures = Dir.glob(File.join(measures_dir, '**/measure.rb'))
+        if measures.length == 0
+          # also try nested 2-deep to support openstudio-measures
+          measures = Dir.glob(File.join(measures_dir, '**/**/measure.rb'))
+        end
+
+        result = []
+        measures.each {|m| result << File.dirname(File.dirname(m))}
+        
+        return result.uniq
+      end
 
       ##
       # Run the OpenStudio CLI command to test measures on given directory
@@ -168,6 +205,11 @@ module OpenStudio
       #  @return [Boolean] 
       def test_measures_with_cli(measures_dir)
         puts "Testing measures with CLI system call"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty" 
+          return false
+        end
+        
         puts "measures path: #{measures_dir}"
 
         cli = OpenStudio.getOpenStudioCLI
@@ -197,25 +239,34 @@ module OpenStudio
       #  @return [Boolean]
       def update_measures(measures_dir)
         puts "Updating measures with CLI system call"
-        puts "measures path: #{measures_dir}"
-
-        cli = OpenStudio.getOpenStudioCLI
-        puts "CLI: #{cli}"
-
-        the_call = ''
-        if @gemfile_path
-          the_call = "#{cli} --verbose --bundle #{@gemfile_path} --bundle_path #{@bundle_path} measure -t #{measures_dir}"
-        else
-          the_call = "#{cli} --verbose measure -t #{measures_dir}"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty"
+          return false
         end
+        
+        result = true
+        # DLM: this is a temporary workaround to handle OpenStudio-Measures
+        get_measure_dirs_in_dir(measures_dir).each do |measures_dir|
+          puts "measures path: #{measures_dir}"
 
-        puts "SYSTEM CALL:"
-        puts the_call
-        STDOUT.flush
-        result = run_command(the_call, get_clean_env())
-        puts "DONE, result = #{result}"
-        STDOUT.flush
+          cli = OpenStudio.getOpenStudioCLI
+          puts "CLI: #{cli}"
 
+          the_call = ''
+          if @gemfile_path
+            the_call = "#{cli} --verbose --bundle #{@gemfile_path} --bundle_path #{@bundle_path} measure -t #{measures_dir}"
+          else
+            the_call = "#{cli} --verbose measure -t #{measures_dir}"
+          end
+
+          puts "SYSTEM CALL:"
+          puts the_call
+          STDOUT.flush
+          result = result && run_command(the_call, get_clean_env())
+          puts "DONE, result = #{result}"
+          STDOUT.flush
+        end
+        
         return result
 
       end
@@ -229,6 +280,11 @@ module OpenStudio
       ##
       def list_measures(measures_dir)
         puts "Listing measures"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty"
+          return false
+        end
+
         puts "measures path: #{measures_dir}"
 
         # this is to accommodate a single measures dir (like most gems)
@@ -253,6 +309,15 @@ module OpenStudio
       ##
       #  @return [Boolean]
       def copy_measure_resource_files(measures_dir, all_measure_resource_dirs)
+        puts "Copying measure resources"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty"
+          return false
+        elsif all_measure_resource_dirs.nil? || all_measure_resource_dirs.empty?
+          puts "Measures resources dirs is nil or empty"
+          return false
+        end
+      
         result = false
         puts "Copying updated resource files from measure_resources directories to individual measures."
         puts "Only files that have actually been changed will be listed."
@@ -295,6 +360,15 @@ module OpenStudio
       ##
       #  @return [Boolean]
       def add_measure_license(measures_dir, measure_files_dir)
+        puts "Adding measure licenses"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty"
+          return false
+        elsif measure_files_dir.nil? || measure_files_dir.empty?
+          puts "Measures files dir is nil or empty"
+          return false
+        end
+        
         result = false
         license_file = File.join(measure_files_dir, 'LICENSE.md')
         puts "License file path: #{license_file}"
@@ -320,6 +394,15 @@ module OpenStudio
       ##
       #  @return [Boolean]
       def add_measure_readme(measures_dir, measure_files_dir)
+        puts "Adding measure readmes"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty"
+          return false
+        elsif measure_files_dir.nil? || measure_files_dir.empty?
+          puts "Measures files dir is nil or empty"
+          return false
+        end
+        
         result = false
         readme_file = File.join(measure_files_dir, 'README.md.erb')
         puts "Readme file path: #{readme_file}"
@@ -342,7 +425,15 @@ module OpenStudio
       end
 
       def update_measure_copyright(measures_dir, measure_files_dir)
-
+        puts "Updating measure copyrights"
+        if measures_dir.nil? || measures_dir.empty?
+          puts "Measures dir is nil or empty"
+          return false
+        elsif measure_files_dir.nil? || measure_files_dir.empty?
+          puts "Measures files dir is nil or empty"
+          return false
+        end
+        
         ruby_regex = /^#.\*{79}.*#.\*{79}$/m
         erb_regex = /^<%.*#.\*{79}.*#.\*{79}.%>$/m
         js_regex = /^\/\* @preserve.*Copyright.*license.{2}\*\//m

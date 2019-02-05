@@ -116,7 +116,8 @@ module OpenStudio
       result = []
       self.all_extensions.each do |obj|
         begin
-          result << obj.new.measures_dir
+          dir = obj.new.measures_dir
+          result << dir if dir
         rescue
         end
       end
@@ -131,7 +132,8 @@ module OpenStudio
       result = []
       self.all_extensions.each do |obj|
         begin
-          result << obj.new.measure_resources_dir
+          dir = obj.new.measure_resources_dir
+          result << dir if dir
         rescue
         end
       end
@@ -146,7 +148,8 @@ module OpenStudio
       result = []
       self.all_extensions.each do |obj|
         begin
-          result << obj.new.files_dir
+          dir = obj.new.files_dir
+          result << dir if dir
         rescue
         end
       end

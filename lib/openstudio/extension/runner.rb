@@ -401,6 +401,8 @@ module OpenStudio
             if f =~ path[:regex]
               puts '  License found -- updating'
               File.open(file, 'w') { |write| write << f.gsub(path[:regex], path[:license]) }
+            elsif f =~ /\(C\)/i || f =~ /\(Copyright\)/i
+              puts '  File already has copyright -- skipping'
             else
               puts '  No license found -- adding'
               if f =~ /#!/

@@ -588,7 +588,7 @@ module OpenStudio
           result = run_osw(osw, File.dirname(osw))
 
           if !result
-            failures << "Failed to run the simulation with command: #{command}"
+            failures << "Failed to run OSW '#{osw}'"
           end
 
         end

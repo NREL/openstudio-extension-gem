@@ -26,7 +26,7 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
-require_relative '../../../lib/measure_resources/os_lib_geometry'
+require_relative '../../lib/measure_resources/os_lib_geometry'
 
 RSpec.describe 'OS Lib Geometry' do
   context 'z-surfaces' do

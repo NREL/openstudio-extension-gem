@@ -56,7 +56,7 @@ module OpenStudio
       def setup_subtasks(name)
         namespace name do
           desc 'Run the CLI task to check for measure updates'
-          task :update_measures => ['measures:add_license', 'measures:add_readme', 'measures:copy_resources', 'measures:update_copyright'] do
+          task update_measures: ['measures:add_license', 'measures:add_readme', 'measures:copy_resources', 'measures:update_copyright'] do
             puts 'updating measures...'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_measures(@measures_dir)
@@ -71,12 +71,12 @@ module OpenStudio
 
           desc 'Use openstudio system ruby to run tests'
           task :test_with_openstudio do
-            #puts Dir.pwd
-            #puts Rake.original_dir
+            # puts Dir.pwd
+            # puts Rake.original_dir
             puts 'testing with openstudio'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             result = runner.test_measures_with_cli(@measures_dir)
-            
+
             if !result
               exit 1
             end
@@ -91,7 +91,6 @@ module OpenStudio
           namespace 'measures' do
             desc 'Copy the resources files to individual measures'
             task :copy_resources do
-            
               # make sure we don't have conflicting resource file names
               OpenStudio::Extension.check_for_name_conflicts
 
@@ -110,7 +109,6 @@ module OpenStudio
 
             desc 'Add README.md.erb file if it and README.md do not already exist for a measure'
             task :add_readme do
-
               puts 'Adding README.md.erb to measures where it and README.md do not exist.'
               puts 'Only files that have actually been changed will be listed.'
 
@@ -130,7 +128,6 @@ module OpenStudio
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
               runner.update_measure_copyright(@measures_dir, @measure_files_dir)
             end
-
           end
 
           desc 'Copy the measures to a location that can be uploaded to BCL'

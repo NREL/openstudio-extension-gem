@@ -29,10 +29,6 @@
 require 'openstudio/extension/version'
 require 'openstudio/extension/runner'
 
-# ensure that all gems are loaded so we can do introspection
-require 'bundler'
-Bundler.require(:default)
-
 module OpenStudio
   module Extension
     class Extension
@@ -230,10 +226,13 @@ module OpenStudio
     #
     #  @return [Hash]  Output OSW with measure and file paths configured
     def self.configure_osw(in_osw)
-      check_for_name_conflicts
-
-      measure_dirs = all_measure_dirs
-      file_dirs = all_file_dirs
+      self.check_for_name_conflicts
+      
+      measure_dirs = self.all_measure_dirs
+      file_dirs = self.all_file_dirs
+      
+      in_osw[:measure_paths] = [] if in_osw[:measure_paths].nil?
+      in_osw[:file_paths] = [] if in_osw[:file_paths].nil?
 
       in_osw[:measure_paths] = in_osw[:measure_paths].concat(measure_dirs).uniq
       in_osw[:file_paths] = in_osw[:file_paths].concat(file_dirs).uniq

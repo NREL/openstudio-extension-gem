@@ -226,11 +226,11 @@ module OpenStudio
     #
     #  @return [Hash]  Output OSW with measure and file paths configured
     def self.configure_osw(in_osw)
-      self.check_for_name_conflicts
-      
-      measure_dirs = self.all_measure_dirs
-      file_dirs = self.all_file_dirs
-      
+      check_for_name_conflicts
+
+      measure_dirs = all_measure_dirs
+      file_dirs = all_file_dirs
+
       in_osw[:measure_paths] = [] if in_osw[:measure_paths].nil?
       in_osw[:file_paths] = [] if in_osw[:file_paths].nil?
 

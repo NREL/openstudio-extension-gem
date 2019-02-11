@@ -54,8 +54,8 @@ module OpenStudio
             if File.exist?('./.bundle/config')
               puts 'config exists'
               config = YAML.load_file('./.bundle/config')
-             
-              if config['BUNDLE_PATH'] == @bundle_install_path 
+
+              if config['BUNDLE_PATH'] == @bundle_install_path
                 # already been configured, might not be up to date
                 needs_config = false
               end
@@ -74,24 +74,24 @@ module OpenStudio
 
             puts "needs_config = #{needs_config}"
             if needs_config
-              run_command("bundle config --local path '#{@bundle_install_path}'", get_clean_env())
+              run_command("bundle config --local path '#{@bundle_install_path}'", get_clean_env)
             end
 
             puts "needs_platform = #{needs_platform}"
             if needs_platform
-              run_command('bundle lock --add_platform ruby', get_clean_env())
+              run_command('bundle lock --add_platform ruby', get_clean_env)
             end
-            
+
             needs_update = needs_config || needs_platform
             if !needs_update
-              if !File.exists?('Gemfile.lock') || File.mtime(@gemfile_path) > File.mtime('Gemfile.lock') 
+              if !File.exist?('Gemfile.lock') || File.mtime(@gemfile_path) > File.mtime('Gemfile.lock')
                 needs_update = true
               end
             end
-            
+
             puts "needs_update = #{needs_update}"
             if needs_update
-              run_command('bundle update', get_clean_env())
+              run_command('bundle update', get_clean_env)
             end
           ensure
             Dir.chdir(@original_dir)
@@ -117,9 +117,9 @@ module OpenStudio
 
         # DLM: preserve GEM_HOME and GEM_PATH set by current bundle because we are not supporting bundle
         # requires to ruby gems will work, will fail if we require a native gem
-        new_env["GEM_PATH"] = nil
-        new_env["GEM_HOME"] = nil
-        
+        new_env['GEM_PATH'] = nil
+        new_env['GEM_HOME'] = nil
+
         # DLM: for now, ignore current bundle in case it has binary dependencies in it
         # bundle_gemfile = ENV['BUNDLE_GEMFILE']
         # bundle_path = ENV['BUNDLE_PATH']
@@ -145,7 +145,7 @@ module OpenStudio
         original_dir = Dir.pwd
         begin
           Dir.chdir(@dirname)
-          
+
           # DLM: using popen3 here can result in deadlocks
           stdout_str, stderr_str, status = Open3.capture3(env, command)
           if status.success?
@@ -539,14 +539,14 @@ module OpenStudio
           file.puts JSON.pretty_generate(osw)
         end
 
-        cli = OpenStudio.getOpenStudioCLI       
+        cli = OpenStudio.getOpenStudioCLI
         out_log = run_osw_path + '.log'
         if Gem.win_platform?
-          #out_log = "nul"
+          # out_log = "nul"
         else
-          #out_log = "/dev/null"
+          # out_log = "/dev/null"
         end
-          
+
         the_call = ''
         if @gemfile_path
           the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
@@ -565,27 +565,25 @@ module OpenStudio
 
         return result
       end
-      
-        # run osws, return any failure messages
+
+      # run osws, return any failure messages
       def run_osws(osw_files, num_parallel = 1, max_to_run = Float::INFINITY)
         failures = []
 
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)
- 
+
         Parallel.each(osw_files, in_threads: num_parallel) do |osw|
-        #osw_files.each do |osw|
-          
+          # osw_files.each do |osw|
+
           result = run_osw(osw, File.dirname(osw))
 
           if !result
             failures << "Failed to run OSW '#{osw}'"
           end
-
         end
-        
+
         return failures
-      end      
-      
+      end
     end
   end
 end

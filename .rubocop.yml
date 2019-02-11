@@ -2,7 +2,7 @@ AllCops:
   Exclude:
     - gems/**/*
     - lib/measures/**/*
-    - lib/measure_resources/**/*
+    - lib/openstudio/extension/core/**/*
 
 inherit_from:
   - http://s3.amazonaws.com/openstudio-resources/styles/rubocop.yml

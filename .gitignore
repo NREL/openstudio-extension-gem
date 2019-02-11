@@ -21,7 +21,6 @@
 /.idea
 *.rubocop-http*
 
-
 # measures tests
 lib/measures/.rubocop.yml
 lib/measures/test_results/*

@@ -35,7 +35,7 @@
 
 begin
   #load OpenStudio measure libraries from common location
-  require 'measure_resources/os_lib_helper_methods'
+  require 'openstudio/extension/core/os_lib_helper_methods'
 rescue LoadError
   # common location unavailable, load from local resources
   require_relative 'resources/os_lib_helper_methods'

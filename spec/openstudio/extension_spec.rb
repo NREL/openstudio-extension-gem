@@ -42,11 +42,11 @@ RSpec.describe OpenStudio::Extension do
 
   it 'has a measure resources directory' do
     extension = OpenStudio::Extension::Extension.new
-    measure_resources_dir = extension.measure_resources_dir
-    expect(measure_resources_dir).not_to be nil
-    expect(File.directory?(measure_resources_dir)).to be true
-    expect(File.exist?(measure_resources_dir)).to be true
-    expect(File.exist?(File.join(measure_resources_dir, 'os_lib_helper_methods.rb'))).to be true
+    core_dir = extension.core_dir
+    expect(core_dir).not_to be nil
+    expect(File.directory?(core_dir)).to be true
+    expect(File.exist?(core_dir)).to be true
+    expect(File.exist?(File.join(core_dir, 'os_lib_helper_methods.rb'))).to be true
   end
 
   it 'has a measure files directory' do
@@ -80,11 +80,11 @@ RSpec.describe OpenStudio::Extension do
     expect(OpenStudio::Extension.check_for_name_conflicts).to be false
     expect(OpenStudio::Extension.all_extensions.size).to eq(1)
     expect(OpenStudio::Extension.all_measure_dirs.size).to eq(1)
-    expect(OpenStudio::Extension.all_measure_resource_dirs.size).to eq(1)
+    expect(OpenStudio::Extension.all_core_dirs.size).to eq(1)
     expect(OpenStudio::Extension.all_file_dirs.size).to eq(1)
 
     expect(File.exist?(File.join(OpenStudio::Extension.all_measure_dirs[0], 'openstudio_extension_test_measure/measure.rb'))).to be true
-    expect(File.exist?(File.join(OpenStudio::Extension.all_measure_resource_dirs[0], 'os_lib_helper_methods.rb'))).to be true
+    expect(File.exist?(File.join(OpenStudio::Extension.all_core_dirs[0], 'os_lib_helper_methods.rb'))).to be true
     expect(File.exist?(File.join(OpenStudio::Extension.all_file_dirs, 'openstudio-extension-gem-test.epw'))).to be true
   end
 

@@ -40,7 +40,7 @@ module OpenStudio
       # Base method
       # Return the absolute path of the measures or nil if there is none, can be used when configuring OSWs
       def measures_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '../measures/'))
+        return File.absolute_path(File.join(File.dirname(__FILE__), '..', 'measures'))
       end
 
       # Base method
@@ -48,8 +48,8 @@ module OpenStudio
       # Measure resources are library files which are copied into measure resource folders when building standalone measures
       # Measure resources will be copied into the resources folder for measures which have files of the same name
       # Measure resources are copied from dependent gems so file names must be unique across all gems
-      def measure_resources_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '../measure_resources/'))
+      def core_dir
+        return File.absolute_path(File.join(File.dirname(__FILE__), 'extension', 'core'))
       end
 
       # Base method
@@ -57,7 +57,7 @@ module OpenStudio
       # Measure files are common files like copyright files which are used to update measures
       # Measure files will only be applied to measures in the current repository
       def measure_files_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '../measure_files/'))
+        return File.absolute_path(File.join(File.dirname(__FILE__), '..', '..', 'doc_templates'))
       end
 
       # Base method
@@ -71,13 +71,13 @@ module OpenStudio
       # Relevant files such as weather data, design days, etc.
       # return the absolute path of the files or nil if there is none, can be used when configuring OSWs
       def files_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '../files/'))
+        return File.absolute_path(File.join(File.dirname(__FILE__), '..', 'files'))
       end
 
       # Base method
       # return the absolute path of root of this gem
       def root_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '../../'))
+        return File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end
 
       # Base method
@@ -93,7 +93,7 @@ module OpenStudio
     ##
     # Module method to return all classes derived from OpenStudio::Extension::Extension
     ##
-    #  @return [Array]  Array of classes
+    #  @return [Array]: Array of classes
     def self.all_extensions
       result = []
       ObjectSpace.each_object(::Class) do |obj|
@@ -106,7 +106,7 @@ module OpenStudio
     ##
     # Module method to return measure directories from all extensions
     ##
-    #  @return [Array]  Array of measure directories
+    #  @return [Array]: Array of measure directories
     def self.all_measure_dirs
       result = []
       all_extensions.each do |obj|
@@ -123,11 +123,11 @@ module OpenStudio
     # Module method to return measure resource directories from all extensions
     ##
     #  @return [Array]  Array of measure resource directories
-    def self.all_measure_resource_dirs
+    def self.all_core_dirs
       result = []
       all_extensions.each do |obj|
         begin
-          dir = obj.new.measure_resources_dir
+          dir = obj.new.core_dir
           result << dir if dir
         rescue StandardError
         end
@@ -159,7 +159,7 @@ module OpenStudio
     ##
     def self.check_for_name_conflicts
       measure_dirs = all_measure_dirs
-      measure_resource_dirs = all_measure_resource_dirs
+      core_dirs = all_core_dirs
       file_dirs = all_file_dirs
       conflicts = []
 
@@ -179,17 +179,17 @@ module OpenStudio
         end
       end
 
-      measure_resource_dir_names = {}
-      measure_resource_dirs.each do |dir|
+      core_dir_names = {}
+      core_dirs.each do |dir|
         Dir.glob(File.join(dir, '*')).each do |file|
           next if !File.file?(file)
 
           # puts file
           file_name = File.basename(file).downcase
-          if measure_resource_dir_names[file_name]
-            conflicts << "Measure resource '#{file}' conflicts with '#{measure_resource_dir_names[file_name]}'"
+          if core_dir_names[file_name]
+            conflicts << "Measure resource '#{file}' conflicts with '#{core_dir_names[file_name]}'"
           else
-            measure_resource_dir_names[file_name] = file
+            core_dir_names[file_name] = file
           end
         end
       end
@@ -201,7 +201,7 @@ module OpenStudio
 
           # puts file
           file_name = File.basename(file).downcase
-          if measure_resource_dir_names[file_name]
+          if core_dir_names[file_name]
             conflicts << "File '#{file}' conflicts with '#{file_names[file_name]}'"
           else
             file_names[file_name] = file

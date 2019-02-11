@@ -309,27 +309,27 @@ module OpenStudio
 
       # Update measures by copying in the latest resource files from the Extension gem into
       # the measures' respective resources folders.
-      # measures_dir and all_measure_resource_dirs configured in rake_task
+      # measures_dir and all_core_dirs configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
-      ##
-      #  @return [Boolean]
-      def copy_measure_resource_files(measures_dir, all_measure_resource_dirs)
+      #
+      # @return [Boolean]
+      def copy_core_files(measures_dir, all_core_dirs)
         puts 'Copying measure resources'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
           return false
-        elsif all_measure_resource_dirs.nil? || all_measure_resource_dirs.empty?
+        elsif all_core_dirs.nil? || all_core_dirs.empty?
           puts 'Measures resources dirs is nil or empty'
           return false
         end
 
         result = false
-        puts 'Copying updated resource files from measure_resources directories to individual measures.'
+        puts 'Copying updated resource files from core directories to individual measures.'
         puts 'Only files that have actually been changed will be listed.'
 
         # get all resource files relative to this file
         resource_files = []
-        all_measure_resource_dirs.each do |resource_path|
+        all_core_dirs.each do |resource_path|
           resource_files.concat(Dir.glob(File.join(resource_path, '/*.*')))
         end
 
@@ -347,11 +347,11 @@ module OpenStudio
         # loop through resource files
         resource_files.each do |resource_file|
           # loop through measure dirs looking for matching file
-          measures.each do |measure_resource|
-            next unless File.basename(measure_resource) == File.basename(resource_file)
-            next if FileUtils.identical?(resource_file, File.path(measure_resource))
-            puts "Replacing #{measure_resource} with #{resource_file}."
-            FileUtils.cp(resource_file, File.path(measure_resource))
+          measures.each do |measure|
+            next unless File.basename(measure) == File.basename(resource_file)
+            next if FileUtils.identical?(resource_file, File.path(measure))
+            puts "Replacing #{measure} with #{resource_file}."
+            FileUtils.cp(resource_file, File.path(measure))
           end
         end
         result = true

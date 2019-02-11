@@ -34,7 +34,7 @@ require_relative '../extension'
 module OpenStudio
   module Extension
     class RakeTask < Rake::TaskLib
-      attr_accessor :name, :measures_dir, :measure_resources_dir, :measure_files_dir, :files_dir
+      attr_accessor :name, :measures_dir, :core_dir, :measure_files_dir, :files_dir
 
       def initialize(*args, &task_block)
         @name = args.shift || :openstudio
@@ -46,7 +46,7 @@ module OpenStudio
         @extension_class = extension_class
         @extension = extension_class.new
         @measures_dir = @extension.measures_dir
-        @measure_resources_dir = @extension.measure_resources_dir
+        @core_dir = @extension.core_dir
         @measure_files_dir = @extension.measure_files_dir
         @files_dir = @extension.files_dir
       end
@@ -94,9 +94,9 @@ module OpenStudio
               # make sure we don't have conflicting resource file names
               OpenStudio::Extension.check_for_name_conflicts
 
-              puts 'Copying resource files from measure_resources to individual measures'
+              puts 'Copying resource files from the core library to individual measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.copy_measure_resource_files(@measures_dir, OpenStudio::Extension.all_measure_resource_dirs)
+              runner.copy_core_files(@measures_dir, OpenStudio::Extension.all_core_dirs)
             end
 
             desc 'Add License File to measures'

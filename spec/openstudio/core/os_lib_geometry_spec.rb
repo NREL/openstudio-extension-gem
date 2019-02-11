@@ -26,10 +26,12 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
-require_relative '../../lib/measure_resources/os_lib_geometry'
+# TODO: should we load all this files when we require 'openstudio/extension'? I vote yes, but have to be careful with
+# conflicts.
+require 'openstudio/extension/core/os_lib_geometry'
 
 RSpec.describe 'OS Lib Geometry' do
-  context 'z-surfaces' do
+  context 'z-values' do
     before :all do
       @model = OpenStudio::Model.exampleModel
     end

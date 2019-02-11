@@ -61,6 +61,12 @@ From the command line, run these with ```bundle exec rake #{task_name}```
 - [X] ```Runner::initialize``` _DLM: should say that the path argument should be for a dir with a Gemfile right?_
 - [X] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
 
+- Recommendations
+
+* Move measure_files under measures as files
+* Move measure_resources under measures as resources
+* Add .gitignore to OpenStudio when creating a measure to exclude test_results, .rubocop-http*, ...
+
 # Releasing
 
 * Update change log

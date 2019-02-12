@@ -27,7 +27,6 @@
 ########################################################################################################################
 
 RSpec.describe OpenStudio::Extension do
-
   it 'has a version number' do
     expect(OpenStudio::Extension::VERSION).not_to be nil
   end
@@ -40,7 +39,7 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exist?(measures_dir)).to be true
     expect(File.exist?(File.join(measures_dir, 'openstudio_extension_test_measure/measure.rb'))).to be true
   end
-  
+
   it 'has a files directory' do
     extension = OpenStudio::Extension::Extension.new
     files_dir = extension.files_dir
@@ -49,7 +48,7 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exist?(files_dir)).to be true
     expect(File.exist?(File.join(files_dir, 'openstudio-extension-gem-test.epw'))).to be true
   end
-  
+
   it 'has a core directory' do
     extension = OpenStudio::Extension::Extension.new
     core_dir = extension.core_dir

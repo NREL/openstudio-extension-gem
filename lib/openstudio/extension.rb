@@ -32,32 +32,28 @@ require 'openstudio/extension/runner'
 module OpenStudio
   module Extension
     class Extension
-    
-      # Base method
-      # Return the absolute path of root of this gem, override in derived classes
-      def root_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
+      attr_accessor :root_dir
+
+      def initialize
+        @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end
-      
-      # Base method
+
       # Return the absolute path of the measures or nil if there is none, used when configuring OSWs
       def measures_dir
-        return File.absolute_path(File.join(root_dir, 'lib', 'measures'))
+        return File.absolute_path(File.join(@root_dir, 'lib', 'measures'))
       end
       
-      # Base method
       # Relevant files such as weather data, design days, etc.
       # Return the absolute path of the files or nil if there is none, used when configuring OSWs
       def files_dir
-        return File.absolute_path(File.join(root_dir, 'lib', 'files'))
+        return File.absolute_path(File.join(@root_dir, 'lib', 'files'))
       end
       
-      # Base method
       # Doc templates are common files like copyright files which are used to update measures and other code
       # Doc templates will only be applied to measures in the current repository
       # Return the absolute path of the doc templates dir or nil if there is none
       def doc_templates_dir
-        return File.absolute_path(File.join(root_dir, 'doc_templates'))
+        return File.absolute_path(File.join(@root_dir, 'doc_templates'))
       end
 
       # Do not override
@@ -65,7 +61,7 @@ module OpenStudio
       # Files will be copied into the resources folder of measures which have files of the same name
       # Return the absolute path of the core dir or nil if there is none
       def core_dir
-        return File.absolute_path(File.join(root_dir, 'lib', 'openstudio', 'extension', 'core'))
+        return File.absolute_path(File.join(@root_dir, 'lib', 'openstudio', 'extension', 'core'))
       end
     end
 

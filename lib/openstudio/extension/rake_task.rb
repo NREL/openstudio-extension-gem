@@ -96,7 +96,7 @@ module OpenStudio
 
               puts 'Copying resource files from the core library to individual measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.copy_core_files(@measures_dir)
+              runner.copy_core_files(@measures_dir, @core_dir)
             end
 
             desc 'Add License File to measures'

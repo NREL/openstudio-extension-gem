@@ -309,11 +309,11 @@ module OpenStudio
 
       # Update measures by copying in the latest resource files from the Extension gem into
       # the measures' respective resources folders.
-      # measures_dir configured in rake_task
+      # measures_dir and core_dir configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       #
       # @return [Boolean]
-      def copy_core_files(measures_dir)
+      def copy_core_files(measures_dir, core_dir)
         puts 'Copying measure resources'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'

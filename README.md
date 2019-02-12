@@ -1,4 +1,4 @@
-# OpenStudio::Extension
+# OpenStudio::Extension 
 
 This gem repository serves as a base for single purpose repositories that host API methods, CLI tools, and OpenStudio measures which leverage those methods and tools.  Other repositories (e.g. urbanopt-geojson-gem) will depend on this repository and inherit/mix-in needed functionality.  The repository is formatted as a gem to allow for semantic versioning via Bundle.  The repository includes methods for testing, documentation, and build tasks.
 

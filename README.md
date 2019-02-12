@@ -60,6 +60,10 @@ From the command line, run these with ```bundle exec rake #{task_name}```
 - [ ] ```Extension::minimum_openstudio_version``` _DLM: should we rename? should people overwrite this in their class?_
 - [X] ```Runner::initialize``` _DLM: should say that the path argument should be for a dir with a Gemfile right?_
 - [X] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
+- [ ] Run rubocop on all of the core files and remove exclusion from .rubocop.yml file.
+- [ ] Cleanup task after running tests (may need to be in the OpenStudio Measure Tester)
+- [ ] Add a `rake init new_ext_gem` to Rakefile
+- [ ] Add tests to the extension/core
 
 # Releasing
 

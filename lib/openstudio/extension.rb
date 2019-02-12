@@ -32,69 +32,51 @@ require 'openstudio/extension/runner'
 module OpenStudio
   module Extension
     class Extension
-      # Return the version of the OpenStudio Extension Gem
-      def version
-        OpenStudio::Extension::VERSION
-      end
-
+    
       # Base method
-      # Return the absolute path of the measures or nil if there is none, can be used when configuring OSWs
-      def measures_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '..', 'measures'))
-      end
-
-      # Base method
-      # Return the absolute path of the measures resources dir or nil if there is none
-      # Measure resources are library files which are copied into measure resource folders when building standalone measures
-      # Measure resources will be copied into the resources folder for measures which have files of the same name
-      # Measure resources are copied from dependent gems so file names must be unique across all gems
-      def core_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), 'extension', 'core'))
-      end
-
-      # Base method
-      # Return the absolute path of the measures files dir or nil if there is none
-      # Measure files are common files like copyright files which are used to update measures
-      # Measure files will only be applied to measures in the current repository
-      def measure_files_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '..', '..', 'doc_templates'))
-      end
-
-      # Base method
-      # List the names (and versions?) of the measures.
-      # DLM: do we need this? if we do, what format should it return?  I would prefer to remove this
-      def list_measures
-        return []
-      end
-
-      # Base method
-      # Relevant files such as weather data, design days, etc.
-      # return the absolute path of the files or nil if there is none, can be used when configuring OSWs
-      def files_dir
-        return File.absolute_path(File.join(File.dirname(__FILE__), '..', 'files'))
-      end
-
-      # Base method
-      # return the absolute path of root of this gem
+      # Return the absolute path of root of this gem, override in derived classes
       def root_dir
         return File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end
-
+      
       # Base method
-      # returns a minimum openstudio version or nil
-      # need something like this because cannot restrict os version via gemfile
-      # Not sure how to do this yet
-      def minimum_openstudio_version
-        puts 'return the minimum openstudio version'
-        return 'unknown minimum openstudio version'
+      # Return the absolute path of the measures or nil if there is none, used when configuring OSWs
+      def measures_dir
+        return File.absolute_path(File.join(root_dir, 'lib', 'measures'))
+      end
+      
+      # Base method
+      # Relevant files such as weather data, design days, etc.
+      # Return the absolute path of the files or nil if there is none, used when configuring OSWs
+      def files_dir
+        return File.absolute_path(File.join(root_dir, 'lib', 'files'))
+      end
+      
+      # Base method
+      # Doc templates are common files like copyright files which are used to update measures and other code
+      # Doc templates will only be applied to measures in the current repository
+      # Return the absolute path of the doc templates dir or nil if there is none
+      def doc_templates_dir
+        return File.absolute_path(File.join(root_dir, 'doc_templates'))
+      end
+
+      # Do not override
+      # Files in the core directory are copied into measure resource folders to build standalone measures
+      # Files will be copied into the resources folder of measures which have files of the same name
+      # Return the absolute path of the core dir or nil if there is none
+      def core_dir
+        return File.absolute_path(File.join(root_dir, 'lib', 'openstudio', 'extension', 'core'))
       end
     end
 
     ##
     # Module method to return all classes derived from OpenStudio::Extension::Extension
+    # Note all extension classes must be loaded before calling this method
     ##
     #  @return [Array]: Array of classes
     def self.all_extensions
+      # DLM: consider calling Bundler.require in this method
+      # do not call Bundler.require when requiring this file, only when calling this method
       result = []
       ObjectSpace.each_object(::Class) do |obj|
         next if !obj.ancestors.include?(OpenStudio::Extension::Extension)
@@ -118,23 +100,7 @@ module OpenStudio
       end
       return result.uniq
     end
-
-    ##
-    # Module method to return measure resource directories from all extensions
-    ##
-    #  @return [Array]  Array of measure resource directories
-    def self.all_core_dirs
-      result = []
-      all_extensions.each do |obj|
-        begin
-          dir = obj.new.core_dir
-          result << dir if dir
-        rescue StandardError
-        end
-      end
-      return result.uniq
-    end
-
+    
     ##
     # Module method to return file directories from all extensions
     ##
@@ -150,7 +116,7 @@ module OpenStudio
       end
       return result.uniq
     end
-
+    
     ##
     # Module method to check for duplicate file, measure, or measure resource names across all extensions
     #
@@ -159,7 +125,6 @@ module OpenStudio
     ##
     def self.check_for_name_conflicts
       measure_dirs = all_measure_dirs
-      core_dirs = all_core_dirs
       file_dirs = all_file_dirs
       conflicts = []
 
@@ -179,21 +144,6 @@ module OpenStudio
         end
       end
 
-      core_dir_names = {}
-      core_dirs.each do |dir|
-        Dir.glob(File.join(dir, '*')).each do |file|
-          next if !File.file?(file)
-
-          # puts file
-          file_name = File.basename(file).downcase
-          if core_dir_names[file_name]
-            conflicts << "Measure resource '#{file}' conflicts with '#{core_dir_names[file_name]}'"
-          else
-            core_dir_names[file_name] = file
-          end
-        end
-      end
-
       file_names = {}
       file_dirs.each do |dir|
         Dir.glob(File.join(dir, '*')).each do |file|
@@ -201,7 +151,7 @@ module OpenStudio
 
           # puts file
           file_name = File.basename(file).downcase
-          if core_dir_names[file_name]
+          if file_names[file_name]
             conflicts << "File '#{file}' conflicts with '#{file_names[file_name]}'"
           else
             file_names[file_name] = file

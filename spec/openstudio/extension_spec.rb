@@ -27,6 +27,7 @@
 ########################################################################################################################
 
 RSpec.describe OpenStudio::Extension do
+
   it 'has a version number' do
     expect(OpenStudio::Extension::VERSION).not_to be nil
   end
@@ -39,8 +40,17 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exist?(measures_dir)).to be true
     expect(File.exist?(File.join(measures_dir, 'openstudio_extension_test_measure/measure.rb'))).to be true
   end
-
-  it 'has a measure resources directory' do
+  
+  it 'has a files directory' do
+    extension = OpenStudio::Extension::Extension.new
+    files_dir = extension.files_dir
+    expect(files_dir).not_to be nil
+    expect(File.directory?(files_dir)).to be true
+    expect(File.exist?(files_dir)).to be true
+    expect(File.exist?(File.join(files_dir, 'openstudio-extension-gem-test.epw'))).to be true
+  end
+  
+  it 'has a core directory' do
     extension = OpenStudio::Extension::Extension.new
     core_dir = extension.core_dir
     expect(core_dir).not_to be nil
@@ -49,22 +59,13 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exist?(File.join(core_dir, 'os_lib_helper_methods.rb'))).to be true
   end
 
-  it 'has a measure files directory' do
+  it 'has a doc templates directory' do
     extension = OpenStudio::Extension::Extension.new
-    measure_files_dir = extension.measure_files_dir
-    expect(measure_files_dir).not_to be nil
-    expect(File.directory?(measure_files_dir)).to be true
-    expect(File.exist?(measure_files_dir)).to be true
-    expect(File.exist?(File.join(measure_files_dir, 'LICENSE.md'))).to be true
-  end
-
-  it 'has a files directory' do
-    extension = OpenStudio::Extension::Extension.new
-    files_dir = extension.files_dir
-    expect(files_dir).not_to be nil
-    expect(File.directory?(files_dir)).to be true
-    expect(File.exist?(files_dir)).to be true
-    expect(File.exist?(File.join(files_dir, 'openstudio-extension-gem-test.epw'))).to be true
+    doc_templates_dir = extension.doc_templates_dir
+    expect(doc_templates_dir).not_to be nil
+    expect(File.directory?(doc_templates_dir)).to be true
+    expect(File.exist?(doc_templates_dir)).to be true
+    expect(File.exist?(File.join(doc_templates_dir, 'LICENSE.md'))).to be true
   end
 
   it 'has a root directory' do
@@ -80,11 +81,9 @@ RSpec.describe OpenStudio::Extension do
     expect(OpenStudio::Extension.check_for_name_conflicts).to be false
     expect(OpenStudio::Extension.all_extensions.size).to eq(1)
     expect(OpenStudio::Extension.all_measure_dirs.size).to eq(1)
-    expect(OpenStudio::Extension.all_core_dirs.size).to eq(1)
     expect(OpenStudio::Extension.all_file_dirs.size).to eq(1)
 
     expect(File.exist?(File.join(OpenStudio::Extension.all_measure_dirs[0], 'openstudio_extension_test_measure/measure.rb'))).to be true
-    expect(File.exist?(File.join(OpenStudio::Extension.all_core_dirs[0], 'os_lib_helper_methods.rb'))).to be true
     expect(File.exist?(File.join(OpenStudio::Extension.all_file_dirs, 'openstudio-extension-gem-test.epw'))).to be true
   end
 

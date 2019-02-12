@@ -309,29 +309,23 @@ module OpenStudio
 
       # Update measures by copying in the latest resource files from the Extension gem into
       # the measures' respective resources folders.
-      # measures_dir and all_core_dirs configured in rake_task
+      # measures_dir configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       #
       # @return [Boolean]
-      def copy_core_files(measures_dir, all_core_dirs)
+      def copy_core_files(measures_dir)
         puts 'Copying measure resources'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
           return false
-        elsif all_core_dirs.nil? || all_core_dirs.empty?
-          puts 'Measures resources dirs is nil or empty'
-          return false
         end
 
         result = false
-        puts 'Copying updated resource files from core directories to individual measures.'
+        puts 'Copying updated resource files from extension core directory to individual measures.'
         puts 'Only files that have actually been changed will be listed.'
 
-        # get all resource files relative to this file
-        resource_files = []
-        all_core_dirs.each do |resource_path|
-          resource_files.concat(Dir.glob(File.join(resource_path, '/*.*')))
-        end
+        # get all resource files in the core dir
+        resource_files = Dir.glob(File.join(core_dir, '/*.*'))
 
         # this is to accommodate a single measures dir (like most gems)
         # or a repo with multiple directories fo measures (like OpenStudio-measures)
@@ -360,22 +354,22 @@ module OpenStudio
       end
 
       # Update measures by adding license file
-      # measures_dir and measure_files_dir configured in rake_task
+      # measures_dir and doc_templates_dir configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       ##
       #  @return [Boolean]
-      def add_measure_license(measures_dir, measure_files_dir)
+      def add_measure_license(measures_dir, doc_templates_dir)
         puts 'Adding measure licenses'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
           return false
-        elsif measure_files_dir.nil? || measure_files_dir.empty?
-          puts 'Measures files dir is nil or empty'
+        elsif doc_templates_dir.nil? || doc_templates_dir.empty?
+          puts 'Doc templates dir is nil or empty'
           return false
         end
 
         result = false
-        license_file = File.join(measure_files_dir, 'LICENSE.md')
+        license_file = File.join(doc_templates_dir, 'LICENSE.md')
         puts "License file path: #{license_file}"
 
         raise "License file not found '#{license_file}'" if !File.exist?(license_file)
@@ -393,22 +387,22 @@ module OpenStudio
       end
 
       # Update measures by adding license file
-      # measures_dir and measure_files_dir configured in rake_task
+      # measures_dir and doc_templates_dir configured in rake_task
       # Returns true if the command completes successfully, false otherwise.
       ##
       #  @return [Boolean]
-      def add_measure_readme(measures_dir, measure_files_dir)
+      def add_measure_readme(measures_dir, doc_templates_dir)
         puts 'Adding measure readmes'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
           return false
-        elsif measure_files_dir.nil? || measure_files_dir.empty?
+        elsif doc_templates_dir.nil? || doc_templates_dir.empty?
           puts 'Measures files dir is nil or empty'
           return false
         end
 
         result = false
-        readme_file = File.join(measure_files_dir, 'README.md.erb')
+        readme_file = File.join(doc_templates_dir, 'README.md.erb')
         puts "Readme file path: #{readme_file}"
 
         raise "Readme file not found '#{readme_file}'" if !File.exist?(readme_file)
@@ -428,12 +422,12 @@ module OpenStudio
         return result
       end
 
-      def update_measure_copyright(measures_dir, measure_files_dir)
+      def update_measure_copyright(measures_dir, doc_templates_dir)
         puts 'Updating measure copyrights'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
           return false
-        elsif measure_files_dir.nil? || measure_files_dir.empty?
+        elsif doc_templates_dir.nil? || doc_templates_dir.empty?
           puts 'Measures files dir is nil or empty'
           return false
         end
@@ -442,7 +436,7 @@ module OpenStudio
         erb_regex = /^<%.*#.\*{79}.*#.\*{79}.%>$/m
         js_regex = /^\/\* @preserve.*Copyright.*license.{2}\*\//m
 
-        filename = File.join(measure_files_dir, 'copyright_ruby.txt')
+        filename = File.join(doc_templates_dir, 'copyright_ruby.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
         file = File.open(filename, 'r')
@@ -450,7 +444,7 @@ module OpenStudio
         file.close
         ruby_header_text.strip!
 
-        filename = File.join(measure_files_dir, 'copyright_erb.txt')
+        filename = File.join(doc_templates_dir, 'copyright_erb.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
         file = File.open(filename, 'r')
@@ -458,7 +452,7 @@ module OpenStudio
         file.close
         erb_header_text.strip!
 
-        filename = File.join(measure_files_dir, 'copyright_js.txt')
+        filename = File.join(doc_templates_dir, 'copyright_js.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
         file = File.open(filename, 'r')

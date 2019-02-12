@@ -34,7 +34,7 @@ require_relative '../extension'
 module OpenStudio
   module Extension
     class RakeTask < Rake::TaskLib
-      attr_accessor :name, :measures_dir, :core_dir, :measure_files_dir, :files_dir
+      attr_accessor :name, :measures_dir, :core_dir, :doc_templates_dir, :files_dir
 
       def initialize(*args, &task_block)
         @name = args.shift || :openstudio
@@ -47,7 +47,7 @@ module OpenStudio
         @extension = extension_class.new
         @measures_dir = @extension.measures_dir
         @core_dir = @extension.core_dir
-        @measure_files_dir = @extension.measure_files_dir
+        @doc_templates_dir = @extension.doc_templates_dir
         @files_dir = @extension.files_dir
       end
 
@@ -96,7 +96,7 @@ module OpenStudio
 
               puts 'Copying resource files from the core library to individual measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.copy_core_files(@measures_dir, OpenStudio::Extension.all_core_dirs)
+              runner.copy_core_files(@measures_dir)
             end
 
             desc 'Add License File to measures'
@@ -104,7 +104,7 @@ module OpenStudio
               # copy license file
               puts 'Adding license file to measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.add_measure_license(@measures_dir, @measure_files_dir)
+              runner.add_measure_license(@measures_dir, @doc_templates_dir)
             end
 
             desc 'Add README.md.erb file if it and README.md do not already exist for a measure'
@@ -115,7 +115,7 @@ module OpenStudio
               # copy README.md.erb file
               puts 'Adding license file to measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.add_measure_readme(@measures_dir, @measure_files_dir)
+              runner.add_measure_readme(@measures_dir, @doc_templates_dir)
             end
 
             desc 'Update copyright on measure files'
@@ -126,7 +126,7 @@ module OpenStudio
               # copy README.md.erb file
               puts 'Updating COPYRIGHT in measures files'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.update_measure_copyright(@measures_dir, @measure_files_dir)
+              runner.update_measure_copyright(@measures_dir, @doc_templates_dir)
             end
           end
 

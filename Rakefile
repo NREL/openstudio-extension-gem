@@ -44,10 +44,10 @@ task default: :spec
 desc 'Initialize a new gem'
 task :init_new_gem do
   puts 'Initializing a new extension gem'
-  puts "\n Enter the name of the new gem directory (ex: openstudio-something-gem. Should end with '-gem'):"
+  print "\n Enter the name of the new gem directory (ex: openstudio-something-gem. Should end with '-gem'): "
   gem_name = STDIN.gets.chomp
 
-  puts "\n Enter the path (full or relative to this repo) where you want the new gem directory to be created:"
+  print "\n Enter the path (full or relative to this repo) where you want the new gem directory to be created: "
   dir_path = STDIN.gets.chomp
 
   # check if directory already exists at path, if so error
@@ -62,7 +62,6 @@ task :init_new_gem do
 
   # copy file structure
   FileUtils.cp('.gitignore', full_dir_name + '/.gitignore')
-  FileUtils.cp_r(File.join(File.dirname(__FILE__), 'init_templates/template_rakefile.txt'), File.join(full_dir_name, 'Rakefile'))
   FileUtils.cp_r(File.join(File.dirname(__FILE__), 'init_templates/template_gemfile.txt'), File.join(full_dir_name, 'Gemfile'))
   FileUtils.cp_r(File.join(File.dirname(__FILE__), 'doc_templates'), full_dir_name)
 
@@ -75,6 +74,12 @@ task :init_new_gem do
   gem_name_underscores_no_os = gem_name_bare.gsub('openstudio-', '').gsub('openstudio', '').gsub('-', '_').gsub(' ', '_')
   gem_name_spaces = gem_name.split('-').map{ |word| word.capitalize }.join(' ')
   gem_class_name = gem_name_underscores_no_os.split('_').collect(&:capitalize).join
+
+  # Rewrite the rakefile template
+  text = File.read(File.join(File.dirname(__FILE__), 'init_templates/template_rakefile.txt'))
+  new_contents = text.gsub(/GEM_CLASS_NAME/, gem_class_name)
+  new_contents = new_contents.gsub(/GEM_NAME_UNDERSCORES/, gem_name_underscores_no_os)
+  File.open(File.join(full_dir_name, '/Rakefile'), "w") {|file| file.puts new_contents }
 
   # Rewrite README with gem-specific tokens and save
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/README.md'))
@@ -111,6 +116,4 @@ task :init_new_gem do
   new_contents = text.gsub(/GEM_CLASS_NAME/, gem_class_name)
   new_contents = new_contents.gsub(/GEM_NAME_UNDERSCORES/, gem_name_underscores_no_os)
   File.open(File.join(full_dir_name, 'lib', 'openstudio', "#{gem_name_underscores_no_os}.rb"), "w") {|file| file.puts new_contents }
-
 end
-

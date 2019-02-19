@@ -1,12 +1,15 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
-# Load in the rake tasks from the base openstudio-extension gem
-# Also set measures_dir location for this gem for openstudio-extension gem to use
-require "openstudio/extension/rake_task"
-os_extension = OpenStudio::Extension::RakeTask.new
-os_extension.set_measures_dir(File.join(File.expand_path(File.dirname(__FILE__)), 'lib/measures'))
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new
 
-task :default => :spec
+# Load in the rake tasks from the base openstudio-extension gem
+require 'openstudio/extension/rake_task'
+require 'openstudio/GEM_NAME_UNDERSCORES'
+os_extension = OpenStudio::Extension::RakeTask.new
+os_extension.set_extension_class(OpenStudio::GEM_CLASS_NAME::GEM_CLASS_NAME)
+
+task default: :spec

@@ -31,7 +31,36 @@ Each OpenStudio extension gem should define its own module name to ensure that t
 
 ## Installation
 
-To use this and other extension gems, you will need Ruby 2.2.4.  On mac, it is recommended that you install [rbenv](https://github.com/rbenv/rbenv) to easily manage difference versions of Ruby.
+To use this and other extension gems, you will need Ruby 2.2.4 and OpenStudio 2.7.1 or greater.  
+
+### Windows Installation
+Install Ruby using the [RubyInstaller](https://rubyinstaller.org/downloads/archives/) for [Ruby 2.2.4 (x64)](https://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.2.4-x64.exe).
+
+Install Dekit using the [mingw64](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe) installer.
+
+Check the ruby installation returns the correct Ruby version (2.2.4):
+```
+ruby -v
+```
+
+Install bundler from the command line
+```
+gem install bundler
+```
+
+Install OpenStudio.  Create a file ```C:\ruby-2.2.4-x64-mingw32\lib\ruby\site_ruby\openstudio.rb``` and point it to your OpenStudio installation by editing the contents.  E.g.:
+
+```ruby
+require 'C:\openstudio-2.7.1\Ruby\openstudio.rb'
+```
+
+Verify your OpenStudio and Ruby configuration:
+```
+ruby -e "require 'openstudio'" -e "puts OpenStudio::Model::Model.new"
+```
+
+### Mac Installation
+It is recommended that you install [rbenv](https://github.com/rbenv/rbenv) to easily manage difference versions of Ruby.
 rbenv can be installed view Homebrew:
 ```ruby
 brew install rbenv

@@ -45,7 +45,7 @@ ruby -v
 
 Install bundler from the command line
 ```
-gem install bundler
+gem install bundler -v 1.17
 ```
 
 Install OpenStudio.  Create a file ```C:\ruby-2.2.4-x64-mingw32\lib\ruby\site_ruby\openstudio.rb``` and point it to your OpenStudio installation by editing the contents.  E.g.:
@@ -70,8 +70,16 @@ rbenv install 2.2.4
 
 Also install bundler
 ```ruby
-gem install bundler
+gem install bundler -v 1.17
 ```
+
+Install [OpenStudio](https://www.openstudio.net/downloads).
+
+Add the RUBYLIB environment variable to your bash_profile file. It should point to the Ruby folder within the OpenStudio Application you just downloaded:
+```ruby
+export RUBYLIB=“/Applications/OpenStudio-2.7.2/Ruby”
+```
+
 
 ## Contents
 The OpenStudio Extension Gem (this repo) contains methods that can be shared across and extended by other derivative extension gems.
@@ -81,18 +89,30 @@ The OpenStudio Extension Gem (this repo) contains methods that can be shared acr
 Extension gem and the derivative extension gem should have the following directory structure:
 
 ├── doc_templates
+
 ├── init_templates
+
 ├── lib
+
 │       ├── data
+
 │       ├── files
+
 │       ├── measures
+
 │       └── openstudio
+
 │                         └── extension
+
 │                                       └── core
+
 └── spec
                        ├── files
+
                        └── openstudio
+   
                                     └── core
+
 `doc_templates` contains copyright and license file templates that can be copied and added to each measure.  
 The derivative extension gems should have their own doc_templates directory.
 

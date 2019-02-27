@@ -5,6 +5,7 @@ require 'open3'
 require 'openstudio'
 require 'yaml'
 require 'fileutils'
+require 'parallel'
 
 module OpenStudio
   module Extension

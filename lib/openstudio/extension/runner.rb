@@ -422,20 +422,27 @@ module OpenStudio
         result = true
         return result
       end
-
-      def update_measure_copyright(measures_dir, doc_templates_dir)
-        puts 'Updating measure copyrights'
-        if measures_dir.nil? || measures_dir.empty?
-          puts 'Measures dir is nil or empty'
+      
+      def update_copyright(root_dir, doc_templates_dir)
+      
+        if root_dir.nil? || root_dir.empty?
+          puts 'Root dir is nil or empty'
           return false
         elsif doc_templates_dir.nil? || doc_templates_dir.empty?
           puts 'Measures files dir is nil or empty'
           return false
         end
-
-        ruby_regex = /^#.\*{79}.*#.\*{79}$/m
-        erb_regex = /^<%.*#.\*{79}.*#.\*{79}.%>$/m
-        js_regex = /^\/\* @preserve.*Copyright.*license.{2}\*\//m
+        
+        if File.exist?(File.join(doc_templates_dir, 'LICENSE.md'))
+          if File.exist?(File.join(root_dir, 'LICENSE.md'))
+            puts "updating LICENSE.md in root dir"
+            FileUtils.cp(File.join(doc_templates_dir, 'LICENSE.md'), File.join(root_dir, 'LICENSE.md'))
+          end
+        end
+        
+        ruby_regex = /^\#\s?[\#\*]{12,}.*copyright.*\#\s?[\#\*]{12,}\s*$/mi
+        erb_regex = /^<%\s*\#\s?[\#\*]{12,}.*copyright.*\#\s?[\#\*]{12,}\s*%>$/mi 
+        js_regex = /^\/\* @preserve.*copyright.*license.{2}\*\//mi
 
         filename = File.join(doc_templates_dir, 'copyright_ruby.txt')
         puts "Copyright file path: #{filename}"
@@ -444,6 +451,7 @@ module OpenStudio
         ruby_header_text = file.read
         file.close
         ruby_header_text.strip!
+        ruby_header_text += "\n"
 
         filename = File.join(doc_templates_dir, 'copyright_erb.txt')
         puts "Copyright file path: #{filename}"
@@ -452,6 +460,7 @@ module OpenStudio
         erb_header_text = file.read
         file.close
         erb_header_text.strip!
+        erb_header_text += "\n"
 
         filename = File.join(doc_templates_dir, 'copyright_js.txt')
         puts "Copyright file path: #{filename}"
@@ -460,29 +469,19 @@ module OpenStudio
         js_header_text = file.read
         file.close
         js_header_text.strip!
-
-        # test if you're in a gem or in the OpenStudio-measures repo
-        # OpenStudio-measures can be nested in an extra directory if operating at root of repo vs. within a measures dir
-        measures = Dir["#{measures_dir}/**/measure.rb"]
-        measures_full_dir = File.join(measures_dir, '**')
-        if measures.empty?
-          # also try nested 2-deep to support openstudio-measures
-          measures = Dir["#{measures_dir}/**/**/measure.rb"]
-          if !measures.empty?
-            # update measures_full_dir
-            measures_full_dir = File.join(measures_dir, '**/**')
-          end
-        end
-
-        puts "Using measures full dir: #{measures_full_dir}"
+        js_header_text += "\n"
+        
+        raise "bad copyright_ruby.txt" if !(ruby_header_text =~ ruby_regex)
+        raise "bad copyright_erb.txt" if !(erb_header_text =~ erb_regex)
+        raise "bad copyright_js.txt" if !(js_header_text =~ js_regex)
 
         # look for .rb, .html.erb, and .js.erb
         paths = [
-          { glob: "#{measures_full_dir}/*.rb", license: ruby_header_text, regex: ruby_regex },
-          { glob: "#{measures_full_dir}/*.html.erb", license: erb_header_text, regex: erb_regex },
-          { glob: "#{measures_full_dir}/*.js.erb", license: js_header_text, regex: js_regex }
+          { glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex },
+          { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
+          { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
-
+        
         paths.each do |path|
           Dir[path[:glob]].each do |file|
             puts "Updating license in file #{file}"

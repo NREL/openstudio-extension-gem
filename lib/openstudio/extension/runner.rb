@@ -497,7 +497,7 @@ module OpenStudio
                 puts '  CANNOT add license to file automatically, add it manually and it will update automatically in the future'
                 next
               end
-              File.open(file, 'w') { |write| write << f.insert(0, path[:license] + "\n\n") }
+              File.open(file, 'w') { |write| write << f.insert(0, path[:license] + "\n") }
             end
           end
         end

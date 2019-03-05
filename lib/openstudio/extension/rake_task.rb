@@ -45,6 +45,7 @@ module OpenStudio
       def set_extension_class(extension_class)
         @extension_class = extension_class
         @extension = extension_class.new
+        @root_dir = @extension.root_dir
         @measures_dir = @extension.measures_dir
         @core_dir = @extension.core_dir
         @doc_templates_dir = @extension.doc_templates_dir
@@ -56,7 +57,7 @@ module OpenStudio
       def setup_subtasks(name)
         namespace name do
           desc 'Run the CLI task to check for measure updates'
-          task update_measures: ['measures:add_license', 'measures:add_readme', 'measures:copy_resources', 'measures:update_copyright'] do
+          task update_measures: ['measures:add_license', 'measures:add_readme', 'measures:copy_resources', 'update_copyright'] do
             puts 'updating measures...'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_measures(@measures_dir)
@@ -109,27 +110,22 @@ module OpenStudio
 
             desc 'Add README.md.erb file if it and README.md do not already exist for a measure'
             task :add_readme do
+              # copy README.md.erb file
               puts 'Adding README.md.erb to measures where it and README.md do not exist.'
               puts 'Only files that have actually been changed will be listed.'
-
-              # copy README.md.erb file
-              puts 'Adding license file to measures'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
               runner.add_measure_readme(@measures_dir, @doc_templates_dir)
             end
-
-            desc 'Update copyright on measure files'
-            task :update_copyright do
-              puts 'Adding README.md.erb to measures where it and README.md do not exist.'
-              puts 'Only files that have actually been changed will be listed.'
-
-              # copy README.md.erb file
-              puts 'Updating COPYRIGHT in measures files'
-              runner = OpenStudio::Extension::Runner.new(Dir.pwd)
-              runner.update_measure_copyright(@measures_dir, @doc_templates_dir)
-            end
           end
-
+        
+          desc 'Update copyright on files'
+          task :update_copyright do
+            # update copyright
+            puts 'Updating COPYRIGHT in files'
+            runner = OpenStudio::Extension::Runner.new(Dir.pwd)
+            runner.update_copyright(@root_dir, @doc_templates_dir)
+          end
+            
           desc 'Copy the measures to a location that can be uploaded to BCL'
           task :stage_bcl do
             puts 'Staging measures for BCL'

@@ -1,3 +1,4 @@
+# encoding: UTF-8
 ########################################################################################################################
 #  openstudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC. All rights reserved.
 #

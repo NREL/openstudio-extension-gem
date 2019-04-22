@@ -217,7 +217,7 @@ module OpenStudio
         puts 'Testing measures with CLI system call'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
-          return false
+          return true
         end
 
         puts "measures path: #{measures_dir}"
@@ -250,7 +250,7 @@ module OpenStudio
         puts 'Updating measures with CLI system call'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
-          return false
+          return true
         end
 
         result = true
@@ -289,7 +289,7 @@ module OpenStudio
         puts 'Listing measures'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
-          return false
+          return true
         end
 
         puts "measures path: #{measures_dir}"
@@ -318,7 +318,7 @@ module OpenStudio
         puts 'Copying measure resources'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
-          return false
+          return true
         end
 
         result = false
@@ -363,7 +363,7 @@ module OpenStudio
         puts 'Adding measure licenses'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
-          return false
+          return true
         elsif doc_templates_dir.nil? || doc_templates_dir.empty?
           puts 'Doc templates dir is nil or empty'
           return false
@@ -396,7 +396,7 @@ module OpenStudio
         puts 'Adding measure readmes'
         if measures_dir.nil? || measures_dir.empty?
           puts 'Measures dir is nil or empty'
-          return false
+          return true
         elsif doc_templates_dir.nil? || doc_templates_dir.empty?
           puts 'Measures files dir is nil or empty'
           return false

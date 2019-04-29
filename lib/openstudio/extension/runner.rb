@@ -440,8 +440,8 @@ module OpenStudio
           end
         end
         
-        ruby_regex = /^\#\s?[\#\*]{12,}.*copyright.*\#\s?[\#\*]{12,}\s*$/mi
-        erb_regex = /^<%\s*\#\s?[\#\*]{12,}.*copyright.*\#\s?[\#\*]{12,}\s*%>$/mi 
+        ruby_regex = /^\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*$/mi
+        erb_regex = /^<%\s*\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*%>$/mi 
         js_regex = /^\/\* @preserve.*copyright.*license.{2}\*\//mi
 
         filename = File.join(doc_templates_dir, 'copyright_ruby.txt')

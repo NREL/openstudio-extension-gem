@@ -227,7 +227,7 @@ module OsLib_HVAC
       # get the demand components and see if water use connection, then save it
       # notify user with info statement if supply side of plant loop had heat exchanger for refrigeration
       usedForSHWorRefrigeration = false
-      plantLoop.demandComponents.each do |comp| # AP code to check your comments above
+      plantloop.demandComponents.each do |comp| # AP code to check your comments above
         if comp.to_WaterUseConnections.is_initialized || comp.to_CoilWaterHeatingDesuperheater.is_initialized
           usedForSHWorRefrigeration = true
         end
@@ -235,7 +235,7 @@ module OsLib_HVAC
       if usedForSHWorRefrigeration == false
         plantloop.remove
       else
-        runner.registerWarning("#{plantLoop.name} is used for SHW or refrigeration heat reclaim.  Loop will not be deleted")
+        runner.registerWarning("#{plantloop.name} is used for SHW or refrigeration heat reclaim.  Loop will not be deleted")
       end
     end
   end

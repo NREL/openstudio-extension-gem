@@ -213,8 +213,9 @@ gem 'openstudio-extension'
 
 And then execute:
 
-    $ bundle
-
+    $ bundle install
+    $ bundle update
+    
 Or install it yourself as:
 
     $ gem install 'openstudio-extension'
@@ -224,7 +225,6 @@ Or install it yourself as:
 * Update change log
 * Update version in `/lib/openstudio/extension/version.rb`
 * Merge down to master
-* Release via github
 * run `rake release` from master  
 
 # TODO

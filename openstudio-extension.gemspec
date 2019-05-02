@@ -5,8 +5,8 @@ require 'openstudio/extension/version'
 Gem::Specification.new do |spec|
   spec.name          = 'openstudio-extension'
   spec.version       = OpenStudio::Extension::VERSION
-  spec.authors       = ['Nicholas Long', 'Dan Macumber']
-  spec.email         = ['nicholas.long@nrel.gov', 'daniel.macumber@nrel.gov']
+  spec.authors       = ['Katherine Fleming', 'Nicholas Long', 'Dan Macumber']
+  spec.email         = ['katherine.fleming@nrel.gov', 'nicholas.long@nrel.gov', 'daniel.macumber@nrel.gov']
   spec.platform      = Gem::Platform::RUBY
 
   spec.summary       = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'

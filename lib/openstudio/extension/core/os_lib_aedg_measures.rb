@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -58,10 +58,8 @@ module OsLib_AedgMeasures
 
     # expected climate zone number should be 1 through 8
     if !['1', '2', '3', '4', '5', '6', '7', '8'].include? climateZoneNumber
-      if !runner.nil?
-        runner.registerError('ASHRAE climate zone number is not within expected range of 1 to 8.')
-      end
-      return false # note - for this to work need to check for false in measure.rb and add return false there as well.
+      runner.registerWarning('ASHRAE climate zone number is not within expected range of 1 to 8.')
+      # return false # note - for this to work need to check for false in measure.rb and add return false there as well.
     end
 
     result = climateZoneNumber

@@ -49,12 +49,13 @@ module OpenStudio
     # The Runner class provides functionality to run various commands including calls to the OpenStudio CLI.
     #
     class Runner
+      attr_reader :gemfile_path, :bundle_install_path
       ##
       # When initialized with a directory containing a Gemfile, the Runner will attempt to create a bundle
       # compatible with the OpenStudio CLI.
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
-      def initialize(dirname = Dir.pwd)
+      def initialize(dirname = Dir.pwd, bundle_without = [])
         # DLM: I am not sure if we want to use the main root directory to create these bundles
         # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
 
@@ -63,7 +64,11 @@ module OpenStudio
         @gemfile_path = File.join(@dirname, 'Gemfile')
         @bundle_install_path = File.join(@dirname, '.bundle/install/')
         @original_dir = Dir.pwd
-
+        
+        @bundle_without = bundle_without
+        @bundle_without_string = bundle_without.join(' ')
+        puts "@bundle_without_string = '#{@bundle_without_string}'"
+        
         raise "#{@dirname} does not exist" if !File.exist?(@dirname)
         raise "#{@dirname} is not a directory" if !File.directory?(@dirname)
 
@@ -90,12 +95,16 @@ module OpenStudio
             needs_config = true
             if File.exist?('./.bundle/config')
               puts 'config exists'
+              needs_config = false
               config = YAML.load_file('./.bundle/config')
 
-              if config['BUNDLE_PATH'] == @bundle_install_path
-                # already been configured, might not be up to date
-                needs_config = false
+              if config['BUNDLE_PATH'] != @bundle_install_path
+                needs_config = true
               end
+              
+              #if config['BUNDLE_WITHOUT'] != @bundle_without_string
+              #  needs_config = true
+              #end
             end
 
             # check existing platform
@@ -112,6 +121,7 @@ module OpenStudio
             puts "needs_config = #{needs_config}"
             if needs_config
               run_command("bundle config --local path '#{@bundle_install_path}'", get_clean_env)
+              #run_command("bundle config --local without '#{@bundle_without_string}'", get_clean_env)
             end
 
             puts "needs_platform = #{needs_platform}"
@@ -163,6 +173,7 @@ module OpenStudio
         # if bundle_gemfile.nil? || bundle_path.nil?
         new_env['BUNDLE_GEMFILE'] = nil
         new_env['BUNDLE_PATH'] = nil
+        new_env['BUNDLE_WITHOUT'] = nil
         # else
         #  new_env['BUNDLE_GEMFILE'] = bundle_gemfile
         #  new_env['BUNDLE_PATH'] = bundle_path
@@ -262,7 +273,11 @@ module OpenStudio
 
         the_call = ''
         if @gemfile_path
-          the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -r '#{measures_dir}'"
+          if @bundle_without_string.empty?
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -r '#{measures_dir}'"
+          else
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -r '#{measures_dir}'"
+          end
         else
           the_call = "#{cli} --verbose measure -r #{measures_dir}"
         end
@@ -298,7 +313,11 @@ module OpenStudio
 
           the_call = ''
           if @gemfile_path
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{measures_dir}'"
+            if @bundle_without_string.empty?
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{measures_dir}'"
+            else
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -t '#{measures_dir}'"
+            end            
           else
             the_call = "#{cli} --verbose measure -t '#{measures_dir}'"
           end
@@ -582,7 +601,11 @@ module OpenStudio
 
         the_call = ''
         if @gemfile_path
-          the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          if @bundle_without_string.empty?
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          else
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          end               
         else
           the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
         end

@@ -71,49 +71,49 @@ task :init_new_gem do
 
   # Replacement tokens
   gem_name_bare = gem_name.gsub('-gem', '')
-  gem_name_underscores_no_os = gem_name_bare.gsub('openstudio-', '').gsub('openstudio', '').gsub('-', '_').gsub(' ', '_')
-  gem_name_spaces = gem_name.split('-').map{ |word| word.capitalize }.join(' ')
+  gem_name_underscores_no_os = gem_name_bare.gsub('openstudio-', '').gsub('openstudio', '').tr('-', '_').tr(' ', '_')
+  gem_name_spaces = gem_name.split('-').map(&:capitalize).join(' ')
   gem_class_name = gem_name_underscores_no_os.split('_').collect(&:capitalize).join
 
   # Rewrite the rakefile template
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/template_rakefile.txt'))
   new_contents = text.gsub(/GEM_CLASS_NAME/, gem_class_name)
   new_contents = new_contents.gsub(/GEM_NAME_UNDERSCORES/, gem_name_underscores_no_os)
-  File.open(File.join(full_dir_name, '/Rakefile'), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, '/Rakefile'), 'w') { |file| file.puts new_contents }
 
   # Rewrite README with gem-specific tokens and save
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/README.md'))
   new_contents = text.gsub(/GEM_NAME_SPACES/, gem_name_spaces)
   new_contents = new_contents.gsub(/GEM_NAME_BARE/, gem_name_bare)
-  File.open(File.join(full_dir_name, '/README.md'), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, '/README.md'), 'w') { |file| file.puts new_contents }
 
   # Rewrite gemspec
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/gemspec.txt'))
   new_contents = text.gsub(/GEM_NAME_UNDERSCORES/, gem_name_underscores_no_os)
   new_contents = new_contents.gsub(/GEM_NAME_BARE/, gem_name_bare)
   new_contents = new_contents.gsub(/GEM_CLASS_NAME/, gem_class_name)
-  File.open(File.join(full_dir_name, "#{gem_name_bare}.gemspec"), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, "#{gem_name_bare}.gemspec"), 'w') { |file| file.puts new_contents }
 
   # Rewrite spec and spec_helper with gem-specific tokens and save
   Dir.mkdir File.join(full_dir_name, 'spec')
   Dir.mkdir File.join(full_dir_name, 'spec/tests')
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/spec.rb'))
   new_contents = text.gsub(/GEM_CLASS_NAME/, gem_class_name)
-  File.open(File.join(full_dir_name, 'spec', 'tests', "#{gem_name_underscores_no_os}_spec.rb"), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, 'spec', 'tests', "#{gem_name_underscores_no_os}_spec.rb"), 'w') { |file| file.puts new_contents }
 
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/spec_helper.rb'))
   new_contents = text.gsub(/GEM_NAME_UNDERSCORES/, gem_name_underscores_no_os)
-  File.open(File.join(full_dir_name, 'spec', "spec_helper.rb"), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, 'spec', 'spec_helper.rb'), 'w') { |file| file.puts new_contents }
 
   # Stub out OpenStudio directory
   Dir.mkdir File.join(full_dir_name, 'lib/openstudio')
   Dir.mkdir File.join(full_dir_name, 'lib/openstudio', gem_name_underscores_no_os)
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/version.rb'))
   new_contents = text.gsub(/GEM_CLASS_NAME/, gem_class_name)
-  File.open(File.join(full_dir_name, 'lib', 'openstudio', gem_name_underscores_no_os, 'version.rb'), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, 'lib', 'openstudio', gem_name_underscores_no_os, 'version.rb'), 'w') { |file| file.puts new_contents }
 
   text = File.read(File.join(File.dirname(__FILE__), 'init_templates/openstudio_module.rb'))
   new_contents = text.gsub(/GEM_CLASS_NAME/, gem_class_name)
   new_contents = new_contents.gsub(/GEM_NAME_UNDERSCORES/, gem_name_underscores_no_os)
-  File.open(File.join(full_dir_name, 'lib', 'openstudio', "#{gem_name_underscores_no_os}.rb"), "w") {|file| file.puts new_contents }
+  File.open(File.join(full_dir_name, 'lib', 'openstudio', "#{gem_name_underscores_no_os}.rb"), 'w') { |file| file.puts new_contents }
 end

@@ -1,4 +1,4 @@
-# encoding: UTF-8
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -64,11 +64,11 @@ module OpenStudio
         @gemfile_path = File.join(@dirname, 'Gemfile')
         @bundle_install_path = File.join(@dirname, '.bundle/install/')
         @original_dir = Dir.pwd
-        
+
         @bundle_without = bundle_without
         @bundle_without_string = bundle_without.join(' ')
         puts "@bundle_without_string = '#{@bundle_without_string}'"
-        
+
         raise "#{@dirname} does not exist" if !File.exist?(@dirname)
         raise "#{@dirname} is not a directory" if !File.directory?(@dirname)
 
@@ -101,10 +101,10 @@ module OpenStudio
               if config['BUNDLE_PATH'] != @bundle_install_path
                 needs_config = true
               end
-              
-              #if config['BUNDLE_WITHOUT'] != @bundle_without_string
+
+              # if config['BUNDLE_WITHOUT'] != @bundle_without_string
               #  needs_config = true
-              #end
+              # end
             end
 
             # check existing platform
@@ -121,7 +121,7 @@ module OpenStudio
             puts "needs_config = #{needs_config}"
             if needs_config
               run_command("bundle config --local path '#{@bundle_install_path}'", get_clean_env)
-              #run_command("bundle config --local without '#{@bundle_without_string}'", get_clean_env)
+              # run_command("bundle config --local without '#{@bundle_without_string}'", get_clean_env)
             end
 
             puts "needs_platform = #{needs_platform}"
@@ -317,7 +317,7 @@ module OpenStudio
               the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{measures_dir}'"
             else
               the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -t '#{measures_dir}'"
-            end            
+            end
           else
             the_call = "#{cli} --verbose measure -t '#{measures_dir}'"
           end
@@ -477,9 +477,8 @@ module OpenStudio
         result = true
         return result
       end
-      
+
       def update_copyright(root_dir, doc_templates_dir)
-      
         if root_dir.nil? || root_dir.empty?
           puts 'Root dir is nil or empty'
           return false
@@ -487,16 +486,16 @@ module OpenStudio
           puts 'Doc templates dir is nil or empty'
           return false
         end
-        
+
         if File.exist?(File.join(doc_templates_dir, 'LICENSE.md'))
           if File.exist?(File.join(root_dir, 'LICENSE.md'))
-            puts "updating LICENSE.md in root dir"
+            puts 'updating LICENSE.md in root dir'
             FileUtils.cp(File.join(doc_templates_dir, 'LICENSE.md'), File.join(root_dir, 'LICENSE.md'))
           end
         end
-        
+
         ruby_regex = /^\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*$/mi
-        erb_regex = /^<%\s*\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*%>$/mi 
+        erb_regex = /^<%\s*\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*%>$/mi
         js_regex = /^\/\* @preserve.*copyright.*license.{2}\*\//mi
 
         filename = File.join(doc_templates_dir, 'copyright_ruby.txt')
@@ -525,10 +524,10 @@ module OpenStudio
         file.close
         js_header_text.strip!
         js_header_text += "\n"
-        
-        raise "bad copyright_ruby.txt" if !(ruby_header_text =~ ruby_regex)
-        raise "bad copyright_erb.txt" if !(erb_header_text =~ erb_regex)
-        raise "bad copyright_js.txt" if !(js_header_text =~ js_regex)
+
+        raise 'bad copyright_ruby.txt' if ruby_header_text !~ ruby_regex
+        raise 'bad copyright_erb.txt' if erb_header_text !~ erb_regex
+        raise 'bad copyright_js.txt' if js_header_text !~ js_regex
 
         # look for .rb, .html.erb, and .js.erb
         paths = [
@@ -536,10 +535,10 @@ module OpenStudio
           { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
           { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
-        
+
         puts "Encoding.default_external = #{Encoding.default_external}"
         puts "Encoding.default_internal = #{Encoding.default_internal}"
-        
+
         paths.each do |path|
           Dir[path[:glob]].each do |file|
             puts "Updating license in file #{file}"
@@ -605,7 +604,7 @@ module OpenStudio
             the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
           else
             the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
-          end               
+          end
         else
           the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
         end

@@ -192,7 +192,7 @@ module OpenStudio
 
       return in_osw
     end
-    
+
     ##
     # Module method used to set the measure argument for measure_dir_name to argument_value
     # argument_name must appear in the OSW or exception will be raised
@@ -200,7 +200,7 @@ module OpenStudio
     #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized
     #
     #  @return [Hash] Output OSW with measure argument set
-    # 
+    #
     def self.set_measure_argument(osw, measure_dir_name, argument_name, argument_value)
       result = false
       osw[:steps].each do |step|
@@ -209,12 +209,12 @@ module OpenStudio
           result = true
         end
       end
-      
+
       if !result
         raise "Could not set '#{argument_name}' to '#{argument_value}' for measure '#{measure_dir_name}'"
       end
 
       return osw
-    end    
+    end
   end
 end

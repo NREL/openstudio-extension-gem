@@ -124,7 +124,7 @@ module OpenStudio
               runner.add_measure_readme(@measures_dir, @doc_templates_dir)
             end
           end
-        
+
           desc 'Update copyright on files'
           task :update_copyright do
             # update copyright
@@ -132,7 +132,7 @@ module OpenStudio
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_copyright(@root_dir, @doc_templates_dir)
           end
-            
+
           desc 'Copy the measures to a location that can be uploaded to BCL'
           task :stage_bcl do
             puts 'Staging measures for BCL'

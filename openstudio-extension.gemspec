@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'openstudio-workflow'
   spec.add_dependency 'openstudio_measure_tester', '~> 0.1.7'
   spec.add_dependency 'parallel', '~> 1.12.0'
+  spec.add_dependency 'json_pure'
 end

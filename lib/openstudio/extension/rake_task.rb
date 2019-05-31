@@ -174,6 +174,28 @@ module OpenStudio
             end
           end
 
+          desc 'Download Measure'
+          task :download_measure do
+            puts "downloading a measure from BCL"
+            bcl = ::BCL::ComponentMethods.new
+            bcl.login
+
+            if ENV['bcl_download_uid']
+              uid = ENV['bcl_download_uid']
+            else
+              uid = '7c65af63-4316-47c9-b7a5-68d7a019e533'
+            end
+
+            content = bcl.download_component(uid)
+
+            # save as tar.gz
+            download_path = @files_dir + '/downloads'
+            FileUtils.mkdir(download_path) if !File.exists? download_path
+            f = File.open("#{download_path.to_s}/#{uid}.tar.gz", 'wb')
+            f.write(content)
+            puts "saving content to #{download_path}"
+          end
+
           desc 'Copy the measures to a location that can be uploaded to BCL'
           task :stage_bcl do
             puts 'Staging measures for BCL'

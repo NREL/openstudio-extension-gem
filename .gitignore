@@ -13,6 +13,8 @@
 /test/
 /lib/measures/test_results
 /lib/measures/.rubocop*
+/lib/measures/staged
+/lib/measures/staged/*
 
 # rspec failure tracking
 .rspec_status

@@ -4,3 +4,5 @@ source 'http://rubygems.org'
 gemspec
 
 gem 'simplecov', github: 'NREL/simplecov'
+
+gem 'bcl', :path => '../bcl-gem'

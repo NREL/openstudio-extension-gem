@@ -42,6 +42,7 @@ require 'openstudio'
 require 'yaml'
 require 'fileutils'
 require 'parallel'
+require 'bcl'
 
 module OpenStudio
   module Extension

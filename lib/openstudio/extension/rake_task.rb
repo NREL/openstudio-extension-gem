@@ -67,14 +67,14 @@ module OpenStudio
         namespace name do
           desc 'Run the CLI task to check for measure updates'
           task update_measures: ['measures:add_license', 'measures:add_readme', 'measures:copy_resources', 'update_copyright'] do
-            puts 'updating measures...'
+            puts 'updating measures'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_measures(@measures_dir)
           end
 
           desc 'List measures'
           task :list_measures do
-            puts 'Listing measures...'
+            puts 'Listing measures'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.list_measures(@measures_dir)
           end
@@ -143,6 +143,34 @@ module OpenStudio
             puts 'Updating COPYRIGHT in files'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_copyright(@root_dir, @doc_templates_dir)
+          end
+            
+          desc 'Test BCL login'
+          task :test_bcl_login do
+            puts "test BCL login"
+            bcl = ::BCL::ComponentMethods.new
+            bcl.login
+          end
+
+          desc 'Search BCL'
+          task :search_bcl_measures do
+            puts "test search BCL"
+            bcl = ::BCL::ComponentMethods.new
+            bcl.login
+            # check for env var specifying keyword first
+            if ENV['bcl_search_keyword']
+              keyword = ENV['bcl_search_keyword']
+            else
+              keyword = 'Space'
+            end
+            num_results = 10
+            # bcl.search params: search_string, filter_string, return_all_results?
+            puts "searching BCL measures for keyword: #{keyword}"
+            results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
+            puts "there are #{results[:result].count} results"
+            results[:result].each do |res|
+             puts (res[:measure][:name]).to_s
+            end
           end
 
           desc 'Copy the measures to a location that can be uploaded to BCL'

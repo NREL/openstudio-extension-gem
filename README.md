@@ -180,7 +180,7 @@ The OpenStudio-extension gem can be used to easily initialize a new derivative e
 
 * First, call the rake task:
     ```ruby
-    bundle exec rake init-new-gem
+    bundle exec rake init_new_gem
     ```
     * Enter the name of the gem repository (use dashes between words and the repo name should end with '-gem')
     * Enter the location of the directory where the gem directory should be created

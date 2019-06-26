@@ -388,14 +388,22 @@ module OsLib_CreateResults
         end
       end
 
+      # Get the electricity timeseries to determine the year used
+      elec = @sql.timeSeries(ann_env_pd, 'Zone Timestep', 'Electricity:Facility', '')
+      timeseries_yr = nil
+      if elec.is_initialized
+        timeseries_yr = elec.get.dateTimes[0].date.year
+      else
+        @runner.registerError('Peak Demand timeseries (Electricity:Facility at zone timestep) could not be found, cannot determine the informatino needed to calculate savings or incentives.')
+      end
       # Setup the peak demand time window based on input arguments.
       # Note that holidays and weekends are not excluded because
       # of a bug in EnergyPlus dates.
       # This will only impact corner-case buildings that have
       # peak demand on weekends or holidays, which is unusual.
       @runner.registerInfo("Peak Demand window is #{start_mo} #{start_day} to #{end_mo} #{end_day} from #{start_hr}:00 to #{end_hr}:00.")
-      start_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_mo), start_day), OpenStudio::Time.new(0, 0, 0, 0))
-      end_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_mo), end_day), OpenStudio::Time.new(0, 24, 0, 0))
+      start_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(start_mo), start_day, timeseries_yr), OpenStudio::Time.new(0, 0, 0, 0))
+      end_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(end_mo), end_day, timeseries_yr), OpenStudio::Time.new(0, 24, 0, 0))
       start_time = OpenStudio::Time.new(0, start_hr, 0, 0)
       end_time = OpenStudio::Time.new(0, end_hr, 0, 0)
 
@@ -416,7 +424,6 @@ module OsLib_CreateResults
       # electricity_peak_demand
       electricity_peak_demand = -1.0
       electricity_peak_demand_time = nil
-      elec = @sql.timeSeries(ann_env_pd, 'Zone Timestep', 'Electricity:Facility', '')
       # deduce the timestep based on the hours simulated and the number of datapoints in the timeseries
       if elec.is_initialized && day_types
         elec = elec.get

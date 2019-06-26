@@ -1001,7 +1001,7 @@ module OsLib_Reporting
       data_arrays << [setpoint.iddObject.name, 'Reset', desc, '', '']
 
     when 'OS:SetpointManager:Warmest'
-      setpoint = component.to_SetpointManagerWarmest
+      setpoint = component.to_SetpointManagerWarmest.get
       source_units = 'C'
       if is_ip_units
         target_units = 'F'
@@ -1009,12 +1009,12 @@ module OsLib_Reporting
         target_units = source_units
       end
       min_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, source_units, target_units).get.round(1)
-      max_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, source_units, target_units).get.round(1)
+      max_sat_f = OpenStudio.convert(setpoint.maximumSetpointTemperature, source_units, target_units).get.round(1)
       desc = "#{min_sat_f} #{target_units} to #{max_sat_f.round} #{target_units}"
       data_arrays << [setpoint.iddObject.name, 'Reset SAT per Worst Zone', desc, '', '']
 
     when 'OS:SetpointManager:WarmestTemperatureFlow'
-      setpoint = component.to_SetpointManagerWarmestTemperatureFlow
+      setpoint = component.to_SetpointManagerWarmestTemperatureFlow.get
       source_units = 'C'
       if is_ip_units
         target_units = 'F'
@@ -1022,7 +1022,7 @@ module OsLib_Reporting
         target_units = source_units
       end
       min_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, source_units, target_units).get.round(1)
-      max_sat_f = OpenStudio.convert(setpoint.minimumSetpointTemperature, source_units, target_units).get.round(1)
+      max_sat_f = OpenStudio.convert(setpoint.maximumSetpointTemperature, source_units, target_units).get.round(1)
       desc = "#{min_sat_f} #{target_units} to #{max_sat_f.round} #{target_units}, #{setpoint.strategy}"
       data_arrays << [setpoint.iddObject.name, 'Reset SAT & Flow per Worst Zone', desc, '', '']
     end
@@ -1899,7 +1899,7 @@ module OsLib_Reporting
     table = {}
     table[:title] = 'Exterior Lighting'
     table[:header] = columns
-    table[:source_units] = ['', 'W', '', '', 'kWh'] # used for conversion, not needed for rendering.
+    table[:source_units] = ['', 'W', '', '', 'GJ'] # used for conversion, not needed for rendering.
     table[:units] = ['', 'W', '', '', 'kWh']
     table[:data] = []
 
@@ -3383,17 +3383,17 @@ module OsLib_Reporting
             if is_ip_units
               ee_power = elec_equip.powerPerFloorArea.to_f * 0.092903 # IP
               ee_power = "#{ee_power.round(2)} (W/ft^2)"
-              ee_total_power = ((elec_equip.powerPerFloorArea.to_f * space.floorArea) * 0.092903) * elec_equip.multiplier
+              ee_total_power = ((elec_equip.powerPerFloorArea.to_f * space.floorArea))
             else
               ee_power = elec_equip.powerPerFloorArea.to_f
               ee_power = "#{ee_power.round(2)} (W/m^2)"
-              ee_total_power = ((elec_equip.powerPerFloorArea.to_f * space.floorArea)) * elec_equip.multiplier
+              ee_total_power = ((elec_equip.powerPerFloorArea.to_f * space.floorArea))
             end
           end
 
           if elec_equip.electricEquipmentDefinition.designLevelCalculationMethod == 'Watts/Person'
             ee_power = "#{elec_equip.powerPerPerson.to_f.round(2)} (W/person)"
-            ee_total_power = (elec_equip.powerPerPerson.to_f * space.numberOfPeople) * elec_equip.multiplier
+            ee_total_power = (elec_equip.powerPerPerson.to_f * space.numberOfPeople)
           end
 
           if elec_equip.electricEquipmentDefinition.designLevelCalculationMethod == 'EquipmentLevel'

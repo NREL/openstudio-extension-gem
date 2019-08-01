@@ -163,10 +163,7 @@ module OpenStudio
       end
 
       if !conflicts.empty?
-        conflicts.each do |conflict|
-          puts conflict
-        end
-        raise 'Conflicting file names found'
+        raise "Conflicting file names found: [#{conflicts.join(', ')}]"
       end
 
       return false

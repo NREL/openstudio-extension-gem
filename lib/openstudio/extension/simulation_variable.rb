@@ -34,7 +34,7 @@
 # *******************************************************************************
 
 module OpenStudio
-  module Variables
+  module Extension
     # max number of datapoints to run
     MAX_DATAPOINTS = Float::INFINITY
 

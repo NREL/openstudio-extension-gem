@@ -41,6 +41,24 @@ module OpenStudio
     class Extension
       attr_accessor :root_dir
 
+      # max number of datapoints to run
+      MAX_DATAPOINTS = Float::INFINITY
+
+      # number of parallel jobs
+      NUM_PARALLEL = 7
+
+      # do simulations
+      DO_SIMULATIONS = false
+
+      # specify to run the baseline simulation only or not
+      SIMULATE_BASELINE_ONLY = false
+
+      # specify to include the model calibration or not
+      DO_MODEL_CALIBRATION = false
+
+      # collect results
+      DO_GET_RESULTS = false
+
       def initialize
         @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end

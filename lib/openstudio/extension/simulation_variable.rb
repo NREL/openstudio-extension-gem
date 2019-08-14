@@ -35,22 +35,6 @@
 
 module OpenStudio
   module Extension
-    # max number of datapoints to run
-    MAX_DATAPOINTS = Float::INFINITY
 
-    # number of parallel jobs
-    NUM_PARALLEL = 7
-
-    # do simulations
-    DO_SIMULATIONS = false.freeze
-
-    # specify to run the baseline simulation only or not
-    SIMULATE_BASELINE_ONLY = false
-
-    # specify to include the model calibration or not
-    DO_MODEL_CALIBRATION = false
-
-    # collect results
-    DO_GET_RESULTS = false
   end
 end

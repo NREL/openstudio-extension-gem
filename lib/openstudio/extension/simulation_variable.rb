@@ -42,7 +42,7 @@ module OpenStudio
     NUM_PARALLEL = 7
 
     # do simulations
-    DO_SIMULATIONS = false
+    DO_SIMULATIONS = false.freeze
 
     # specify to run the baseline simulation only or not
     SIMULATE_BASELINE_ONLY = false

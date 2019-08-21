@@ -164,8 +164,6 @@ module OpenStudio
 
       if !conflicts.empty?
         raise "Conflicting file names found: #{conflicts.join(', ')}"
-        end
-        raise 'Conflicting file names found'
       end
 
       return false

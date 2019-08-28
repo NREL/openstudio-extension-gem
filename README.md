@@ -61,22 +61,22 @@ ruby -e "require 'openstudio'" -e "puts OpenStudio::Model::Model.new"
 
 ### Mac Installation
 It is recommended that you install [rbenv](https://github.com/rbenv/rbenv) to easily manage difference versions of Ruby.
-rbenv can be installed view Homebrew:
-```ruby
+rbenv can be installed via [Homebrew](https://brew.sh/):
+```
 brew install rbenv
 rbenv init
 rbenv install 2.2.4
 ```
 
 Also install bundler
-```ruby
+```
 gem install bundler -v 1.17
 ```
 
 Install [OpenStudio](https://www.openstudio.net/downloads).
 
-Add the RUBYLIB environment variable to your bash_profile file. It should point to the Ruby folder within the OpenStudio Application you just downloaded:
-```ruby
+Add the RUBYLIB environment variable to your `bash_profile` (or similar) file. It should point to the Ruby folder within the OpenStudio Application you just downloaded:
+```
 export RUBYLIB=“/Applications/OpenStudio-2.7.2/Ruby”
 ```
 

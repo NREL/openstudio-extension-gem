@@ -36,7 +36,7 @@ To use this and other extension gems, you will need Ruby 2.2.4 and OpenStudio 2.
 ### Windows Installation
 Install Ruby using the [RubyInstaller](https://rubyinstaller.org/downloads/archives/) for [Ruby 2.2.4 (x64)](https://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.2.4-x64.exe).
 
-Install Dekit using the [mingw64](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe) installer.
+Install Devkit using the [mingw64](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe) installer.
 
 Check the ruby installation returns the correct Ruby version (2.2.4):
 ```

@@ -77,7 +77,7 @@ Install [OpenStudio](https://www.openstudio.net/downloads).
 
 Add the RUBYLIB environment variable to your `bash_profile` (or similar) file. It should point to the Ruby folder within the OpenStudio Application you just downloaded:
 ```
-export RUBYLIB=“/Applications/OpenStudio-2.7.2/Ruby”
+export RUBYLIB=/Applications/OpenStudio-2.7.2/Ruby
 ```
 
 

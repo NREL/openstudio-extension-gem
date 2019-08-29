@@ -75,7 +75,7 @@ gem install bundler -v 1.17
 
 Install [OpenStudio](https://www.openstudio.net/downloads).
 
-Add the RUBYLIB environment variable to your `bash_profile` (or similar) file. It should point to the Ruby folder within the OpenStudio Application you just downloaded:
+Add the RUBYLIB environment variable to your `bash_profile` (or similar) file. It should point to the Ruby folder within the OpenStudio Application you just downloaded (replace 2.7.2 with the version you are using):
 ```
 export RUBYLIB=/Applications/OpenStudio-2.7.2/Ruby
 ```

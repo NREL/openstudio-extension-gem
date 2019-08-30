@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+
+gem 'openstudio-extension', path: '../../../../openstudio-extension-gem'
+
+gem 'rest-client', '2.1.0'
+gem 'rest-client', '1.9.1'
+  
+gem 'simplecov', github: 'NREL/simplecov'

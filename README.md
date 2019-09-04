@@ -36,7 +36,7 @@ To use this and other extension gems, you will need Ruby 2.2.4 and OpenStudio 2.
 ### Windows Installation
 Install Ruby using the [RubyInstaller](https://rubyinstaller.org/downloads/archives/) for [Ruby 2.2.4 (x64)](https://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.2.4-x64.exe).
 
-Install Dekit using the [mingw64](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe) installer.
+Install Devkit using the [mingw64](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe) installer.
 
 Check the ruby installation returns the correct Ruby version (2.2.4):
 ```
@@ -61,23 +61,23 @@ ruby -e "require 'openstudio'" -e "puts OpenStudio::Model::Model.new"
 
 ### Mac Installation
 It is recommended that you install [rbenv](https://github.com/rbenv/rbenv) to easily manage difference versions of Ruby.
-rbenv can be installed view Homebrew:
-```ruby
+rbenv can be installed via [Homebrew](https://brew.sh/):
+```
 brew install rbenv
 rbenv init
 rbenv install 2.2.4
 ```
 
 Also install bundler
-```ruby
+```
 gem install bundler -v 1.17
 ```
 
 Install [OpenStudio](https://www.openstudio.net/downloads).
 
-Add the RUBYLIB environment variable to your bash_profile file. It should point to the Ruby folder within the OpenStudio Application you just downloaded:
-```ruby
-export RUBYLIB=“/Applications/OpenStudio-2.7.2/Ruby”
+Add the RUBYLIB environment variable to your `bash_profile` (or similar) file. It should point to the Ruby folder within the OpenStudio Application you just downloaded (replace 2.7.2 with the version you are using):
+```
+export RUBYLIB=/Applications/OpenStudio-2.7.2/Ruby
 ```
 
 
@@ -180,7 +180,7 @@ The OpenStudio-extension gem can be used to easily initialize a new derivative e
 
 * First, call the rake task:
     ```ruby
-    bundle exec rake init-new-gem
+    bundle exec rake init_new_gem
     ```
     * Enter the name of the gem repository (use dashes between words and the repo name should end with '-gem')
     * Enter the location of the directory where the gem directory should be created

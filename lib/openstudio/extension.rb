@@ -163,10 +163,7 @@ module OpenStudio
       end
 
       if !conflicts.empty?
-        conflicts.each do |conflict|
-          puts conflict
-        end
-        raise 'Conflicting file names found'
+        raise "Conflicting file names found: #{conflicts.join(', ')}"
       end
 
       return false
@@ -194,24 +191,36 @@ module OpenStudio
     end
 
     ##
-    # Module method used to set the measure argument for measure_dir_name to argument_value
-    # argument_name must appear in the OSW or exception will be raised
+    # Module method used to set the measure argument for measure_dir_name to argument_value,
+    # argument_name must appear in the OSW or exception will be raised.  If step_name is nil
+    # then all workflow steps matching measure_dir_name will be affected.  If step_name is 
+    # not nil, then only workflow steps matching measure_dir_name and step_name will be affected.
     ##
     #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized
+    #  @param [String] measure_dir_name Directory name of measure to set argument on
+    #  @param [String] argument_name Name of the argument to set
+    #  @param [String] argument_value Value to set the argument name to
+    #  @param [String] step_name Optional argument, if present used to select workflow step to modify
     #
-    #  @return [Hash] Output OSW with measure argument set
+    #  @return [Hash] Output OSW with measure argument set to argument value
     #
-    def self.set_measure_argument(osw, measure_dir_name, argument_name, argument_value)
+    def self.set_measure_argument(osw, measure_dir_name, argument_name, argument_value, step_name = nil)
       result = false
       osw[:steps].each do |step|
         if step[:measure_dir_name] == measure_dir_name
-          step[:arguments][argument_name.to_sym] = argument_value
-          result = true
+          if step_name.nil? || step[:name] == step_name
+            step[:arguments][argument_name.to_sym] = argument_value
+            result = true
+          end
         end
       end
 
       if !result
-        raise "Could not set '#{argument_name}' to '#{argument_value}' for measure '#{measure_dir_name}'"
+        if step_name
+          raise "Could not set '#{argument_name}' to '#{argument_value}' for measure '#{measure_dir_name}' in step '#{step_name}'"
+        else
+          raise "Could not set '#{argument_name}' to '#{argument_value}' for measure '#{measure_dir_name}'"
+        end
       end
 
       return osw

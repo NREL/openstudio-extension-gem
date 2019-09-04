@@ -590,31 +590,35 @@ module OpenStudio
           file.puts JSON.pretty_generate(osw)
         end
 
-        cli = OpenStudio.getOpenStudioCLI
-        out_log = run_osw_path + '.log'
-        if Gem.win_platform?
-          # out_log = "nul"
-        else
-          # out_log = "/dev/null"
-        end
-
-        the_call = ''
-        if @gemfile_path
-          if @bundle_without_string.empty?
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+        if Extension::DO_SIMULATIONS
+          cli = OpenStudio.getOpenStudioCLI
+          out_log = run_osw_path + '.log'
+          if Gem.win_platform?
+            # out_log = "nul"
           else
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            # out_log = "/dev/null"
           end
-        else
-          the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
-        end
 
-        puts 'SYSTEM CALL:'
-        puts the_call
-        STDOUT.flush
-        result = run_command(the_call, get_clean_env)
-        puts "DONE, result = #{result}"
-        STDOUT.flush
+          the_call = ''
+          if @gemfile_path
+            if @bundle_without_string.empty?
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            else
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            end
+          else
+            the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          end
+
+          puts 'SYSTEM CALL:'
+          puts the_call
+          STDOUT.flush
+          result = run_command(the_call, get_clean_env)
+          puts "DONE, result = #{result}"
+          STDOUT.flush
+        else
+          puts 'simulations are not performed, since to the DO_SIMULATIONS constant is set to false'
+        end
 
         # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
 

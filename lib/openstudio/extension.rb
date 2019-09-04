@@ -50,15 +50,6 @@ module OpenStudio
       # do simulations
       DO_SIMULATIONS = false
 
-      # specify to run the baseline simulation only or not
-      # SIMULATE_BASELINE_ONLY = false
-
-      # specify to include the model calibration or not
-      # DO_MODEL_CALIBRATION = false
-
-      # collect results
-      # DO_GET_RESULTS = false
-
       def initialize
         @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end

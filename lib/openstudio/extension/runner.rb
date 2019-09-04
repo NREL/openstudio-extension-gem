@@ -622,7 +622,7 @@ module OpenStudio
       end
 
       # run osws, return any failure messages
-      def run_osws(osw_files, num_parallel = 1, max_to_run = Float::INFINITY)
+      def run_osws(osw_files, num_parallel = NUM_PARALLEL, max_to_run = MAX_DATAPOINTS)
         failures = []
 
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)

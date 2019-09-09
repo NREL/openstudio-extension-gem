@@ -50,6 +50,9 @@ module OpenStudio
       # do simulations
       DO_SIMULATIONS = false
 
+      # do simulations
+      VERBOSE = false
+
       def initialize
         @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end

@@ -600,14 +600,18 @@ module OpenStudio
           end
 
           the_call = ''
+          verbose_string = ''
+          if Extension::VERBOSE
+            verbose_string = ' --verbose'
+          end
           if @gemfile_path
             if @bundle_without_string.empty?
-              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+              the_call = "#{cli}#{verbose} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
             else
-              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+              the_call = "#{cli}#{verbose} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
             end
           else
-            the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            the_call = "#{cli}#{verbose} run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
           end
 
           puts 'SYSTEM CALL:'

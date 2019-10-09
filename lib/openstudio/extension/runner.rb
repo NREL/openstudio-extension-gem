@@ -590,31 +590,39 @@ module OpenStudio
           file.puts JSON.pretty_generate(osw)
         end
 
-        cli = OpenStudio.getOpenStudioCLI
-        out_log = run_osw_path + '.log'
-        if Gem.win_platform?
-          # out_log = "nul"
-        else
-          # out_log = "/dev/null"
-        end
-
-        the_call = ''
-        if @gemfile_path
-          if @bundle_without_string.empty?
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+        if Extension::DO_SIMULATIONS
+          cli = OpenStudio.getOpenStudioCLI
+          out_log = run_osw_path + '.log'
+          if Gem.win_platform?
+            # out_log = "nul"
           else
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            # out_log = "/dev/null"
           end
-        else
-          the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
-        end
 
-        puts 'SYSTEM CALL:'
-        puts the_call
-        STDOUT.flush
-        result = run_command(the_call, get_clean_env)
-        puts "DONE, result = #{result}"
-        STDOUT.flush
+          the_call = ''
+          verbose_string = ''
+          if Extension::VERBOSE
+            verbose_string = ' --verbose'
+          end
+          if @gemfile_path
+            if @bundle_without_string.empty?
+              the_call = "#{cli}#{verbose_string} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            else
+              the_call = "#{cli}#{verbose_string} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            end
+          else
+            the_call = "#{cli}#{verbose_string} run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          end
+
+          puts 'SYSTEM CALL:'
+          puts the_call
+          STDOUT.flush
+          result = run_command(the_call, get_clean_env)
+          puts "DONE, result = #{result}"
+          STDOUT.flush
+        else
+          puts 'simulations are not performed, since to the DO_SIMULATIONS constant is set to false'
+        end
 
         # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
 
@@ -622,7 +630,7 @@ module OpenStudio
       end
 
       # run osws, return any failure messages
-      def run_osws(osw_files, num_parallel = 1, max_to_run = Float::INFINITY)
+      def run_osws(osw_files, num_parallel = Extension::NUM_PARALLEL, max_to_run = Extension::MAX_DATAPOINTS)
         failures = []
 
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)

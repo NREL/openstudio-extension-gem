@@ -41,6 +41,18 @@ module OpenStudio
     class Extension
       attr_accessor :root_dir
 
+      # max number of datapoints to run
+      MAX_DATAPOINTS = Float::INFINITY
+
+      # number of parallel jobs
+      NUM_PARALLEL = 7
+
+      # do simulations
+      DO_SIMULATIONS = false
+
+      # do simulations
+      VERBOSE = false
+
       def initialize
         @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end

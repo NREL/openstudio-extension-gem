@@ -38,6 +38,18 @@ RSpec.describe OpenStudio::Extension do
     expect(OpenStudio::Extension::VERSION).not_to be nil
   end
 
+  it 'has a max datapoint constant' do
+    expect(OpenStudio::Extension::Extension::MAX_DATAPOINTS).not_to be nil
+  end
+
+  it 'has a num parallel constant' do
+    expect(OpenStudio::Extension::Extension::NUM_PARALLEL).not_to be nil
+  end
+
+  it 'has a do simulations constant' do
+    expect(OpenStudio::Extension::Extension::DO_SIMULATIONS).not_to be nil
+  end
+
   it 'has a measures directory' do
     extension = OpenStudio::Extension::Extension.new
     measures_dir = extension.measures_dir

@@ -35,6 +35,7 @@
 
 require 'openstudio/extension/version'
 require 'openstudio/extension/runner'
+require 'openstudio/extension/runner_config'
 
 module OpenStudio
   module Extension

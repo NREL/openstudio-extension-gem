@@ -65,13 +65,15 @@ module OpenStudio
         # DLM: I am not sure if we want to use the main root directory to create these bundles
         # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
 
-        # override the default options with the passed options
-        @options = {
-          max_datapoints: Float::INFINITY,
-          num_parallel: 1, # current default is 7, but seems like we should allow the user to define this
-          run_simulations: false,
-          verbose: false
-        }.merge(options)
+        # if the dirname contains a runner.conf file, then use the config file to specify the parameters
+        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && !options
+          puts 'Using runner options from runner.conf file'
+          runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
+          @options = runner_config.options
+        else
+          # use the passed values or defaults overriden by passed options
+          @options = OpenStudio::Extension::RunnerConfig.default_config.merge(options)
+        end
 
         puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
         @dirname = File.absolute_path(dirname)
@@ -650,6 +652,7 @@ module OpenStudio
       def run_osws(osw_files, num_parallel = @options[:num_parallel], max_to_run = @options[:max_datapoints])
         failures = []
 
+        puts "Max to run is #{max_to_run}"
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)
 
         Parallel.each(osw_files, in_threads: num_parallel) do |osw|

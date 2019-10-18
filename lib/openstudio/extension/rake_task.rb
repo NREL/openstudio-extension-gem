@@ -126,6 +126,15 @@ module OpenStudio
             end
           end
 
+          # namespace for anything runner related
+          namespace 'runner' do
+            desc 'Initialize a local runner.conf file to set custom runner parameters'
+            task :init do
+              puts 'Creating runner.conf'
+              OpenStudio::Extension::RunnerConfig.init(Dir.pwd)
+            end
+          end
+
           desc 'Update copyright on files'
           task :update_copyright do
             # update copyright

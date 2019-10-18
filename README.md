@@ -229,7 +229,7 @@ Or install it yourself as:
 
 # TODO
 
-- [ ] Finalize documentation on naming conventions, etc
+- [X] Finalize documentation on naming conventions, etc
 - [X] Add test measure
 - [X] Rake task ```openstudio:update_measures```
 - [X] Rake task ```openstudio:test_with_openstudio```

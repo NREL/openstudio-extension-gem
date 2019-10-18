@@ -67,10 +67,10 @@ module OpenStudio
 
         # override the default options with the passed options
         @options = {
-            max_datapoints: Float::INFINITY,
-            num_parallel: 1, # current default is 7, but seems like we should allow the user to define this
-            run_simulations: false,
-            verbose: false
+          max_datapoints: Float::INFINITY,
+          num_parallel: 1, # current default is 7, but seems like we should allow the user to define this
+          run_simulations: false,
+          verbose: false
         }.merge(options)
 
         puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
@@ -79,7 +79,7 @@ module OpenStudio
         @bundle_install_path = File.join(@dirname, '.bundle/install/')
         @original_dir = Dir.pwd
 
-        @bundle_without = bundle_without ? bundle_without : []
+        @bundle_without = bundle_without || []
         @bundle_without_string = @bundle_without.join(' ')
         puts "@bundle_without_string = '#{@bundle_without_string}'"
 
@@ -413,6 +413,7 @@ module OpenStudio
           measures.each do |measure|
             next unless File.basename(measure) == File.basename(resource_file)
             next if FileUtils.identical?(resource_file, File.path(measure))
+
             puts "Replacing #{measure} with #{resource_file}."
             FileUtils.cp(resource_file, File.path(measure))
           end
@@ -484,6 +485,7 @@ module OpenStudio
         measures.each do |measure|
           next if File.exist?("#{File.dirname(measure)}/README.md.erb")
           next if File.exist?("#{File.dirname(measure)}/README.md")
+
           puts "adding template README to #{measure}"
           FileUtils.cp(readme_file, "#{File.dirname(measure)}/README.md.erb")
         end
@@ -514,6 +516,7 @@ module OpenStudio
         filename = File.join(doc_templates_dir, 'copyright_ruby.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
+
         file = File.open(filename, 'r')
         ruby_header_text = file.read
         file.close
@@ -523,6 +526,7 @@ module OpenStudio
         filename = File.join(doc_templates_dir, 'copyright_erb.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
+
         file = File.open(filename, 'r')
         erb_header_text = file.read
         file.close
@@ -532,6 +536,7 @@ module OpenStudio
         filename = File.join(doc_templates_dir, 'copyright_js.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
+
         file = File.open(filename, 'r')
         js_header_text = file.read
         file.close
@@ -544,9 +549,9 @@ module OpenStudio
 
         # look for .rb, .html.erb, and .js.erb
         paths = [
-            {glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex},
-            {glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex},
-            {glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex}
+          { glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex },
+          { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
+          { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
 
         puts "Encoding.default_external = #{Encoding.default_external}"

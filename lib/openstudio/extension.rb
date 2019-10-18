@@ -45,7 +45,7 @@ module OpenStudio
       # that is inheriting the extension. The root path can be overriden as needed on initialization only. This
       # is mainly used for testing purposes.
       # @param root_dir: string, fully qualified path of the root directory of the extension gem.
-      def initialize(root_dir=nil)
+      def initialize(root_dir = nil)
         @root_dir = root_dir || File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end
 
@@ -87,6 +87,7 @@ module OpenStudio
       result = []
       ObjectSpace.each_object(::Class) do |obj|
         next if !obj.ancestors.include?(OpenStudio::Extension::Extension)
+
         result << obj
       end
       return result.uniq
@@ -197,7 +198,7 @@ module OpenStudio
     ##
     # Module method used to set the measure argument for measure_dir_name to argument_value,
     # argument_name must appear in the OSW or exception will be raised.  If step_name is nil
-    # then all workflow steps matching measure_dir_name will be affected.  If step_name is 
+    # then all workflow steps matching measure_dir_name will be affected.  If step_name is
     # not nil, then only workflow steps matching measure_dir_name and step_name will be affected.
     ##
     #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized

@@ -125,7 +125,7 @@ module OpenStudio
               runner.add_measure_readme(@measures_dir, @doc_templates_dir)
             end
           end
-        
+
           desc 'Update copyright on files'
           task :update_copyright do
             # update copyright

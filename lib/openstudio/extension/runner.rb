@@ -651,15 +651,10 @@ module OpenStudio
       # run osws, return any failure messages
       def run_osws(osw_files, num_parallel = @options[:num_parallel], max_to_run = @options[:max_datapoints])
         failures = []
-
-        puts "Max to run is #{max_to_run}"
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)
 
         Parallel.each(osw_files, in_threads: num_parallel) do |osw|
-          # osw_files.each do |osw|
-
           result = run_osw(osw, File.dirname(osw))
-
           if !result
             failures << "Failed to run OSW '#{osw}'"
           end

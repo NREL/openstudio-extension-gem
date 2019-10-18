@@ -41,20 +41,12 @@ module OpenStudio
     class Extension
       attr_accessor :root_dir
 
-      # max number of datapoints to run
-      MAX_DATAPOINTS = Float::INFINITY
-
-      # number of parallel jobs
-      NUM_PARALLEL = 7
-
-      # do simulations
-      DO_SIMULATIONS = false
-
-      # do simulations
-      VERBOSE = false
-
-      def initialize
-        @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
+      # Typically one does not pass in the root path and it is defaulted as the root path of the project
+      # that is inheriting the extension. The root path can be overriden as needed on initialization only. This
+      # is mainly used for testing purposes.
+      # @param root_dir: string, fully qualified path of the root directory of the extension gem.
+      def initialize(root_dir=nil)
+        @root_dir = root_dir || File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end
 
       # Return the absolute path of the measures or nil if there is none, used when configuring OSWs
@@ -215,7 +207,6 @@ module OpenStudio
     #  @param [String] step_name Optional argument, if present used to select workflow step to modify
     #
     #  @return [Hash] Output OSW with measure argument set to argument value
-    #
     def self.set_measure_argument(osw, measure_dir_name, argument_name, argument_value, step_name = nil)
       result = false
       osw[:steps].each do |step|

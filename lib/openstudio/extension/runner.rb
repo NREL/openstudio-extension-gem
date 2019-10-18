@@ -1,4 +1,3 @@
-
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -49,28 +48,43 @@ module OpenStudio
     # The Runner class provides functionality to run various commands including calls to the OpenStudio CLI.
     #
     class Runner
-      attr_reader :gemfile_path, :bundle_install_path
+      attr_reader :gemfile_path, :bundle_install_path, :options
+
       ##
       # When initialized with a directory containing a Gemfile, the Runner will attempt to create a bundle
       # compatible with the OpenStudio CLI.
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
-      def initialize(dirname = Dir.pwd, bundle_without = [])
+      #  @param bundle_without [Hash] Hash describing the distribution of the variable.
+      #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods.
+      #  @option options [String] :max_datapoints Max number of datapoints to run
+      #  @option options [String] :num_parallel Number of simulations to run in parallel at a time
+      #  @option options [String] :run_simulations Set to true to run the simulations
+      #  @option options [String] :verbose Set to true to receive extra information while running simulations
+      def initialize(dirname = Dir.pwd, bundle_without = [], options = {})
         # DLM: I am not sure if we want to use the main root directory to create these bundles
         # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
 
-        puts "Initializing runner with dirname: '#{dirname}'"
+        # override the default options with the passed options
+        @options = {
+            max_datapoints: Float::INFINITY,
+            num_parallel: 1, # current default is 7, but seems like we should allow the user to define this
+            run_simulations: false,
+            verbose: false
+        }.merge(options)
+
+        puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
         @dirname = File.absolute_path(dirname)
         @gemfile_path = File.join(@dirname, 'Gemfile')
         @bundle_install_path = File.join(@dirname, '.bundle/install/')
         @original_dir = Dir.pwd
 
-        @bundle_without = bundle_without
-        @bundle_without_string = bundle_without.join(' ')
+        @bundle_without = bundle_without ? bundle_without : []
+        @bundle_without_string = @bundle_without.join(' ')
         puts "@bundle_without_string = '#{@bundle_without_string}'"
 
-        raise "#{@dirname} does not exist" if !File.exist?(@dirname)
-        raise "#{@dirname} is not a directory" if !File.directory?(@dirname)
+        raise "#{@dirname} does not exist" unless File.exist?(@dirname)
+        raise "#{@dirname} is not a directory" unless File.directory?(@dirname)
 
         if !File.exist?(@gemfile_path)
           # if there is no gemfile set these to nil
@@ -78,7 +92,6 @@ module OpenStudio
           @bundle_install_path = nil
         else
           # there is a gemfile, attempt to create a bundle
-          original_dir = Dir.pwd
           begin
             # go to the directory with the gemfile
             Dir.chdir(@dirname)
@@ -531,9 +544,9 @@ module OpenStudio
 
         # look for .rb, .html.erb, and .js.erb
         paths = [
-          { glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex },
-          { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
-          { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
+            {glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex},
+            {glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex},
+            {glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex}
         ]
 
         puts "Encoding.default_external = #{Encoding.default_external}"
@@ -590,7 +603,7 @@ module OpenStudio
           file.puts JSON.pretty_generate(osw)
         end
 
-        if Extension::DO_SIMULATIONS
+        if @options[:run_simulations]
           cli = OpenStudio.getOpenStudioCLI
           out_log = run_osw_path + '.log'
           if Gem.win_platform?
@@ -601,7 +614,7 @@ module OpenStudio
 
           the_call = ''
           verbose_string = ''
-          if Extension::VERBOSE
+          if @options[:verbose]
             verbose_string = ' --verbose'
           end
           if @gemfile_path
@@ -621,7 +634,7 @@ module OpenStudio
           puts "DONE, result = #{result}"
           STDOUT.flush
         else
-          puts 'simulations are not performed, since to the DO_SIMULATIONS constant is set to false'
+          puts 'simulations are not performed, since to the @options[:run_simulations] is set to false'
         end
 
         # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
@@ -630,7 +643,7 @@ module OpenStudio
       end
 
       # run osws, return any failure messages
-      def run_osws(osw_files, num_parallel = Extension::NUM_PARALLEL, max_to_run = Extension::MAX_DATAPOINTS)
+      def run_osws(osw_files, num_parallel = @options[:num_parallel], max_to_run = @options[:max_datapoints])
         failures = []
 
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)

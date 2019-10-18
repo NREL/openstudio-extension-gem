@@ -41,8 +41,7 @@ module OpenStudio
       FILENAME = 'runner.conf'.freeze
 
       ##
-      # When initialized with a directory containing a Gemfile, the Runner will attempt to create a bundle
-      # compatible with the OpenStudio CLI.
+      # Class to store configuration of the runner options.
       ##
       #  @param [String] dirname Directory where runner.conf file is stored, typically the root of the extension.
       def initialize(dirname)

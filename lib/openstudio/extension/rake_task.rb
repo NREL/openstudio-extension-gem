@@ -90,10 +90,11 @@ module OpenStudio
             end
           end
 
-          desc 'Use openstudio docker image to run tests'
-          task :test_with_docker do
-            puts 'testing with docker'
-          end
+          # TODO: Implement this eventually... comment out for now.
+          # desc 'Use openstudio docker image to run tests'
+          # task :test_with_docker do
+          #   puts 'testing with docker'
+          # end
 
           # namespace for measure operations
           namespace 'measures' do

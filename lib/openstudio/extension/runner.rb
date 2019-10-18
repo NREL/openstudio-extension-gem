@@ -224,7 +224,6 @@ module OpenStudio
           end
         ensure
           Dir.chdir(original_dir)
-          return result
         end
 
         return result
@@ -319,20 +318,20 @@ module OpenStudio
 
         result = true
         # DLM: this is a temporary workaround to handle OpenStudio-Measures
-        get_measure_dirs_in_dir(measures_dir).each do |measures_dir|
-          puts "measures path: #{measures_dir}"
+        get_measure_dirs_in_dir(measures_dir).each do |m_dir|
+          puts "measures path: #{m_dir}"
 
           cli = OpenStudio.getOpenStudioCLI
 
           the_call = ''
           if @gemfile_path
             if @bundle_without_string.empty?
-              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{measures_dir}'"
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{m_dir}'"
             else
-              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -t '#{measures_dir}'"
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -t '#{m_dir}'"
             end
           else
-            the_call = "#{cli} --verbose measure -t '#{measures_dir}'"
+            the_call = "#{cli} --verbose measure -t '#{m_dir}'"
           end
 
           puts 'SYSTEM CALL:'
@@ -611,11 +610,11 @@ module OpenStudio
         if @options[:run_simulations]
           cli = OpenStudio.getOpenStudioCLI
           out_log = run_osw_path + '.log'
-          if Gem.win_platform?
-            # out_log = "nul"
-          else
-            # out_log = "/dev/null"
-          end
+          # if Gem.win_platform?
+          #   # out_log = "nul"
+          # else
+          #   # out_log = "/dev/null"
+          # end
 
           the_call = ''
           verbose_string = ''

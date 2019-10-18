@@ -34,7 +34,7 @@
 # *******************************************************************************
 
 begin
-  #load OpenStudio measure libraries from common location
+  # load OpenStudio measure libraries from common location
   require 'openstudio/extension/core/os_lib_helper_methods'
 rescue LoadError
   # common location unavailable, load from local resources
@@ -44,7 +44,7 @@ end
 # start the measure
 class OpenStudioExtensionTestMeasure < OpenStudio::Measure::ModelMeasure
   # define the name that a user will see
-  def name 
+  def name
     return 'OpenStudio Extension Test Measure'
   end
 

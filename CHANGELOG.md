@@ -1,4 +1,8 @@
 # OpenStudio Extension Gem
+
+## Version 0.1.4 (unreleased)
+
+* Update license copyright dates
  
 ## Version 0.1.3
 

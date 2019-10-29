@@ -39,7 +39,8 @@ require 'fileutils'
 RSpec.describe OpenStudio::Extension::Runner do
   it 'can run an OSW' do
     extension = OpenStudio::Extension::Extension.new
-    runner = OpenStudio::Extension::Runner.new(extension.root_dir)
+    runner_options = { run_simulations: true }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
     in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
     expect(File.exist?(in_osw_path)).to be true
 
@@ -72,6 +73,45 @@ RSpec.describe OpenStudio::Extension::Runner do
 
     expect(File.exist?(run_osw_path)).to be true
     expect(File.exist?(out_osw_path)).to be true
+    expect(File.exist?(failed_job_path)).to be false
+  end
+
+  it 'does not run an OSW' do
+    extension = OpenStudio::Extension::Extension.new
+    runner_options = { run_simulations: false }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
+    in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
+    expect(File.exist?(in_osw_path)).to be true
+
+    in_osw = {}
+    File.open(in_osw_path, 'r') do |file|
+      in_osw = JSON.parse(file.read, symbolize_names: true)
+    end
+    expect(in_osw[:seed_file]).to be nil
+    expect(in_osw[:weather_file]).to eq('openstudio-extension-gem-test.epw')
+    expect(in_osw[:measure_paths]).to be_empty
+    expect(in_osw[:file_paths]).to be_empty
+
+    run_dir = File.join(File.dirname(__FILE__), '../test/runner/')
+    run_osw_path = File.join(run_dir, 'in.osw')
+    out_osw_path = File.join(run_dir, 'out.osw')
+    failed_job_path = File.join(run_dir, 'failed.job')
+
+    if File.exist?(run_dir)
+      FileUtils.rm_rf(run_dir)
+    end
+    expect(File.exist?(run_dir)).to be false
+    expect(File.exist?(run_osw_path)).to be false
+    expect(File.exist?(failed_job_path)).to be false
+
+    FileUtils.mkdir_p(run_dir)
+    expect(File.exist?(run_dir)).to be true
+
+    result = runner.run_osw(in_osw, run_dir)
+    expect(result).to be nil
+
+    expect(File.exist?(run_osw_path)).to be true
+    expect(File.exist?(out_osw_path)).to be false
     expect(File.exist?(failed_job_path)).to be false
   end
 end

@@ -33,40 +33,45 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # *******************************************************************************
 
-begin
-  # load OpenStudio measure libraries from common location
-  require 'openstudio/extension/core/os_lib_helper_methods'
-rescue LoadError
-  # common location unavailable, load from local resources
-  require_relative 'resources/os_lib_helper_methods'
-end
-
-# start the measure
-class OpenStudioExtensionTestMeasure < OpenStudio::Measure::ModelMeasure
-  # define the name that a user will see
-  def name
-    return 'OpenStudio Extension Test Measure'
-  end
-
-  # define the arguments that the user will input
-  def arguments(model)
-    args = OpenStudio::Measure::OSArgumentVector.new
-
-    return args
-  end
-
-  # define what happens when the measure is run
-  def run(model, runner, user_arguments)
-    super(model, runner, user_arguments)
-
-    # use the built-in error checking
-    if !runner.validateUserArguments(arguments(model), user_arguments)
-      return false
+require 'json'
+RSpec.describe OpenStudio::Extension::RunnerConfig do
+  before :all do
+    if File.exist? 'runner.conf'
+      puts 'removing runner conf'
+      File.delete('runner.conf')
     end
+  end
 
-    return true
+  it 'has defaults' do
+    defaults = OpenStudio::Extension::RunnerConfig.default_config
+    expect(defaults[:max_datapoints]).to eq 1E9.to_i
+    expect(defaults[:num_parallel]).to eq 2
+    expect(defaults[:run_simulations]).to eq true
+    expect(defaults[:verbose]).to eq false
+  end
+
+  it 'inits a new file' do
+    expect(!File.exist?('runner.conf'))
+    OpenStudio::Extension::RunnerConfig.init(Dir.pwd)
+    expect(File.exist?('runner.conf'))
+  end
+
+  it 'should allow additional config options to exist' do
+    run_config = OpenStudio::Extension::RunnerConfig.new(Dir.pwd)
+    run_config.add_config_option('new_field', 123.456)
+
+    expect(run_config.options[:new_field]).to eq 123.456
+
+    # make sure it can be saved
+    run_config.save
+
+    # load the file and make sure new option exists
+    j = JSON.parse(File.read('runner.conf'), symbolize_names: true)
+    expect(j[:new_field]).to eq 123.456
+  end
+
+  it 'should not allow new unallowed config options' do
+    run_config = OpenStudio::Extension::RunnerConfig.new(Dir.pwd)
+    expect { run_config.add_config_option('num_parallel', 42) }.to raise_error(/num_parallel/)
   end
 end
-
-# this allows the measure to be used by the application
-OpenStudioExtensionTestMeasure.new.registerWithApplication

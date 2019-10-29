@@ -35,14 +35,19 @@
 
 require 'openstudio/extension/version'
 require 'openstudio/extension/runner'
+require 'openstudio/extension/runner_config'
 
 module OpenStudio
   module Extension
     class Extension
       attr_accessor :root_dir
 
-      def initialize
-        @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
+      # Typically one does not pass in the root path and it is defaulted as the root path of the project
+      # that is inheriting the extension. The root path can be overriden as needed on initialization only. This
+      # is mainly used for testing purposes.
+      # @param root_dir: string, fully qualified path of the root directory of the extension gem.
+      def initialize(root_dir = nil)
+        @root_dir = root_dir || File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
       end
 
       # Return the absolute path of the measures or nil if there is none, used when configuring OSWs
@@ -83,6 +88,7 @@ module OpenStudio
       result = []
       ObjectSpace.each_object(::Class) do |obj|
         next if !obj.ancestors.include?(OpenStudio::Extension::Extension)
+
         result << obj
       end
       return result.uniq
@@ -163,7 +169,7 @@ module OpenStudio
       end
 
       if !conflicts.empty?
-        raise "Conflicting file names found: #{conflicts.join(', ')}"
+        raise "Conflicting file names found: [#{conflicts.join(', ')}]"
       end
 
       return false
@@ -193,7 +199,7 @@ module OpenStudio
     ##
     # Module method used to set the measure argument for measure_dir_name to argument_value,
     # argument_name must appear in the OSW or exception will be raised.  If step_name is nil
-    # then all workflow steps matching measure_dir_name will be affected.  If step_name is 
+    # then all workflow steps matching measure_dir_name will be affected.  If step_name is
     # not nil, then only workflow steps matching measure_dir_name and step_name will be affected.
     ##
     #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized
@@ -203,7 +209,6 @@ module OpenStudio
     #  @param [String] step_name Optional argument, if present used to select workflow step to modify
     #
     #  @return [Hash] Output OSW with measure argument set to argument value
-    #
     def self.set_measure_argument(osw, measure_dir_name, argument_name, argument_value, step_name = nil)
       result = false
       osw[:steps].each do |step|

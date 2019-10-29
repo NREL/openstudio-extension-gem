@@ -1,4 +1,3 @@
-
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -49,28 +48,45 @@ module OpenStudio
     # The Runner class provides functionality to run various commands including calls to the OpenStudio CLI.
     #
     class Runner
-      attr_reader :gemfile_path, :bundle_install_path
+      attr_reader :gemfile_path, :bundle_install_path, :options
+
       ##
       # When initialized with a directory containing a Gemfile, the Runner will attempt to create a bundle
       # compatible with the OpenStudio CLI.
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
-      def initialize(dirname = Dir.pwd, bundle_without = [])
+      #  @param bundle_without [Hash] Hash describing the distribution of the variable.
+      #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods.
+      #  @option options [String] :max_datapoints Max number of datapoints to run
+      #  @option options [String] :num_parallel Number of simulations to run in parallel at a time
+      #  @option options [String] :run_simulations Set to true to run the simulations
+      #  @option options [String] :verbose Set to true to receive extra information while running simulations
+      def initialize(dirname = Dir.pwd, bundle_without = [], options = {})
         # DLM: I am not sure if we want to use the main root directory to create these bundles
         # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
 
-        puts "Initializing runner with dirname: '#{dirname}'"
+        # if the dirname contains a runner.conf file, then use the config file to specify the parameters
+        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && !options
+          puts 'Using runner options from runner.conf file'
+          runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
+          @options = runner_config.options
+        else
+          # use the passed values or defaults overriden by passed options
+          @options = OpenStudio::Extension::RunnerConfig.default_config.merge(options)
+        end
+
+        puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
         @dirname = File.absolute_path(dirname)
         @gemfile_path = File.join(@dirname, 'Gemfile')
         @bundle_install_path = File.join(@dirname, '.bundle/install/')
         @original_dir = Dir.pwd
 
-        @bundle_without = bundle_without
-        @bundle_without_string = bundle_without.join(' ')
+        @bundle_without = bundle_without || []
+        @bundle_without_string = @bundle_without.join(' ')
         puts "@bundle_without_string = '#{@bundle_without_string}'"
 
-        raise "#{@dirname} does not exist" if !File.exist?(@dirname)
-        raise "#{@dirname} is not a directory" if !File.directory?(@dirname)
+        raise "#{@dirname} does not exist" unless File.exist?(@dirname)
+        raise "#{@dirname} is not a directory" unless File.directory?(@dirname)
 
         if !File.exist?(@gemfile_path)
           # if there is no gemfile set these to nil
@@ -78,7 +94,6 @@ module OpenStudio
           @bundle_install_path = nil
         else
           # there is a gemfile, attempt to create a bundle
-          original_dir = Dir.pwd
           begin
             # go to the directory with the gemfile
             Dir.chdir(@dirname)
@@ -211,7 +226,6 @@ module OpenStudio
           end
         ensure
           Dir.chdir(original_dir)
-          return result
         end
 
         return result
@@ -306,20 +320,20 @@ module OpenStudio
 
         result = true
         # DLM: this is a temporary workaround to handle OpenStudio-Measures
-        get_measure_dirs_in_dir(measures_dir).each do |measures_dir|
-          puts "measures path: #{measures_dir}"
+        get_measure_dirs_in_dir(measures_dir).each do |m_dir|
+          puts "measures path: #{m_dir}"
 
           cli = OpenStudio.getOpenStudioCLI
 
           the_call = ''
           if @gemfile_path
             if @bundle_without_string.empty?
-              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{measures_dir}'"
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{m_dir}'"
             else
-              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -t '#{measures_dir}'"
+              the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -t '#{m_dir}'"
             end
           else
-            the_call = "#{cli} --verbose measure -t '#{measures_dir}'"
+            the_call = "#{cli} --verbose measure -t '#{m_dir}'"
           end
 
           puts 'SYSTEM CALL:'
@@ -400,6 +414,7 @@ module OpenStudio
           measures.each do |measure|
             next unless File.basename(measure) == File.basename(resource_file)
             next if FileUtils.identical?(resource_file, File.path(measure))
+
             puts "Replacing #{measure} with #{resource_file}."
             FileUtils.cp(resource_file, File.path(measure))
           end
@@ -471,6 +486,7 @@ module OpenStudio
         measures.each do |measure|
           next if File.exist?("#{File.dirname(measure)}/README.md.erb")
           next if File.exist?("#{File.dirname(measure)}/README.md")
+
           puts "adding template README to #{measure}"
           FileUtils.cp(readme_file, "#{File.dirname(measure)}/README.md.erb")
         end
@@ -501,6 +517,7 @@ module OpenStudio
         filename = File.join(doc_templates_dir, 'copyright_ruby.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
+
         file = File.open(filename, 'r')
         ruby_header_text = file.read
         file.close
@@ -510,6 +527,7 @@ module OpenStudio
         filename = File.join(doc_templates_dir, 'copyright_erb.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
+
         file = File.open(filename, 'r')
         erb_header_text = file.read
         file.close
@@ -519,6 +537,7 @@ module OpenStudio
         filename = File.join(doc_templates_dir, 'copyright_js.txt')
         puts "Copyright file path: #{filename}"
         raise "Copyright file not found '#{filename}'" if !File.exist?(filename)
+
         file = File.open(filename, 'r')
         js_header_text = file.read
         file.close
@@ -590,31 +609,39 @@ module OpenStudio
           file.puts JSON.pretty_generate(osw)
         end
 
-        cli = OpenStudio.getOpenStudioCLI
-        out_log = run_osw_path + '.log'
-        if Gem.win_platform?
-          # out_log = "nul"
-        else
-          # out_log = "/dev/null"
-        end
+        if @options[:run_simulations]
+          cli = OpenStudio.getOpenStudioCLI
+          out_log = run_osw_path + '.log'
+          # if Gem.win_platform?
+          #   # out_log = "nul"
+          # else
+          #   # out_log = "/dev/null"
+          # end
 
-        the_call = ''
-        if @gemfile_path
-          if @bundle_without_string.empty?
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
-          else
-            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          the_call = ''
+          verbose_string = ''
+          if @options[:verbose]
+            verbose_string = ' --verbose'
           end
-        else
-          the_call = "#{cli} --verbose run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
-        end
+          if @gemfile_path
+            if @bundle_without_string.empty?
+              the_call = "#{cli}#{verbose_string} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            else
+              the_call = "#{cli}#{verbose_string} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+            end
+          else
+            the_call = "#{cli}#{verbose_string} run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""
+          end
 
-        puts 'SYSTEM CALL:'
-        puts the_call
-        STDOUT.flush
-        result = run_command(the_call, get_clean_env)
-        puts "DONE, result = #{result}"
-        STDOUT.flush
+          puts 'SYSTEM CALL:'
+          puts the_call
+          STDOUT.flush
+          result = run_command(the_call, get_clean_env)
+          puts "DONE, result = #{result}"
+          STDOUT.flush
+        else
+          puts 'simulations are not performed, since to the @options[:run_simulations] is set to false'
+        end
 
         # DLM: this does not always return false for failed CLI runs, consider checking for failed.job file as backup test
 
@@ -622,16 +649,12 @@ module OpenStudio
       end
 
       # run osws, return any failure messages
-      def run_osws(osw_files, num_parallel = 1, max_to_run = Float::INFINITY)
+      def run_osws(osw_files, num_parallel = @options[:num_parallel], max_to_run = @options[:max_datapoints])
         failures = []
-
         osw_files = osw_files.slice(0, [osw_files.size, max_to_run].min)
 
         Parallel.each(osw_files, in_threads: num_parallel) do |osw|
-          # osw_files.each do |osw|
-
           result = run_osw(osw, File.dirname(osw))
-
           if !result
             failures << "Failed to run OSW '#{osw}'"
           end

@@ -147,6 +147,7 @@ Common Rake Tasks that are available to derivative extension gems include:
 | openstudio:measures:add_readme       | Add README.md.erb file if it and the README markdown file do not already exist for a measure |
 | openstudio:measures:copy_resources   | Copy the resources files to individual measures in the calling gem |
 | openstudio:measures:update_copyright | Update copyright on measure files in the calling gem |
+| rake openstudio:runner:init          | Create a runner.conf file running simulations |
 | openstudio:stage_bcl                 | Copy the measures to a location that can be uploaded to BCL |
 | openstudio:push_bcl                  | Upload measures from the specified location to the BCL |
 | openstudio:test_with_docker          | Use openstudio docker image to run tests |
@@ -229,7 +230,7 @@ Or install it yourself as:
 
 # TODO
 
-- [ ] Finalize documentation on naming conventions, etc
+- [X] Finalize documentation on naming conventions, etc
 - [X] Add test measure
 - [X] Rake task ```openstudio:update_measures```
 - [X] Rake task ```openstudio:test_with_openstudio```
@@ -246,5 +247,5 @@ Or install it yourself as:
 - [X] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
 - [ ] Run rubocop on all of the core files and remove exclusion from .rubocop.yml file.
 - [ ] Cleanup task after running tests (may need to be in the OpenStudio Measure Tester)
-- [ ] Add a `rake init new_ext_gem` to Rakefile
+- [X] Add a `rake init new_ext_gem` to Rakefile
 - [ ] Add tests to the extension/core

@@ -1,6 +1,6 @@
 # OpenStudio Extension Gem
  
-## Version 0.1.3 (under development)
+## Version 0.1.3
 
 * Move runner configuration options to runner initializer. Allow user to set the number of parallel simulations, max number of simulations, run the simulations (true/false), and verbose output.
 * Add a runner.conf file that can be used to define how the run_osw(s) behaves.

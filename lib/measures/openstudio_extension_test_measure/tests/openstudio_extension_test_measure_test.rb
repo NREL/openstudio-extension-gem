@@ -39,7 +39,7 @@ require 'openstudio/measure/ShowRunnerOutput'
 require_relative '../measure.rb'
 require 'minitest/autorun'
 
-class OpenStudioExtensionTestMeasure_Test < Minitest::Test
+class OpenStudioExtensionTestMeasureTest < Minitest::Test
   # def setup
   # end
 
@@ -68,8 +68,7 @@ class OpenStudioExtensionTestMeasure_Test < Minitest::Test
     result = runner.result
     # show_output(result)
     assert(result.value.valueName == 'Success')
-    assert(result.warnings.size == 0)
-    assert(result.info.size == 0)
+    assert(result.warnings.empty?)
+    assert(result.info.empty?)
   end
-
 end

@@ -1,7 +1,8 @@
 AllCops:
   Exclude:
     - gems/**/*
-    - lib/measures/**/*
+    - init_templates/**/*
+    - lib/measures/**/resources/*
     - lib/openstudio/extension/core/**/*
 
 inherit_from:

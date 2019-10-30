@@ -139,7 +139,9 @@ In this new framework, each extension gem will contain one or more related measu
 In the short term, in order to preserve the PAT/OS App functionality, resource files will still be copied directly into the measures, and these measures will be pushed to BCL.
 
 ### Rake Tasks
+
 Common Rake Tasks that are available to derivative extension gems include:
+
 | Rake Task | Description |
 | --------- | ----------- |
 | openstudio:list_measures             | List all measures in the calling gem |
@@ -228,7 +230,7 @@ Or install it yourself as:
 * Update version in `/lib/openstudio/extension/version.rb`
 * Create PR to master, after tests and reviews complete, then merge
 * Locally - from the master branch, run `rake release`
-& On GitHub, go to the releases page and update the latest release tag. Name it “Version x.y.z” and copy the CHANGELOG entry into the description box.
+* On GitHub, go to the releases page and update the latest release tag. Name it “Version x.y.z” and copy the CHANGELOG entry into the description box.
 
 # TODO
 

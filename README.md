@@ -107,6 +107,7 @@ Extension gem and the derivative extension gem should have the following directo
 │                                       └── core
 
 └── spec
+
                        ├── files
 
                        └── openstudio
@@ -149,7 +150,7 @@ Common Rake Tasks that are available to derivative extension gems include:
 | openstudio:measures:add_readme       | Add README.md.erb file if it and the README markdown file do not already exist for a measure |
 | openstudio:measures:copy_resources   | Copy the resources files to individual measures in the calling gem |
 | openstudio:measures:update_copyright | Update copyright on measure files in the calling gem |
-| rake openstudio:runner:init          | Create a runner.conf file running simulations |
+| openstudio`:runner:`init          | Create a runner.conf file running simulations |
 | openstudio:stage_bcl                 | Copy the measures to a location that can be uploaded to BCL |
 | openstudio:push_bcl                  | Upload measures from the specified location to the BCL |
 | openstudio:test_with_docker          | Use openstudio docker image to run tests |

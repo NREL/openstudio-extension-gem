@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'bundler', '~> 1.9'
+  spec.add_dependency 'bundler', '~> 2.0'
   spec.add_dependency 'json_pure', '2.2.0'
   spec.add_dependency 'openstudio-workflow', '~> 1.3.4'
   spec.add_dependency 'openstudio_measure_tester', '~> 0.1.7'

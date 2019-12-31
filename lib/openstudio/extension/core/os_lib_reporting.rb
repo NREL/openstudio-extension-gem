@@ -3024,6 +3024,13 @@ module OsLib_Reporting
     ann_env_pd = OsLib_Reporting.ann_env_pd(sqlFile)
     if ann_env_pd
 
+      # store values about humidity fir reguster values
+      zone_max_hours_over_70_rh = 0
+      zone_max_hours_over_55_rh = 0
+      rh_hours_threshold = 10 #hr
+      num_zones_x_hours_over_70 = 0
+      num_zones_x_hours_over_55 = 0
+
       # get keys
       keys = sqlFile.availableKeyValues(ann_env_pd, 'Hourly', 'Zone Air Relative Humidity')
       keys.each do |key|
@@ -3031,6 +3038,10 @@ module OsLib_Reporting
         humidity_bins.each do |k, v|
           humidity_bins[k] = 0
         end
+
+        # reset humidity zone flag
+        zone_rh_count_hr_55 = 0.0
+        zone_rh_count_hr_70 = 0.0
 
         # get desired variable
         output_timeseries = sqlFile.timeSeries(ann_env_pd, 'Hourly', 'Zone Air Relative Humidity', key)
@@ -3079,11 +3090,35 @@ module OsLib_Reporting
           else
             row_color << ''
           end
+
+          # populate rh data for register_values
+          runner.registerInfo("hello looking at #{k}, #{v}")
+          # catch greater than 70 and 80 for runner.registerValue
+          if ['55-60','60-65','65-70','70-75','75-80','>= 80'].include?(k)
+            zone_rh_count_hr_55 += v
+          end
+          if ['70-75','75-80','>= 80'].include?(k)
+            zone_rh_count_hr_70 += v
+          end
+
         end
         row_data += ["#{mean.round(1)} (%)"]
         row_color += ['']
         humidity_table[:data] << row_data
         humidity_table[:data_color] << row_color
+
+        # apply rh zones and max hours
+        if zone_rh_count_hr_55 >= rh_hours_threshold then num_zones_x_hours_over_55 += 1 end
+        if zone_rh_count_hr_70 >= rh_hours_threshold  then num_zones_x_hours_over_70 += 1 end
+        if zone_max_hours_over_55_rh < zone_rh_count_hr_55 then zone_max_hours_over_55_rh = zone_rh_count_hr_55 end
+        if zone_max_hours_over_70_rh < zone_rh_count_hr_70 then zone_max_hours_over_70_rh = zone_rh_count_hr_70 end
+
+        # add rh runner.registerValues to be used as output in analyses
+        runner.registerValue("zone_max_hours_over_70_rh",zone_max_hours_over_70_rh,"hr")
+        runner.registerValue("zone_max_hours_over_55_rh",zone_max_hours_over_55_rh,"hr")
+        runner.registerValue("num_zones_x_hours_over_70",num_zones_x_hours_over_70,"zones")
+        runner.registerValue("num_zones_x_hours_over_55",num_zones_x_hours_over_55,"zones")
+
       end
     else
       runner.registerWarning('An annual simulation was not run. Cannot get annual timeseries data')

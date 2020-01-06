@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'openstudio-workflow', '~> 1.3.4'
   spec.add_dependency 'openstudio_measure_tester', '~> 0.1.7'
   spec.add_dependency 'parallel', '~> 1.12.0'
+  spec.add_dependency "github_api", "~> 0.18.0"
 
   spec.add_development_dependency 'rake', '~> 12.3'
   spec.add_development_dependency 'rspec', '~> 3.7'

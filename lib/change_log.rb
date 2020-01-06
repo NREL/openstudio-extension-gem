@@ -39,8 +39,8 @@ options[:end_date] = Time.parse(options[:end_date].to_s)
 puts options
 
 ### Repository options
-repo_owner = 'URBANopt'
-repo = 'uo-cli'
+repo_owner = 'NREL'
+repo = 'openstudio-extension-gem'
 
 github = Github.new
 if options[:token]

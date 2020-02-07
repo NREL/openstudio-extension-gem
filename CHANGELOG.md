@@ -1,4 +1,9 @@
 # OpenStudio Extension Gem
+
+## Version 0.1.4 (unreleased)
+
+* Update license copyright dates
+* Update template for Gemfile to include FAVOR_LOCAL_GEMS env variable
  
 ## Version 0.1.3
 

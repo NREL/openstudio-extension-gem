@@ -5,14 +5,19 @@ require 'openstudio/extension/version'
 Gem::Specification.new do |spec|
   spec.name          = 'openstudio-extension'
   spec.version       = OpenStudio::Extension::VERSION
+  spec.platform      = Gem::Platform::RUBY
   spec.authors       = ['Katherine Fleming', 'Nicholas Long', 'Dan Macumber']
   spec.email         = ['katherine.fleming@nrel.gov', 'nicholas.long@nrel.gov', 'daniel.macumber@nrel.gov']
-  spec.platform      = Gem::Platform::RUBY
 
+  spec.homepage      = 'https://openstudio.net'
   spec.summary       = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
   spec.description   = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
-  spec.homepage      = 'https://openstudio.net'
-
+  spec.metadata = {
+    bug_tracker_uri: 'https://github.com/NREL/openstudio-extension-gem/issues',
+    changelog_uri: 'https://github.com/NREL/openstudio-extension-gem/blob/develop/CHANGELOG.md',
+    #documentation_uri: 'https://www.rubydoc.info/gems/openstudio-extension-gem/#{gem.version}',
+    source_code_uri: "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
+  }
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files         = Dir.chdir(File.expand_path(__dir__)) do
@@ -22,7 +27,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'bundler', '~> 2.0'
+  spec.required_ruby_version = '>= 2.5'
+
+  spec.add_dependency 'bundler', '~> 2.1'
   spec.add_dependency 'json_pure', '2.2.0'
   spec.add_dependency 'openstudio-workflow', '~> 1.3.4'
   spec.add_dependency 'openstudio_measure_tester', '~> 0.1.7'

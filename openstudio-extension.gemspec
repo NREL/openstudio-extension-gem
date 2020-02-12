@@ -13,10 +13,10 @@ Gem::Specification.new do |spec|
   spec.summary       = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
   spec.description   = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
   spec.metadata = {
-    bug_tracker_uri: 'https://github.com/NREL/openstudio-extension-gem/issues',
-    changelog_uri: 'https://github.com/NREL/openstudio-extension-gem/blob/develop/CHANGELOG.md',
-    #documentation_uri: 'https://www.rubydoc.info/gems/openstudio-extension-gem/#{gem.version}',
-    source_code_uri: "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
+      'bug_tracker_uri' => 'https://github.com/NREL/openstudio-extension-gem/issues',
+      'changelog_uri' => 'https://github.com/NREL/openstudio-extension-gem/blob/develop/CHANGELOG.md',
+      #'documentation_uri' =>  'https://www.rubydoc.info/gems/openstudio-extension-gem/#{gem.version}',
+      'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
   }
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -35,8 +35,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'openstudio_measure_tester', '~> 0.1.7'
   spec.add_dependency 'parallel', '~> 1.12.0'
 
+  spec.add_development_dependency 'github_api', '~> 0.18.0'
   spec.add_development_dependency 'rake', '~> 12.3'
   spec.add_development_dependency 'rspec', '~> 3.7'
   spec.add_development_dependency 'rubocop', '~> 0.54.0'
-  spec.add_development_dependency "github_api", "~> 0.18.0"
 end

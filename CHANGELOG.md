@@ -1,5 +1,11 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.0
+
+* Upgrade Bundler to 2.1.x
+* Remove json_pure gem
+* TODO: Update measure tester to 0.2.0 (removes need for github checkout)
+
 ## Version 0.1.5 (Unreleased)
 
 ## Version 0.1.4

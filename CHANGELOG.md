@@ -3,10 +3,9 @@
 ## Version 0.2.0
 
 * Upgrade Bundler to 2.1.x
+* Restrict to Ruby ~> 2.5.0
 * Remove json_pure gem
-* TODO: Update measure tester to 0.2.0 (removes need for github checkout)
-
-## Version 0.1.5 (Unreleased)
+* Update measure tester to 0.2.0 (removes need for github checkout)
 
 ## Version 0.1.4
 

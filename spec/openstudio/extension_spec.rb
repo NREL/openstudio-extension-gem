@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -36,18 +36,6 @@
 RSpec.describe OpenStudio::Extension do
   it 'has a version number' do
     expect(OpenStudio::Extension::VERSION).not_to be nil
-  end
-
-  it 'has a max datapoint constant' do
-    expect(OpenStudio::Extension::Extension::MAX_DATAPOINTS).not_to be nil
-  end
-
-  it 'has a num parallel constant' do
-    expect(OpenStudio::Extension::Extension::NUM_PARALLEL).not_to be nil
-  end
-
-  it 'has a do simulations constant' do
-    expect(OpenStudio::Extension::Extension::DO_SIMULATIONS).not_to be nil
   end
 
   it 'has a measures directory' do

@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -39,8 +39,8 @@ require 'fileutils'
 RSpec.describe OpenStudio::Extension::Runner do
   it 'can run an OSW' do
     extension = OpenStudio::Extension::Extension.new
-    OpenStudio::Extension::Extension::DO_SIMULATIONS = true
-    runner = OpenStudio::Extension::Runner.new(extension.root_dir)
+    runner_options = { run_simulations: true }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
     in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
     expect(File.exist?(in_osw_path)).to be true
 
@@ -78,8 +78,8 @@ RSpec.describe OpenStudio::Extension::Runner do
 
   it 'does not run an OSW' do
     extension = OpenStudio::Extension::Extension.new
-    OpenStudio::Extension::Extension::DO_SIMULATIONS = false
-    runner = OpenStudio::Extension::Runner.new(extension.root_dir)
+    runner_options = { run_simulations: false }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
     in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
     expect(File.exist?(in_osw_path)).to be true
 

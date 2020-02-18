@@ -24,3 +24,6 @@
 # measures tests
 lib/measures/.rubocop.yml
 lib/measures/test_results/*
+
+# runner conf
+runner.conf

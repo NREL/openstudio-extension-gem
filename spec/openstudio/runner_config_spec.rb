@@ -33,55 +33,45 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # *******************************************************************************
 
-module OsLib_QAQC
-  # Check that there are no people or lights in plenums.
-  def check_plenum_loads(category, target_standard, name_only = false)
-    # summary of the check
-    check_elems = OpenStudio::AttributeVector.new
-    check_elems << OpenStudio::Attribute.new('name', 'Plenum Loads')
-    check_elems << OpenStudio::Attribute.new('category', category)
-    check_elems << OpenStudio::Attribute.new('description', 'Check that the plenums do not have people or lights.')
-
-    # stop here if only name is requested this is used to populate display name for arguments
-    if name_only == true
-      results = []
-      check_elems.each do |elem|
-        results << elem.valueAsString
-      end
-      return results
+require 'json'
+RSpec.describe OpenStudio::Extension::RunnerConfig do
+  before :all do
+    if File.exist? 'runner.conf'
+      puts 'removing runner conf'
+      File.delete('runner.conf')
     end
+  end
 
-    std = Standard.build(target_standard)
+  it 'has defaults' do
+    defaults = OpenStudio::Extension::RunnerConfig.default_config
+    expect(defaults[:max_datapoints]).to eq 1E9.to_i
+    expect(defaults[:num_parallel]).to eq 2
+    expect(defaults[:run_simulations]).to eq true
+    expect(defaults[:verbose]).to eq false
+  end
 
-    begin
-      @model.getThermalZones.each do |zone|
-        # Only check plenums
-        next unless std.thermal_zone_plenum?(zone)
+  it 'inits a new file' do
+    expect(!File.exist?('runner.conf'))
+    OpenStudio::Extension::RunnerConfig.init(Dir.pwd)
+    expect(File.exist?('runner.conf'))
+  end
 
-        # People
-        num_people = zone.numberOfPeople
-        if num_people > 0
-          check_elems << OpenStudio::Attribute.new('flag', "#{zone.name} is a plenum, but has #{num_people.round(1)} people.  Plenums should not contain people.")
-        end
+  it 'should allow additional config options to exist' do
+    run_config = OpenStudio::Extension::RunnerConfig.new(Dir.pwd)
+    run_config.add_config_option('new_field', 123.456)
 
-        # Lights
-        lights_w = zone.lightingPower
-        if lights_w > 0
-          check_elems << OpenStudio::Attribute.new('flag', "#{zone.name} is a plenum, but has #{lights_w.round(1)} W of lights.  Plenums should not contain lights.")
-        end
-      end
-    rescue StandardError => e
-      # brief description of ruby error
-      check_elems << OpenStudio::Attribute.new('flag', "Error prevented QAQC check from running (#{e}).")
+    expect(run_config.options[:new_field]).to eq 123.456
 
-      # backtrace of ruby error for diagnostic use
-      if @error_backtrace then check_elems << OpenStudio::Attribute.new('flag', e.backtrace.join("\n").to_s) end
-    end
+    # make sure it can be saved
+    run_config.save
 
-    # add check_elms to new attribute
-    check_elem = OpenStudio::Attribute.new('check', check_elems)
+    # load the file and make sure new option exists
+    j = JSON.parse(File.read('runner.conf'), symbolize_names: true)
+    expect(j[:new_field]).to eq 123.456
+  end
 
-    return check_elem
-    # note: registerWarning and registerValue will be added for checks downstream using os_lib_reporting_qaqc.rb
+  it 'should not allow new unallowed config options' do
+    run_config = OpenStudio::Extension::RunnerConfig.new(Dir.pwd)
+    expect { run_config.add_config_option('num_parallel', 42) }.to raise_error(/num_parallel/)
   end
 end

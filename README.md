@@ -107,6 +107,7 @@ Extension gem and the derivative extension gem should have the following directo
 │                                       └── core
 
 └── spec
+
                        ├── files
 
                        └── openstudio
@@ -139,7 +140,9 @@ In this new framework, each extension gem will contain one or more related measu
 In the short term, in order to preserve the PAT/OS App functionality, resource files will still be copied directly into the measures, and these measures will be pushed to BCL.
 
 ### Rake Tasks
+
 Common Rake Tasks that are available to derivative extension gems include:
+
 | Rake Task | Description |
 | --------- | ----------- |
 | openstudio:list_measures             | List all measures in the calling gem |
@@ -147,6 +150,7 @@ Common Rake Tasks that are available to derivative extension gems include:
 | openstudio:measures:add_readme       | Add README.md.erb file if it and the README markdown file do not already exist for a measure |
 | openstudio:measures:copy_resources   | Copy the resources files to individual measures in the calling gem |
 | openstudio:measures:update_copyright | Update copyright on measure files in the calling gem |
+| openstudio`:runner:`init          | Create a runner.conf file running simulations |
 | openstudio:stage_bcl                 | Copy the measures to a location that can be uploaded to BCL |
 | openstudio:push_bcl                  | Upload measures from the specified location to the BCL |
 | openstudio:test_with_docker          | Use openstudio docker image to run tests |
@@ -222,14 +226,16 @@ Or install it yourself as:
 
 # Releasing the gem
 
-* Update change log
+* Update CHANGELOG.md
+* Run `rake rubocop:auto_correct`
 * Update version in `/lib/openstudio/extension/version.rb`
-* Merge down to master
-* run `rake release` from master  
+* Create PR to master, after tests and reviews complete, then merge
+* Locally - from the master branch, run `rake release`
+* On GitHub, go to the releases page and update the latest release tag. Name it “Version x.y.z” and copy the CHANGELOG entry into the description box.
 
 # TODO
 
-- [ ] Finalize documentation on naming conventions, etc
+- [X] Finalize documentation on naming conventions, etc
 - [X] Add test measure
 - [X] Rake task ```openstudio:update_measures```
 - [X] Rake task ```openstudio:test_with_openstudio```
@@ -246,5 +252,5 @@ Or install it yourself as:
 - [X] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
 - [ ] Run rubocop on all of the core files and remove exclusion from .rubocop.yml file.
 - [ ] Cleanup task after running tests (may need to be in the OpenStudio Measure Tester)
-- [ ] Add a `rake init new_ext_gem` to Rakefile
+- [X] Add a `rake init new_ext_gem` to Rakefile
 - [ ] Add tests to the extension/core

@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -39,7 +39,8 @@ require 'fileutils'
 RSpec.describe OpenStudio::Extension::Runner do
   it 'can run an OSW' do
     extension = OpenStudio::Extension::Extension.new
-    runner = OpenStudio::Extension::Runner.new(extension.root_dir)
+    runner_options = { run_simulations: true }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
     in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
     expect(File.exist?(in_osw_path)).to be true
 
@@ -81,6 +82,19 @@ RSpec.describe OpenStudio::Extension::Runner do
     
     extension = OpenStudio::Extension::Extension.new
     runner = OpenStudio::Extension::Runner.new(File.join(File.dirname(__FILE__), '../files/NativeGems/'))
+    
+    run_dir = File.join(File.dirname(__FILE__), '../test/runner_native_gems/')
+    expect(result).to be true
+
+    expect(File.exist?(run_osw_path)).to be true
+    expect(File.exist?(out_osw_path)).to be true
+
+
+  it 'does not run an OSW' do
+    extension = OpenStudio::Extension::Extension.new
+    runner_options = { run_simulations: false }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
+
     in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
     expect(File.exist?(in_osw_path)).to be true
 
@@ -93,7 +107,7 @@ RSpec.describe OpenStudio::Extension::Runner do
     expect(in_osw[:measure_paths]).to be_empty
     expect(in_osw[:file_paths]).to be_empty
 
-    run_dir = File.join(File.dirname(__FILE__), '../test/runner_native_gems/')
+    run_dir = File.join(File.dirname(__FILE__), '../test/runner/')
     run_osw_path = File.join(run_dir, 'in.osw')
     out_osw_path = File.join(run_dir, 'out.osw')
     failed_job_path = File.join(run_dir, 'failed.job')
@@ -109,10 +123,11 @@ RSpec.describe OpenStudio::Extension::Runner do
     expect(File.exist?(run_dir)).to be true
 
     result = runner.run_osw(in_osw, run_dir)
-    expect(result).to be true
+
+    expect(result).to be nil
 
     expect(File.exist?(run_osw_path)).to be true
-    expect(File.exist?(out_osw_path)).to be true
+    expect(File.exist?(out_osw_path)).to be false
     expect(File.exist?(failed_job_path)).to be false
   end
 end

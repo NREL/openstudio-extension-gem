@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -90,10 +90,11 @@ module OpenStudio
             end
           end
 
-          desc 'Use openstudio docker image to run tests'
-          task :test_with_docker do
-            puts 'testing with docker'
-          end
+          # TODO: Implement this eventually... comment out for now.
+          # desc 'Use openstudio docker image to run tests'
+          # task :test_with_docker do
+          #   puts 'testing with docker'
+          # end
 
           # namespace for measure operations
           namespace 'measures' do
@@ -122,6 +123,15 @@ module OpenStudio
               puts 'Only files that have actually been changed will be listed.'
               runner = OpenStudio::Extension::Runner.new(Dir.pwd)
               runner.add_measure_readme(@measures_dir, @doc_templates_dir)
+            end
+          end
+
+          # namespace for anything runner related
+          namespace 'runner' do
+            desc 'Initialize a local runner.conf file to set custom runner parameters'
+            task :init do
+              puts 'Creating runner.conf'
+              OpenStudio::Extension::RunnerConfig.init(Dir.pwd)
             end
           end
 

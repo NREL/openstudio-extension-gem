@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -39,7 +39,7 @@ require 'openstudio/measure/ShowRunnerOutput'
 require_relative '../measure.rb'
 require 'minitest/autorun'
 
-class OpenStudioExtensionTestMeasure_Test < Minitest::Test
+class OpenStudioExtensionTestMeasureTest < Minitest::Test
   # def setup
   # end
 
@@ -68,8 +68,7 @@ class OpenStudioExtensionTestMeasure_Test < Minitest::Test
     result = runner.result
     # show_output(result)
     assert(result.value.valueName == 'Success')
-    assert(result.warnings.size == 0)
-    assert(result.info.size == 0)
+    assert(result.warnings.empty?)
+    assert(result.info.empty?)
   end
-
 end

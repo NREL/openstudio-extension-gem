@@ -2,7 +2,7 @@
 
 ## Version 0.1.5
 
-* Fix bug to respect the runner.conf file when usig Extension::Runner with no options
+* Fix bug to respect the runner.conf file when using Extension::Runner with no options
 
 ## Version 0.1.4
 

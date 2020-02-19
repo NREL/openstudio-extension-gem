@@ -105,6 +105,19 @@ module OpenStudio
       end
 
       ##
+      # Update a runner config value
+      #
+      # @param [String] key, The name of the key to update
+      # @param [Variant] new_value, The new value to set the `key` to.
+      def update_config(key, new_value)
+        if @data.key? key.to_sym
+          @data[key.to_sym] = new_value
+        else
+          raise "Could not find key '#{key}' to update in RunnerConfig."
+        end
+      end
+
+      ##
       # Return the options as hash
       def options
         return @data

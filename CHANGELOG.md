@@ -6,6 +6,11 @@
 * Restrict to Ruby ~> 2.5.0
 * Remove json_pure gem
 * Update measure tester to 0.2.0 (removes need for github checkout)
+* Note that this version does not include the changes from Version 0.1.5
+
+## Version 0.1.5
+
+* Fix bug to respect the runner.conf file when using Extension::Runner with no options
 
 ## Version 0.1.4
 

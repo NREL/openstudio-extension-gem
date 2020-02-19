@@ -551,9 +551,9 @@ module OpenStudio
 
         # look for .rb, .html.erb, and .js.erb
         paths = [
-            {glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex},
-            {glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex},
-            {glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex}
+          { glob: "#{root_dir}/**/*.rb", license: ruby_header_text, regex: ruby_regex },
+          { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
+          { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
 
         puts "Encoding.default_external = #{Encoding.default_external}"

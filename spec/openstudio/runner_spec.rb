@@ -55,7 +55,7 @@ RSpec.describe OpenStudio::Extension::Runner do
     expect(runner.options[:num_parallel]).to eq 2.456
     # remove file
     File.delete('runner.conf') if File.exist? 'runner.conf'
-    expect(File.exist? 'runner.conf').to eq false
+    expect(File.exist?('runner.conf')).to eq false
   end
 
   it 'can run an OSW' do

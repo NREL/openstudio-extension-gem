@@ -110,7 +110,7 @@ module OpenStudio
       # @param [String] key, The name of the key to update
       # @param [Variant] new_value, The new value to set the `key` to.
       def update_config(key, new_value)
-        if @data.has_key? key.to_sym
+        if @data.key? key.to_sym
           @data[key.to_sym] = new_value
         else
           raise "Could not find key '#{key}' to update in RunnerConfig."

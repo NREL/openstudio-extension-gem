@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.1 (Unreleased)
+
+* Changes from 0.1.5 (runner.conf bug)
+
 ## Version 0.2.0
 
 * Upgrade Bundler to 2.1.x

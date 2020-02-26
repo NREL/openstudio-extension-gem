@@ -150,7 +150,7 @@ Common Rake Tasks that are available to derivative extension gems include:
 | openstudio:measures:add_readme       | Add README.md.erb file if it and the README markdown file do not already exist for a measure |
 | openstudio:measures:copy_resources   | Copy the resources files to individual measures in the calling gem |
 | openstudio:measures:update_copyright | Update copyright on measure files in the calling gem |
-| openstudio`:runner:`init          | Create a runner.conf file running simulations |
+| openstudio`:runner:`init             | Create a runner.conf file running simulations |
 | openstudio:stage_bcl                 | Copy the measures to a location that can be uploaded to BCL |
 | openstudio:push_bcl                  | Upload measures from the specified location to the BCL |
 | openstudio:test_with_docker          | Use openstudio docker image to run tests |
@@ -235,22 +235,11 @@ Or install it yourself as:
 
 # TODO
 
-- [X] Finalize documentation on naming conventions, etc
-- [X] Add test measure
-- [X] Rake task ```openstudio:update_measures```
-- [X] Rake task ```openstudio:test_with_openstudio```
 - [ ] Rake task ```stage_bcl``` _DLM: BCL gem should be a development dependency only until we can reduce its dependencies and remove native dependencies? should probably put it into a special group so we can bundle without it in openstudio-gems._
 - [ ] Rake task ```push_bcl``` _DLM: how do we want to test this?
-- [X] Get all rake tasks working on Travis
 - [ ] Capture useful output from Travis (measure dashboard results, log files, zip of build products, etc) and put it somewhere (s3?  naming convention?)
-- [X] ```Extension::openstudio_extension_version``` _DLM: should we rename? should people overwrite this in their class?_
-- [X] ```Extension::measures_dir``` _DLM: I think this can have a default implementation, right? If something does not need to be overridden should it be a module method rather than a class one?  KAF: this is in rake task for now
-- [X] ```Extension::list_measures``` _DLM: I think this can have a default implementation, right?_KAF: In Rake task for now
 - [ ] ```Extension::files_dir``` _DLM: I think this can have a default implementation, right?_
 - [ ] ```Extension::minimum_openstudio_version``` _DLM: should we rename? should people overwrite this in their class?_
-- [X] ```Runner::initialize``` _DLM: should say that the path argument should be for a dir with a Gemfile right?_
-- [X] ```Runner::configure_osw``` _DLM: should take in an OSW, add paths to all measure and file dirs for loaded OpenStudio Extensions, write out configured OSW_
 - [ ] Run rubocop on all of the core files and remove exclusion from .rubocop.yml file.
 - [ ] Cleanup task after running tests (may need to be in the OpenStudio Measure Tester)
-- [X] Add a `rake init new_ext_gem` to Rakefile
 - [ ] Add tests to the extension/core

@@ -1,6 +1,10 @@
 # OpenStudio Extension Gem
 
-## Version 0.1.4 (unreleased)
+## Version 0.1.5
+
+* Fix bug to respect the runner.conf file when using Extension::Runner with no options
+
+## Version 0.1.4
 
 * Update license copyright dates
 * Update template for Gemfile to include FAVOR_LOCAL_GEMS env variable

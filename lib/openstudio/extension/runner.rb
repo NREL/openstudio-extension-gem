@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -56,17 +56,18 @@ module OpenStudio
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
       #  @param bundle_without [Hash] Hash describing the distribution of the variable.
-      #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods.
+      #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods. Note if options is used, then a local runner.conf file will not be loaded.
       #  @option options [String] :max_datapoints Max number of datapoints to run
       #  @option options [String] :num_parallel Number of simulations to run in parallel at a time
       #  @option options [String] :run_simulations Set to true to run the simulations
       #  @option options [String] :verbose Set to true to receive extra information while running simulations
       def initialize(dirname = Dir.pwd, bundle_without = [], options = {})
         # DLM: I am not sure if we want to use the main root directory to create these bundles
-        # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
+        # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle
+        # in ~/OpenStudio/#{alias} or something like that?
 
         # if the dirname contains a runner.conf file, then use the config file to specify the parameters
-        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && !options
+        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && options.empty?
           puts 'Using runner options from runner.conf file'
           runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
           @options = runner_config.options

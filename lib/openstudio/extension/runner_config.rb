@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -101,6 +101,19 @@ module OpenStudio
       def save
         File.open(File.join(@dirname, FILENAME), 'w') do |f|
           f << JSON.pretty_generate(@data)
+        end
+      end
+
+      ##
+      # Update a runner config value
+      #
+      # @param [String] key, The name of the key to update
+      # @param [Variant] new_value, The new value to set the `key` to.
+      def update_config(key, new_value)
+        if @data.key? key.to_sym
+          @data[key.to_sym] = new_value
+        else
+          raise "Could not find key '#{key}' to update in RunnerConfig."
         end
       end
 

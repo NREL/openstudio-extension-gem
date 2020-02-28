@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version 0.1.6
+
+* Update core library methods with what was in OpenStudio-measures
+
 ## Version 0.1.5
 
 * Fix bug to respect the runner.conf file when using Extension::Runner with no options

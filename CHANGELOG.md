@@ -16,7 +16,6 @@
 ## Version 0.1.6
 
 * Update core library methods with what was in OpenStudio-measures
->>>>>>> 0.1.X-LTS
 
 ## Version 0.1.5
 

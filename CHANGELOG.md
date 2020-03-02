@@ -3,6 +3,7 @@
 ## Version 0.2.1 (Unreleased)
 
 * Changes from 0.1.5 (runner.conf bug)
+* Changes from 0.1.6 (update core library)
 
 ## Version 0.2.0
 
@@ -11,6 +12,10 @@
 * Remove json_pure gem
 * Update measure tester to 0.2.0 (removes need for github checkout)
 * Note that this version does not include the changes from Version 0.1.5
+
+## Version 0.1.6
+
+* Update core library methods with what was in OpenStudio-measures
 
 ## Version 0.1.5
 

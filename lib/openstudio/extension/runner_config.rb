@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -38,7 +40,7 @@ require 'json'
 module OpenStudio
   module Extension
     class RunnerConfig
-      FILENAME = 'runner.conf'.freeze
+      FILENAME = 'runner.conf'
 
       ##
       # Class to store configuration of the runner options.

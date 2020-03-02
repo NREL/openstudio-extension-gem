@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'openstudio/extension/version'
@@ -13,10 +15,10 @@ Gem::Specification.new do |spec|
   spec.summary       = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
   spec.description   = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
   spec.metadata = {
-      'bug_tracker_uri' => 'https://github.com/NREL/openstudio-extension-gem/issues',
-      'changelog_uri' => 'https://github.com/NREL/openstudio-extension-gem/blob/develop/CHANGELOG.md',
-      #'documentation_uri' =>  'https://www.rubydoc.info/gems/openstudio-extension-gem/#{gem.version}',
-      'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
+    'bug_tracker_uri' => 'https://github.com/NREL/openstudio-extension-gem/issues',
+    'changelog_uri' => 'https://github.com/NREL/openstudio-extension-gem/blob/develop/CHANGELOG.md',
+    # 'documentation_uri' =>  'https://www.rubydoc.info/gems/openstudio-extension-gem/#{gem.version}',
+    'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
   }
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|

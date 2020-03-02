@@ -241,6 +241,5 @@ Or install it yourself as:
 - [ ] Capture useful output from Travis (measure dashboard results, log files, zip of build products, etc) and put it somewhere (s3?  naming convention?)
 - [ ] ```Extension::files_dir``` _DLM: I think this can have a default implementation, right?_
 - [ ] ```Extension::minimum_openstudio_version``` _DLM: should we rename? should people overwrite this in their class?_
-- [ ] Run rubocop on all of the core files and remove exclusion from .rubocop.yml file.
 - [ ] Cleanup task after running tests (may need to be in the OpenStudio Measure Tester)
 - [ ] Add tests to the extension/core

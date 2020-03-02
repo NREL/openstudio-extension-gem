@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -563,14 +565,14 @@ module OpenStudio
           Dir[path[:glob]].each do |file|
             puts "Updating license in file #{file}"
             f = File.read(file)
-            if f =~ path[:regex]
+            if f.match?(path[:regex])
               puts '  License found -- updating'
               File.open(file, 'w') { |write| write << f.gsub(path[:regex], path[:license]) }
             elsif f =~ /\(C\)/i || f =~ /\(Copyright\)/i
               puts '  File already has copyright -- skipping'
             else
               puts '  No license found -- adding'
-              if f =~ /#!/
+              if f.match?(/#!/)
                 puts '  CANNOT add license to file automatically, add it manually and it will update automatically in the future'
                 next
               end

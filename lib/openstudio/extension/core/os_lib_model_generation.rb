@@ -1641,9 +1641,6 @@ module OsLib_ModelGeneration
     end
     if ! args.has_key?("perim_mult")
       args["perim_mult"] = 1.0 # will not make two bars for extended perimeter
-      puts "asdf, doesn't have it I'm adding it"
-    else
-      puts "asdf, already had it"
     end
 
     # lookup and replace argument values from upstream measures

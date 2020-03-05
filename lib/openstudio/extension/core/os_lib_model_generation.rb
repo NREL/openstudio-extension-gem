@@ -606,7 +606,7 @@ module OsLib_ModelGeneration
       hash['ER_Trauma'] = { ratio: 0.0025, space_type_gen: true, default: false }
       hash['ER_Triage'] = { ratio: 0.0050, space_type_gen: true, default: false }
       hash['ICU_NurseStn'] = { ratio: 0.0298, space_type_gen: true, default: false }
-      hash['ICE_Open'] = { ratio: 0.0275, space_type_gen: true, default: false }
+      hash['ICU_Open'] = { ratio: 0.0275, space_type_gen: true, default: false }
       hash['ICU_PatRm'] = { ratio: 0.0115, space_type_gen: true, default: false }
       hash['Kitchen'] = { ratio: 0.0414, space_type_gen: true, default: false }
       hash['Lab'] = { ratio: 0.0236, space_type_gen: true, default: false }
@@ -1641,9 +1641,6 @@ module OsLib_ModelGeneration
     end
     if ! args.has_key?("perim_mult")
       args["perim_mult"] = 1.0 # will not make two bars for extended perimeter
-      puts "asdf, doesn't have it I'm adding it"
-    else
-      puts "asdf, already had it"
     end
 
     # lookup and replace argument values from upstream measures

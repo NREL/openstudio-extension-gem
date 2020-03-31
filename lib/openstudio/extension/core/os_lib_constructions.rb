@@ -283,7 +283,12 @@ module OsLib_Constructions
     # create info message
     if !runner.nil? # todo - need to look for bad visible transmittance here
       uFactorSiToIpConversion = OpenStudio.convert(material.uFactor, 'W/m^2*K', 'Btu/ft^2*h*R').get
-      runner.registerInfo("Created #{construction.name} construction. U-factor: #{OpenStudio.toNeatString(uFactorSiToIpConversion, 2, true)}(Btu/ft^2*h*R), SHGC: #{material.getSolarHeatGainCoefficient}, VT: #{material.getVisibleTransmittance.get}.")
+      # version check to support 2.x and 3.x
+      if Gem::Version.new(OpenStudio::openStudioVersion) > Gem::Version.new("2.9.1")
+        runner.registerInfo("Created #{construction.name} construction. U-factor: #{OpenStudio.toNeatString(uFactorSiToIpConversion, 2, true)}(Btu/ft^2*h*R), SHGC: #{material.solarHeatGainCoefficient}, VT: #{material.getVisibleTransmittance.get}.")
+      else
+        runner.registerInfo("Created #{construction.name} construction. U-factor: #{OpenStudio.toNeatString(uFactorSiToIpConversion, 2, true)}(Btu/ft^2*h*R), SHGC: #{material.getSolarHeatGainCoefficient}, VT: #{material.getVisibleTransmittance.get}.")
+      end
     end
 
     result = construction

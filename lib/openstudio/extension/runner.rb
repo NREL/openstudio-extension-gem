@@ -289,8 +289,13 @@ module OpenStudio
         cli = OpenStudio.getOpenStudioCLI
 
         the_call = ''
+
+        # lets set these to nil to test only using the cli
+        @gemfile_path = nil
+        @bundle_install_path = nil 
         if @gemfile_path
           if @bundle_without_string.empty?
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -r '#{measures_dir}'"
             the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -r '#{measures_dir}'"
           else
             the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -r '#{measures_dir}'"

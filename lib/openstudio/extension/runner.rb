@@ -296,11 +296,9 @@ module OpenStudio
         @bundle_install_path = nil 
         if @gemfile_path
           if @bundle_without_string.empty?
-            #the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -r '#{measures_dir}'"
-            the_call = "#{cli} --verbose measure -r #{measures_dir}"
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -r '#{measures_dir}'"
           else
-            #the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -r '#{measures_dir}'"
-            the_call = "#{cli} --verbose measure -r #{measures_dir}"
+            the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' --bundle_without '#{@bundle_without_string}' measure -r '#{measures_dir}'"
           end
         else
           the_call = "#{cli} --verbose measure -r #{measures_dir}"
@@ -336,6 +334,10 @@ module OpenStudio
           cli = OpenStudio.getOpenStudioCLI
 
           the_call = ''
+          # lets set these to nil to test only using the cli
+          # explicitly calling the cli only using non bundle options 
+          @gemfile_path = nil
+          @bundle_install_path = nil
           if @gemfile_path
             if @bundle_without_string.empty?
               the_call = "#{cli} --verbose --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' measure -t '#{m_dir}'"
@@ -633,6 +635,10 @@ module OpenStudio
           if @options[:verbose]
             verbose_string = ' --verbose'
           end
+          # lets set these to nil to test only using the cli
+          # explicitly calling the cli only using non bundle options 
+          @gemfile_path = nil
+          @bundle_install_path = nil
           if @gemfile_path
             if @bundle_without_string.empty?
               the_call = "#{cli}#{verbose_string} --bundle '#{@gemfile_path}' --bundle_path '#{@bundle_install_path}' run -w '#{run_osw_path}' 2>&1 > \"#{out_log}\""

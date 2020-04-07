@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -37,6 +39,27 @@ require 'json'
 require 'fileutils'
 
 RSpec.describe OpenStudio::Extension::Runner do
+  it 'can use runner.conf' do
+    # Add in a runner
+    File.delete('runner.conf') if File.exist? 'runner.conf'
+    OpenStudio::Extension::RunnerConfig.init(Dir.pwd)
+
+    # load the new runner
+    run_config = OpenStudio::Extension::RunnerConfig.new(Dir.pwd.to_s)
+    run_config.update_config('num_parallel', 2.456)
+    run_config.save
+
+    extension = OpenStudio::Extension::Extension.new
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir)
+
+    # Verify that the options is being set from the runner.conf file by inspecting that the
+    # num_parallel changed in the runner config
+    expect(runner.options[:num_parallel]).to eq 2.456
+    # remove file
+    File.delete('runner.conf') if File.exist? 'runner.conf'
+    expect(File.exist?('runner.conf')).to eq false
+  end
+
   it 'can run an OSW' do
     extension = OpenStudio::Extension::Extension.new
     runner_options = { run_simulations: true }

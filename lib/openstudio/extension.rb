@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -101,11 +103,9 @@ module OpenStudio
     def self.all_measure_dirs
       result = []
       all_extensions.each do |obj|
-        begin
-          dir = obj.new.measures_dir
-          result << dir if dir
-        rescue StandardError
-        end
+        dir = obj.new.measures_dir
+        result << dir if dir
+      rescue StandardError
       end
       return result.uniq
     end
@@ -117,11 +117,9 @@ module OpenStudio
     def self.all_file_dirs
       result = []
       all_extensions.each do |obj|
-        begin
-          dir = obj.new.files_dir
-          result << dir if dir
-        rescue StandardError
-        end
+        dir = obj.new.files_dir
+        result << dir if dir
+      rescue StandardError
       end
       return result.uniq
     end

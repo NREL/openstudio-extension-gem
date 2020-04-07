@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -56,17 +58,18 @@ module OpenStudio
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
       #  @param bundle_without [Hash] Hash describing the distribution of the variable.
-      #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods.
+      #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods. Note if options is used, then a local runner.conf file will not be loaded.
       #  @option options [String] :max_datapoints Max number of datapoints to run
       #  @option options [String] :num_parallel Number of simulations to run in parallel at a time
       #  @option options [String] :run_simulations Set to true to run the simulations
       #  @option options [String] :verbose Set to true to receive extra information while running simulations
       def initialize(dirname = Dir.pwd, bundle_without = [], options = {})
         # DLM: I am not sure if we want to use the main root directory to create these bundles
-        # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle in ~/OpenStudio/#{alias} or something like that?
+        # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle
+        # in ~/OpenStudio/#{alias} or something like that?
 
         # if the dirname contains a runner.conf file, then use the config file to specify the parameters
-        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && !options
+        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && options.empty?
           puts 'Using runner options from runner.conf file'
           runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
           @options = runner_config.options
@@ -562,14 +565,14 @@ module OpenStudio
           Dir[path[:glob]].each do |file|
             puts "Updating license in file #{file}"
             f = File.read(file)
-            if f =~ path[:regex]
+            if f.match?(path[:regex])
               puts '  License found -- updating'
               File.open(file, 'w') { |write| write << f.gsub(path[:regex], path[:license]) }
             elsif f =~ /\(C\)/i || f =~ /\(Copyright\)/i
               puts '  File already has copyright -- skipping'
             else
               puts '  No license found -- adding'
-              if f =~ /#!/
+              if f.match?(/#!/)
                 puts '  CANNOT add license to file automatically, add it manually and it will update automatically in the future'
                 next
               end

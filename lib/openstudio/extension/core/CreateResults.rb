@@ -45,6 +45,23 @@ module OsLib_CreateResults
   # @param end_mo [String] the end month for the peak demand window
   # @param end_day [Integer] the end day for the peak demand window
   # @param end_hr [Integer] the end hour for the peak demand window, using 24-hr clock
+  # @param electricity_consumption_tou_periods [Array<Hash>] optional array of hashes to add
+  # time-of-use electricity consumption values to the annual consumption information.
+  # Periods may overlap, but should be listed in the order in which they must be checked,
+  # where the value will be assigned to the first encountered period it falls into.
+  # An example hash looks like this:
+  #       {
+  #         'tou_name' => 'system_peak',
+  #         'tou_id' => 1,
+  #         'skip_weekends' => true,
+  #         'skip_holidays' => true,
+  #         'start_mo' => 'July',
+  #         'start_day' => 1,
+  #         'start_hr' => 14,
+  #         'end_mo' => 'August',
+  #         'end_day' => 31,
+  #         'end_hr' => 18
+  #       }
   # @return [OpenStudio::AttributeVector] a vector of results needed by EDAPT
   def create_results(skip_weekends = true,
                      skip_holidays = true,
@@ -53,7 +70,8 @@ module OsLib_CreateResults
                      start_hr = 14,
                      end_mo = 'September',
                      end_day = 30,
-                     end_hr = 18)
+                     end_hr = 18,
+                     electricity_consumption_tou_periods = [])
 
     # get the current version of OS being used to determine if sql query
     # changes are needed (for when E+ changes).
@@ -497,6 +515,83 @@ module OsLib_CreateResults
         @runner.registerValue('annual_demand_electricity_peak_demand', 0.0, 'kW')
       end
 
+      # Describe the TOU periods
+      electricity_consumption_tou_periods.each do |tou_pd|
+        @runner.registerInfo("TOU period #{tou_pd['tou_id']} represents #{tou_pd['tou_name']} and covers #{tou_pd['start_mo']}-#{tou_pd['start_day']} to #{tou_pd['end_mo']}-#{tou_pd['end_day']} from #{tou_pd['start_hr']} to #{tou_pd['end_hr']}, skip weekends = #{tou_pd['skip_weekends']}, skip holidays = #{tou_pd['skip_holidays']}")
+      end
+
+      # electricity time-of-use periods
+      elec = @sql.timeSeries(ann_env_pd, 'Zone Timestep', 'Electricity:Facility', '')
+      if elec.is_initialized && day_types
+        elec = elec.get
+        # Put timeseries into array
+        elec_vals = []
+        ann_elec_vals = elec.values
+        for i in 0..(ann_elec_vals.size - 1)
+          elec_vals << ann_elec_vals[i]
+        end
+
+        # Put values into array
+        elec_times = []
+        ann_elec_times = elec.dateTimes
+        for i in 0..(ann_elec_times.size - 1)
+          elec_times << ann_elec_times[i]
+        end
+
+        # Loop through the time/value pairs and find the peak
+        # excluding the times outside of the Xcel peak demand window
+        electricity_tou_vals = Hash.new(0)
+        elec_times.zip(elec_vals).each_with_index do |vs, ind|
+          date_time = vs[0]
+          joules = vs[1]
+          day_type = day_types[ind]
+          time = date_time.time
+          date = date_time.date
+
+          # puts("#{val_kW}kW; #{date}; #{time}; #{day_of_week.valueName}")
+
+          # Determine which TOU period this hour falls into
+          tou_period_assigned = false
+          electricity_consumption_tou_periods.each do |tou_pd|
+            pd_start_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(tou_pd['start_mo']), tou_pd['start_day'], timeseries_yr), OpenStudio::Time.new(0, 0, 0, 0))
+            pd_end_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(tou_pd['end_mo']), tou_pd['end_day'], timeseries_yr), OpenStudio::Time.new(0, 24, 0, 0))
+            pd_start_time = OpenStudio::Time.new(0, tou_pd['start_hr'], 0, 0)
+            pd_end_time = OpenStudio::Time.new(0, tou_pd['end_hr'], 0, 0)
+            # Skip times outside of the correct months
+            next if date_time < pd_start_date || date_time > pd_end_date
+            # Skip times before some time and after another time
+            next if time < pd_start_time || time > pd_end_time
+            # Skip weekends if asked
+            if tou_pd['skip_weekends']
+              # Sunday = 1, Saturday = 7
+              next if day_type == 1 || day_type == 7
+            end
+            # Skip holidays if asked
+            if tou_pd['skip_holidays']
+              # Holiday = 8
+              next if day_type == 8
+            end
+            # If here, this hour falls into the specified period
+            tou_period_assigned = true
+            electricity_tou_vals[tou_pd['tou_id']] += joules
+            break
+          end
+          # Ensure that the value fell into a period
+          unless tou_period_assigned
+            @runner.registerError("Did not find a TOU period covering #{time} on #{date}, kWh will not be included in any TOU period.")
+          end
+        end
+        # Register values for any time-of-use period with kWh
+        electricity_tou_vals.each do |tou_pd_id, joules_in_pd|
+          gj_in_pd = OpenStudio.convert(joules_in_pd, 'J', 'GJ').get
+          kwh_in_pd = OpenStudio.convert(joules_in_pd, 'J', 'kWh').get
+          @runner.registerValue("annual_consumption_electricity_tou_#{tou_pd_id}", gj_in_pd, 'GJ')
+          @runner.registerInfo("TOU period #{tou_pd_id} annual electricity consumption = #{kwh_in_pd} kWh.")
+        end
+      else
+        @runner.registerError('Electricity timeseries (Electricity:Facility at zone timestep) could not be found, cannot determine the information needed to calculate savings or incentives.')
+      end
+
       # electricity_annual_avg_peak_demand
       val = @sql.electricityTotalEndUses
       if val.is_initialized
@@ -585,6 +680,88 @@ module OsLib_CreateResults
       else
         demand_elems << OpenStudio::Attribute.new('district_cooling_peak_demand', 0.0, 'kW')
         @runner.registerValue('annual_demand_district_cooling_peak_demand', 0.0, 'kW')
+      end
+
+      # district cooling time-of-use periods
+      dist_clg = @sql.timeSeries(ann_env_pd, 'Zone Timestep', 'DistrictCooling:Facility', '')
+      if dist_clg.is_initialized && day_types
+        dist_clg = dist_clg.get
+        # Put timeseries into array
+        dist_clg_vals = []
+        ann_dist_clg_vals = dist_clg.values
+        for i in 0..(ann_dist_clg_vals.size - 1)
+          dist_clg_vals << ann_dist_clg_vals[i]
+        end
+
+        # Put values into array
+        dist_clg_times = []
+        ann_dist_clg_times = dist_clg.dateTimes
+        for i in 0..(ann_dist_clg_times.size - 1)
+          dist_clg_times << ann_dist_clg_times[i]
+        end
+
+        # Loop through the time/value pairs and find the peak
+        # excluding the times outside of the Xcel peak demand window
+        dist_clg_tou_vals = Hash.new(0)
+        dist_clg_times.zip(dist_clg_vals).each_with_index do |vs, ind|
+          date_time = vs[0]
+          joules = vs[1]
+          day_type = day_types[ind]
+          time = date_time.time
+          date = date_time.date
+
+          # puts("#{val_kW}kW; #{date}; #{time}; #{day_of_week.valueName}")
+
+          # Determine which TOU period this hour falls into
+          tou_period_assigned = false
+          electricity_consumption_tou_periods.each do |tou_pd|
+            pd_start_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(tou_pd['start_mo']), tou_pd['start_day'], timeseries_yr), OpenStudio::Time.new(0, 0, 0, 0))
+            pd_end_date = OpenStudio::DateTime.new(OpenStudio::Date.new(OpenStudio::MonthOfYear.new(tou_pd['end_mo']), tou_pd['end_day'], timeseries_yr), OpenStudio::Time.new(0, 24, 0, 0))
+            pd_start_time = OpenStudio::Time.new(0, tou_pd['start_hr'], 0, 0)
+            pd_end_time = OpenStudio::Time.new(0, tou_pd['end_hr'], 0, 0)
+            # Skip times outside of the correct months
+            next if date_time < pd_start_date || date_time > pd_end_date
+            # Skip times before some time and after another time
+            next if time < pd_start_time || time > pd_end_time
+            # Skip weekends if asked
+            if tou_pd['skip_weekends']
+              # Sunday = 1, Saturday = 7
+              next if day_type == 1 || day_type == 7
+            end
+            # Skip holidays if asked
+            if tou_pd['skip_holidays']
+              # Holiday = 8
+              next if day_type == 8
+            end
+            # If here, this hour falls into the specified period
+            tou_period_assigned = true
+            dist_clg_tou_vals[tou_pd['tou_id']] += joules
+            break
+          end
+          # Ensure that the value fell into a period
+          unless tou_period_assigned
+            @runner.registerError("Did not find a TOU period covering #{time} on #{date}, kWh will not be included in any TOU period.")
+          end
+        end
+        # Register values for any time-of-use period with kWh
+        dist_clg_tou_vals.each do |tou_pd_id, joules_in_pd|
+          gj_in_pd = OpenStudio.convert(joules_in_pd, 'J', 'GJ').get
+          kwh_in_pd = OpenStudio.convert(joules_in_pd, 'J', 'kWh').get
+          @runner.registerValue("annual_consumption_district_cooling_tou_#{tou_pd_id}", gj_in_pd, 'GJ')
+          @runner.registerInfo("TOU period #{tou_pd_id} annual district cooling consumption = #{kwh_in_pd} kWh.")
+        end
+      else
+        # If TOU periods were specified but this model has no district cooling, report zeroes
+        if electricity_consumption_tou_periods.size > 0
+          # Get the TOU ids
+          tou_ids = []
+          electricity_consumption_tou_periods.each do |tou_pd|
+            tou_ids << tou_pd['tou_id']
+          end
+          tou_ids.uniq.each do |tou_id|
+            @runner.registerValue("annual_consumption_district_cooling_tou_#{tou_id}", 0.0, 'GJ')
+          end
+        end
       end
 
     else

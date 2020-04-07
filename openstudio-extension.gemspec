@@ -32,12 +32,10 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'bundler', '~> 2.1'
   spec.add_dependency 'openstudio-workflow', '~> 2.0.0'
- # spec.add_dependency 'openstudio_measure_tester', '~> 0.2.1'
+  spec.add_dependency 'openstudio_measure_tester', '~> 0.2.2'
   spec.add_dependency 'parallel', '~> 1.19.1'
 
   spec.add_development_dependency 'github_api', '~> 0.18.0'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
-  # This is redundant since it is included in openstudio_measure_tester
-  spec.add_development_dependency 'rubocop', '~> 0.54.0'
 end

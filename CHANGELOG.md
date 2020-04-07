@@ -1,9 +1,10 @@
 # OpenStudio Extension Gem
 
-## Version 0.2.1 (Unreleased)
+## Version 0.2.1
 
 * Changes from 0.1.5 (runner.conf bug)
 * Changes from 0.1.6 (update core library)
+* Update measure tester to 0.2.2 (with Rubocop 0.54)
 
 ## Version 0.2.0
 

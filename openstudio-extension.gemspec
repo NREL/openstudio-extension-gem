@@ -39,6 +39,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
 
-  spec.add_dependency 'bcl', '~> 0.5.8'
-
+  spec.add_dependency 'bcl', '~> 0.5.9'
 end

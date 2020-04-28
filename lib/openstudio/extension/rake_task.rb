@@ -145,157 +145,199 @@ module OpenStudio
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_copyright(@root_dir, @doc_templates_dir)
           end
-            
-          desc 'Test BCL login'
-          task :test_bcl_login do
-            puts "test BCL login"
-            bcl = ::BCL::ComponentMethods.new
-            bcl.login
-          end
 
-          desc 'Search BCL'
-          task :search_bcl_measures do
-            puts "test search BCL"
-            bcl = ::BCL::ComponentMethods.new
-            bcl.login
-            # check for env var specifying keyword first
-            if ENV['bcl_search_keyword']
-              keyword = ENV['bcl_search_keyword']
-            else
-              keyword = 'Space'
-            end
-            num_results = 10
-            # bcl.search params: search_string, filter_string, return_all_results?
-            puts "searching BCL measures for keyword: #{keyword}"
-            results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
-            puts "there are #{results[:result].count} results"
-            results[:result].each do |res|
-             puts (res[:measure][:name]).to_s
-            end
-          end
-
-          desc 'Copy the measures to a location that can be uploaded to BCL'
-          task :stage_bcl do
-            puts 'Staging measures for BCL'
-            # initialize BCL and login
-            bcl = ::BCL::ComponentMethods.new
-            bcl.login
-            # reset = true to clear out old staged content
-            reset = false
-
-            # ensure staged dir exists
-            FileUtils.mkdir_p(@staged_path)
-
-            # delete existing tarballs if reset is true
-            if reset
-              FileUtils.rm_rf(Dir.glob("#{@staged_path}/*"))
+          namespace 'bcl' do
+            desc 'Test BCL login'
+            task :test_login do
+              puts 'test BCL login'
+              bcl = ::BCL::ComponentMethods.new
+              bcl.login
             end
 
-            # create new and existing directories
-            FileUtils.mkdir_p(@staged_path.to_s + '/update')
-            FileUtils.mkdir_p(@staged_path.to_s + '/push/component')
-            FileUtils.mkdir_p(@staged_path.to_s + '/push/measure')
+            # for custom search, populate env var: bcl_search_keyword
+            desc 'Search BCL'
+            task :search_measures do
+              puts 'test search BCL'
+              bcl = ::BCL::ComponentMethods.new
+              bcl.login
 
-            # keep track of noop, update, push
-            noops = 0
-            new_ones = 0
-            updates = 0
-
-            # get all content directories to process
-            dirs = Dir.glob("#{@measures_dir}/*")
-
-            dirs.each do |dir|
-              next if dir.include?('Rakefile') || File.basename(dir) == 'staged'
-              current_d = Dir.pwd
-              content_name = File.basename(dir)
-              puts "", "---"
-              puts "Generating #{content_name}"
-
-              Dir.chdir(dir)
-
-              # figure out whether to upload new or update existing
-              files = Pathname.glob('**/*')
-              uuid = nil
-              vid = nil
-              content_type = 'measure'
-
-              paths = []
-              files.each do |file|
-                # don't tar tests/outputs directory
-                next if file.to_s.start_with?('tests/output') # From measure testing process
-                next if file.to_s.start_with?('tests/test') # From openstudio-measure-tester-gem
-                next if file.to_s.start_with?('tests/coverage') # From openstudio-measure-tester-gem
-                next if file.to_s.start_with?('test_results') # From openstudio-measure-tester-gem
-                paths << file.to_s
-                if file.to_s =~ /^.{0,2}component.xml$/ || file.to_s =~ /^.{0,2}measure.xml$/
-                  if file.to_s =~ /^.{0,2}component.xml$/
-                    content_type = 'component'
-                  end
-                  # extract uuid  and vid
-                  uuid, vid = bcl.uuid_vid_from_xml(file)
-                end
-              end
-              puts "UUID: #{uuid}, VID: #{vid}"
-
-              # note: if uuid is missing, will assume new content
-              action = bcl.search_by_uuid(uuid, vid)
-              puts "#{content_name} ACTION TO TAKE: #{action}"
-              # new content functionality needs to know if measure or component.  update is agnostic.
-              if action == 'noop' # ignore up-to-date content
-                puts "  - WARNING: local #{content_name} uuid and vid match BCL... no update will be performed"
-                noops += 1
-                next
-              elsif action == 'update'
-                # puts "#{content_name} labeled as update for BCL"
-                destination = @staged_path + '/' + action + '/' + "#{content_name}.tar.gz"
-                updates += 1
-              elsif action == 'push'
-                # puts "#{content_name} labeled as new content for BCL"
-                destination = @staged_path + '/' + action + '/' + content_type + "/#{content_name}.tar.gz"
-                new_ones += 1
-              end
-
-              puts "destination: #{destination}"
-
-              # copy over only if 'reset_receipts' is set to TRUE. otherwise ignore if file exists already
-              if File.exist?(destination)
-                if reset
-                  FileUtils.rm(destination)
-                  ::BCL.tarball(destination, paths)
-                else
-                  puts "*** WARNING: File #{content_name}.tar.gz already exists in staged directory... keeping existing file. To overwrite, set reset_receipts arg to true ***"
-                end
+              # check for env var specifying keyword first
+              if ENV['bcl_search_keyword']
+                keyword = ENV['bcl_search_keyword']
               else
-                ::BCL.tarball(destination, paths)
+                keyword = 'Space'
               end
-              Dir.chdir(current_d)
+              num_results = 10
+              # bcl.search params: search_string, filter_string, return_all_results?
+              puts "searching BCL measures for keyword: #{keyword}"
+              results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
+              puts "there are #{results[:result].count} results"
+              results[:result].each do |res|
+                puts (res[:measure][:name]).to_s
+              end
             end
-            puts "","****STAGING DONE**** #{new_ones} new content, #{updates} updates, #{noops} skipped (already up-to-date on BCL)",""
-          end
 
-          desc 'Upload measures from the specified location.'
-          task :push_bcl do
-            puts 'Push measures to BCL'
+            # to call with argument: "openstudio:bcl:stage[true]" (true = remove existing staged content)
+            desc 'Copy the measures/components to a location that can be uploaded to BCL'
+            task :stage, [:reset] do |t, args|
+              puts 'Staging measures for BCL'
+              # initialize BCL and login
+              bcl = ::BCL::ComponentMethods.new
+              bcl.login
 
-            # initialize BCL and login
-            bcl = ::BCL::ComponentMethods.new
-            bcl.login
-            reset = false
-            
-            total_count = 0
-            successes = 0
-            errors = 0
-            skipped = 0
+              # process reset options: true to clear out old staged content
+              options = { reset: false }
+              if args[:reset].to_s == 'true'
+                options[:reset] = true
+              end
 
-            # grab all the new measure and component tar files and push to bcl
-            ['measure', 'component'].each do |content_type|
+              # ensure staged dir exists
+              FileUtils.mkdir_p(@staged_path)
+
+              # delete existing tarballs if reset is true
+              if options[:reset]
+                puts 'Deleting existing staged content'
+                FileUtils.rm_rf(Dir.glob("#{@staged_path}/*"))
+              end
+
+              # create new and existing directories
+              FileUtils.mkdir_p(@staged_path.to_s + '/update')
+              FileUtils.mkdir_p(@staged_path.to_s + '/push/component')
+              FileUtils.mkdir_p(@staged_path.to_s + '/push/measure')
+
+              # keep track of noop, update, push
+              noops = 0
+              new_ones = 0
+              updates = 0
+
+              # get all content directories to process
+              dirs = Dir.glob("#{@measures_dir}/*")
+
+              dirs.each do |dir|
+                next if dir.include?('Rakefile') || File.basename(dir) == 'staged'
+                current_d = Dir.pwd
+                content_name = File.basename(dir)
+                puts '', '---'
+                puts "Generating #{content_name}"
+
+                Dir.chdir(dir)
+
+                # figure out whether to upload new or update existing
+                files = Pathname.glob('**/*')
+                uuid = nil
+                vid = nil
+                content_type = 'measure'
+
+                paths = []
+                files.each do |file|
+                  # don't tar tests/outputs directory
+                  next if file.to_s.start_with?('tests/output') # From measure testing process
+                  next if file.to_s.start_with?('tests/test') # From openstudio-measure-tester-gem
+                  next if file.to_s.start_with?('tests/coverage') # From openstudio-measure-tester-gem
+                  next if file.to_s.start_with?('test_results') # From openstudio-measure-tester-gem
+                  paths << file.to_s
+                  if file.to_s =~ /^.{0,2}component.xml$/ || file.to_s =~ /^.{0,2}measure.xml$/
+                    if file.to_s.match?(/^.{0,2}component.xml$/)
+                      content_type = 'component'
+                    end
+                    # extract uuid  and vid
+                    uuid, vid = bcl.uuid_vid_from_xml(file)
+                  end
+                end
+                puts "UUID: #{uuid}, VID: #{vid}"
+
+                # note: if uuid is missing, will assume new content
+                action = bcl.search_by_uuid(uuid, vid)
+                puts "#{content_name} ACTION TO TAKE: #{action}"
+                # new content functionality needs to know if measure or component.  update is agnostic.
+                if action == 'noop' # ignore up-to-date content
+                  puts "  - WARNING: local #{content_name} uuid and vid match BCL... no update will be performed"
+                  noops += 1
+                  next
+                elsif action == 'update'
+                  # puts "#{content_name} labeled as update for BCL"
+                  destination = @staged_path + '/' + action + '/' + "#{content_name}.tar.gz"
+                  updates += 1
+                elsif action == 'push'
+                  # puts "#{content_name} labeled as new content for BCL"
+                  destination = @staged_path + '/' + action + '/' + content_type + "/#{content_name}.tar.gz"
+                  new_ones += 1
+                end
+
+                puts "destination: #{destination}"
+
+                # copy over only if 'reset_receipts' is set to TRUE. otherwise ignore if file exists already
+                if File.exist?(destination)
+                  if reset
+                    FileUtils.rm(destination)
+                    ::BCL.tarball(destination, paths)
+                  else
+                    puts "*** WARNING: File #{content_name}.tar.gz already exists in staged directory... keeping existing file. To overwrite, set reset_receipts arg to true ***"
+                  end
+                else
+                  ::BCL.tarball(destination, paths)
+                end
+                Dir.chdir(current_d)
+              end
+              puts '', "****STAGING DONE**** #{new_ones} new content, #{updates} updates, #{noops} skipped (already up-to-date on BCL)", ''
+            end
+
+            desc 'Upload measures from the specified location.'
+            task :push do
+              puts 'Push measures to BCL'
+
+              # initialize BCL and login
+              bcl = ::BCL::ComponentMethods.new
+              bcl.login
+              reset = false
+
+              total_count = 0
+              successes = 0
+              errors = 0
+              skipped = 0
+
+              # grab all the new measure and component tar files and push to bcl
+              ['measure', 'component'].each do |content_type|
+                items = []
+                paths = Pathname.glob(@staged_path.to_s + "/push/#{content_type}/*.tar.gz")
+                paths.each do |path|
+                  # puts path
+                  items << path.to_s
+                end
+
+                items.each do |item|
+                  puts item.split('/').last
+                  total_count += 1
+
+                  receipt_file = File.dirname(item) + '/' + File.basename(item, '.tar.gz') + '.receipt'
+                  if !reset && File.exist?(receipt_file)
+                    skipped += 1
+                    puts 'SKIP: receipt file found'
+                    next
+                  end
+
+                  valid, res = bcl.push_content(item, true, "nrel_#{content_type}")
+                  if valid
+                    successes += 1
+                  else
+                    errors += 1
+                    if res.key?(:error)
+                      puts "  ERROR MESSAGE: #{res[:error]}"
+                    else
+                      puts "ERROR: #{res.inspect.chomp}"
+                    end
+                  end
+                  puts '', '---'
+                end
+              end
+
+              # grab all the updated content (measures and components) tar files and push to bcl
               items = []
-              paths = Pathname.glob(@staged_path.to_s + "/push/#{content_type}/*.tar.gz")
+              paths = Pathname.glob(@staged_path.to_s + '/update/*.tar.gz')
               paths.each do |path|
                 # puts path
                 items << path.to_s
               end
-
               items.each do |item|
                 puts item.split('/').last
                 total_count += 1
@@ -307,7 +349,7 @@ module OpenStudio
                   next
                 end
 
-                valid, res = bcl.push_content(item, true, "nrel_#{content_type}")
+                valid, res = bcl.update_content(item, true)
                 if valid
                   successes += 1
                 else
@@ -315,47 +357,14 @@ module OpenStudio
                   if res.key?(:error)
                     puts "  ERROR MESSAGE: #{res[:error]}"
                   else
-                    puts "ERROR: #{res.inspect.chomp}"
+                    puts "ERROR MESSAGE: #{res.inspect.chomp}"
                   end
                 end
-                puts "", "---"
-              end
-            end
-
-            # grab all the updated content (measures and components) tar files and push to bcl
-            items = []
-            paths = Pathname.glob(@staged_path.to_s + '/update/*.tar.gz')
-            paths.each do |path|
-              # puts path
-              items << path.to_s
-            end
-            items.each do |item|
-              puts item.split('/').last
-              total_count += 1
-
-              receipt_file = File.dirname(item) + '/' + File.basename(item, '.tar.gz') + '.receipt'
-              if !reset && File.exist?(receipt_file)
-                skipped += 1
-                puts 'SKIP: receipt file found'
-                next
+                puts '', '---'
               end
 
-              valid, res = bcl.update_content(item, true)
-              if valid
-                successes += 1
-              else
-                errors += 1
-                if res.key?(:error)
-                  puts "  ERROR MESSAGE: #{res[:error]}"
-                else
-                  puts "ERROR MESSAGE: #{res.inspect.chomp}"
-                end
-              end
-              puts "", "---"
+              puts "****UPLOAD DONE**** #{total_count} total, #{successes} success, #{errors} failures, #{skipped} skipped"
             end
-
-            puts "****UPLOAD DONE**** #{total_count} total, #{successes} success, #{errors} failures, #{skipped} skipped"
-
           end
         end
       end

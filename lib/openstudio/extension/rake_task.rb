@@ -145,6 +145,34 @@ module OpenStudio
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_copyright(@root_dir, @doc_templates_dir)
           end
+            
+          desc 'Test BCL login'
+          task :test_bcl_login do
+            puts "test BCL login"
+            bcl = ::BCL::ComponentMethods.new
+            bcl.login
+          end
+
+          desc 'Search BCL'
+          task :search_bcl_measures do
+            puts "test search BCL"
+            bcl = ::BCL::ComponentMethods.new
+            bcl.login
+            # check for env var specifying keyword first
+            if ENV['bcl_search_keyword']
+              keyword = ENV['bcl_search_keyword']
+            else
+              keyword = 'Space'
+            end
+            num_results = 10
+            # bcl.search params: search_string, filter_string, return_all_results?
+            puts "searching BCL measures for keyword: #{keyword}"
+            results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
+            puts "there are #{results[:result].count} results"
+            results[:result].each do |res|
+             puts (res[:measure][:name]).to_s
+            end
+          end
 
           namespace 'bcl' do
             desc 'Test BCL login'
@@ -334,37 +362,7 @@ module OpenStudio
               # grab all the updated content (measures and components) tar files and push to bcl
               items = []
               paths = Pathname.glob(@staged_path.to_s + '/update/*.tar.gz')
-              paths.each do |path|
-                # puts path
-                items << path.to_s
-              end
-              items.each do |item|
-                puts item.split('/').last
-                total_count += 1
 
-                receipt_file = File.dirname(item) + '/' + File.basename(item, '.tar.gz') + '.receipt'
-                if !reset && File.exist?(receipt_file)
-                  skipped += 1
-                  puts 'SKIP: receipt file found'
-                  next
-                end
-
-                valid, res = bcl.update_content(item, true)
-                if valid
-                  successes += 1
-                else
-                  errors += 1
-                  if res.key?(:error)
-                    puts "  ERROR MESSAGE: #{res[:error]}"
-                  else
-                    puts "ERROR MESSAGE: #{res.inspect.chomp}"
-                  end
-                end
-                puts '', '---'
-              end
-
-              puts "****UPLOAD DONE**** #{total_count} total, #{successes} success, #{errors} failures, #{skipped} skipped"
-            end
           end
         end
       end

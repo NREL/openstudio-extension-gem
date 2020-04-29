@@ -362,7 +362,7 @@ module OpenStudio
               # grab all the updated content (measures and components) tar files and push to bcl
               items = []
               paths = Pathname.glob(@staged_path.to_s + '/update/*.tar.gz')
-
+            end
           end
         end
       end

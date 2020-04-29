@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.2 (Unreleased)
+
+* Exclude measure tests from being released with the gem (reduces the size of the installed gem significantly)
+
 ## Version 0.2.1
 
 * Changes from 0.1.5 (runner.conf bug)

@@ -145,34 +145,6 @@ module OpenStudio
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_copyright(@root_dir, @doc_templates_dir)
           end
-            
-          desc 'Test BCL login'
-          task :test_bcl_login do
-            puts "test BCL login"
-            bcl = ::BCL::ComponentMethods.new
-            bcl.login
-          end
-
-          desc 'Search BCL'
-          task :search_bcl_measures do
-            puts "test search BCL"
-            bcl = ::BCL::ComponentMethods.new
-            bcl.login
-            # check for env var specifying keyword first
-            if ENV['bcl_search_keyword']
-              keyword = ENV['bcl_search_keyword']
-            else
-              keyword = 'Space'
-            end
-            num_results = 10
-            # bcl.search params: search_string, filter_string, return_all_results?
-            puts "searching BCL measures for keyword: #{keyword}"
-            results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
-            puts "there are #{results[:result].count} results"
-            results[:result].each do |res|
-             puts (res[:measure][:name]).to_s
-            end
-          end
 
           namespace 'bcl' do
             desc 'Test BCL login'

@@ -51,7 +51,7 @@ module OpenStudio
         setup_subtasks(@name)
       end
 
-      def set_extension_class(extension_class)
+      def set_extension_class(extension_class, github_repo='')
         @extension_class = extension_class
         @extension = extension_class.new
         @root_dir = @extension.root_dir
@@ -60,6 +60,7 @@ module OpenStudio
         @core_dir = @extension.core_dir
         @doc_templates_dir = @extension.doc_templates_dir
         @files_dir = @extension.files_dir
+        @github_repo = github_repo
       end
 
       private
@@ -92,12 +93,6 @@ module OpenStudio
               exit 1
             end
           end
-
-          # TODO: Implement this eventually... comment out for now.
-          # desc 'Use openstudio docker image to run tests'
-          # task :test_with_docker do
-          #   puts 'testing with docker'
-          # end
 
           # namespace for measure operations
           namespace 'measures' do
@@ -144,6 +139,14 @@ module OpenStudio
             puts 'Updating COPYRIGHT in files'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             runner.update_copyright(@root_dir, @doc_templates_dir)
+          end
+
+          desc 'Print the change log from GitHub'
+          task :change_log, [:start_date, :end_date, :apikey] do |t, args|
+            require 'change_log'
+            cl = ChangeLog.new(@github_repo, *args)
+            cl.process
+            cl.print_issues
           end
 
           namespace 'bcl' do

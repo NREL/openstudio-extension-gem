@@ -1,10 +1,11 @@
 # OpenStudio Extension Gem
 
-## Version 0.2.2 (Unreleased)
+## Version 0.2.2
 
 * Exclude measure tests from being released with the gem (reduces the size of the installed gem significantly)
 * Add BCL commands to upload measures
-* Update github changelog gem to use Octokit compared to github_api (which was last released 3 years ago)
+* Update GitHub changelog gem to use Octokit compared to github_api (which was last released 3 years ago)
+* Promote GitHub changelog creation to a rake task to be inherited by all downstream extension gems
 
 ## Version 0.2.1
 

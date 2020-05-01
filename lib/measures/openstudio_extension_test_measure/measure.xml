@@ -1,17 +1,18 @@
+<?xml version="1.0"?>
 <measure>
   <schema_version>3.0</schema_version>
   <name>openstudio_extension_test_measure</name>
   <uid>36b99a29-41e1-4d85-9272-85d43b966e5a</uid>
-  <version_id>e9fedf04-7619-4c93-a865-0e54adfe3507</version_id>
-  <version_modified>20190430T155209Z</version_modified>
+  <version_id>edf7f103-9f51-4944-a5af-1d8fa2b0c9b7</version_id>
+  <version_modified>20200427T230714Z</version_modified>
   <xml_checksum>49BEF039</xml_checksum>
   <class_name>OpenStudioExtensionTestMeasure</class_name>
   <display_name>OpenStudio Extension Test Measure</display_name>
-  <description>Rotate your building relative to its current orientation. This will not rotate site shading objects.</description>
-  <modeler_description>Get the North Axis field for the  OS:Building object and adjusted it based on the user specified value. If the starting value is 20 degrees and the user value is 5 degrees, then the resulting value is 25 degrees.</modeler_description>
-  <arguments/>
-  <outputs/>
-  <provenances/>
+  <description>A measure that tests OpenStudio Extension gem functionality</description>
+  <modeler_description>This is a test measure that tests OpenStudio Extension gem functionality.</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
   <tags>
     <tag>Envelope.Form</tag>
   </tags>
@@ -39,28 +40,22 @@
   </attributes>
   <files>
     <file>
-      <filename>LICENSE.md</filename>
-      <filetype>md</filetype>
-      <usage_type>license</usage_type>
-      <checksum>9640B6CB</checksum>
-    </file>
-    <file>
       <filename>README.md.erb</filename>
       <filetype>erb</filetype>
       <usage_type>readmeerb</usage_type>
       <checksum>703C9964</checksum>
     </file>
     <file>
-      <filename>README.md</filename>
+      <filename>LICENSE.md</filename>
       <filetype>md</filetype>
-      <usage_type>readme</usage_type>
-      <checksum>7258830F</checksum>
+      <usage_type>license</usage_type>
+      <checksum>E0468DD6</checksum>
     </file>
     <file>
       <filename>OpenStudioExtensionTestMeasure_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>8452EA9A</checksum>
+      <checksum>66A00EA8</checksum>
     </file>
     <file>
       <version>
@@ -71,13 +66,19 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>E5793A49</checksum>
+      <checksum>51BB85EF</checksum>
     </file>
     <file>
       <filename>os_lib_helper_methods.rb</filename>
       <filetype>rb</filetype>
       <usage_type>resource</usage_type>
-      <checksum>22515A49</checksum>
+      <checksum>07B01D67</checksum>
+    </file>
+    <file>
+      <filename>README.md</filename>
+      <filetype>md</filetype>
+      <usage_type>readme</usage_type>
+      <checksum>7258830F</checksum>
     </file>
   </files>
 </measure>

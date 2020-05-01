@@ -43,6 +43,7 @@ require 'openstudio'
 require 'yaml'
 require 'fileutils'
 require 'parallel'
+require 'bcl'
 
 module OpenStudio
   module Extension
@@ -57,7 +58,7 @@ module OpenStudio
       # compatible with the OpenStudio CLI.
       ##
       #  @param [String] dirname Directory to run commands in, defaults to Dir.pwd. If directory includes a Gemfile then create a local bundle.
-      #  @param bundle_without [Hash] Hash describing the distribution of the variable.
+      #  @param bundle_without [Array] List of strings of the groups to exclude when running the bundle command
       #  @param options [Hash] Hash describing options for running the simulation. These are the defaults for all runs unless overriden within the run_* methods. Note if options is used, then a local runner.conf file will not be loaded.
       #  @option options [String] :max_datapoints Max number of datapoints to run
       #  @option options [String] :num_parallel Number of simulations to run in parallel at a time

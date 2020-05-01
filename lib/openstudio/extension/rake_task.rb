@@ -51,7 +51,7 @@ module OpenStudio
         setup_subtasks(@name)
       end
 
-      def set_extension_class(extension_class, github_repo='')
+      def set_extension_class(extension_class, github_repo = '')
         @extension_class = extension_class
         @extension = extension_class.new
         @root_dir = @extension.root_dir

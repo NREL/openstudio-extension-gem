@@ -55,7 +55,8 @@ module OpenStudio
         @extension_class = extension_class
         @extension = extension_class.new
         @root_dir = @extension.root_dir
-        @measures_dir = @extension.measures_dir
+        # Catch if measures_dir is nil, then just make it an empty string
+        @measures_dir = @extension.measures_dir || ''
         @staged_path = @measures_dir + '/staged'
         @core_dir = @extension.core_dir
         @doc_templates_dir = @extension.doc_templates_dir

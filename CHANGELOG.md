@@ -1,8 +1,9 @@
 # OpenStudio Extension Gem
 
-## Version (Unreleased)
+## Version 0.2.3
 
 * Use new version of rubocop style from S3
+* Remove frozen string literals in comments
 
 ## Version 0.2.2
 

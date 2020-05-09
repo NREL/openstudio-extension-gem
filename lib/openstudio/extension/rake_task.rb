@@ -82,8 +82,6 @@ module OpenStudio
 
           desc 'Use openstudio system ruby to run tests'
           task :test_with_openstudio do
-            # puts Dir.pwd
-            # puts Rake.original_dir
             puts 'testing with openstudio'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             result = runner.test_measures_with_cli(@measures_dir)

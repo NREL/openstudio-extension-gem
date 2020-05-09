@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version (Unreleased)
+
+* Use new version of rubocop style from S3
+
 ## Version 0.2.2
 
 * Exclude measure tests from being released with the gem (reduces the size of the installed gem significantly)

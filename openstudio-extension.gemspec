@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'openstudio/extension/version'
@@ -30,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '~> 2.5.0'
 
-  spec.add_dependency 'bcl', '~> 0.6.0'
+  spec.add_dependency 'bcl', '~> 0.6.1'
   spec.add_dependency 'bundler', '~> 2.1'
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   spec.add_dependency 'openstudio-workflow', '~> 2.0.0'

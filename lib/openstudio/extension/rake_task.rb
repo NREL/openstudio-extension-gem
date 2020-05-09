@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -177,7 +175,7 @@ module OpenStudio
               results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
               puts "there are #{results[:result].count} results"
               results[:result].each do |res|
-                puts (res[:measure][:name]).to_s
+                puts(res[:measure][:name]).to_s
               end
             end
 

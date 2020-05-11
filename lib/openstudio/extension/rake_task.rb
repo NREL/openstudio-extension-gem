@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -51,11 +49,12 @@ module OpenStudio
         setup_subtasks(@name)
       end
 
-      def set_extension_class(extension_class, github_repo='')
+      def set_extension_class(extension_class, github_repo = '')
         @extension_class = extension_class
         @extension = extension_class.new
         @root_dir = @extension.root_dir
-        @measures_dir = @extension.measures_dir
+        # Catch if measures_dir is nil, then just make it an empty string
+        @measures_dir = @extension.measures_dir || ''
         @staged_path = @measures_dir + '/staged'
         @core_dir = @extension.core_dir
         @doc_templates_dir = @extension.doc_templates_dir
@@ -83,8 +82,6 @@ module OpenStudio
 
           desc 'Use openstudio system ruby to run tests'
           task :test_with_openstudio do
-            # puts Dir.pwd
-            # puts Rake.original_dir
             puts 'testing with openstudio'
             runner = OpenStudio::Extension::Runner.new(Dir.pwd)
             result = runner.test_measures_with_cli(@measures_dir)
@@ -176,7 +173,7 @@ module OpenStudio
               results = bcl.search(keyword, "fq[]=bundle:nrel_measure&show_rows=#{num_results}", false)
               puts "there are #{results[:result].count} results"
               results[:result].each do |res|
-                puts (res[:measure][:name]).to_s
+                puts(res[:measure][:name]).to_s
               end
             end
 

@@ -1,5 +1,10 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.3
+
+* Use new version of rubocop style from S3
+* Remove frozen string literals in comments
+
 ## Version 0.2.2
 
 * Exclude measure tests from being released with the gem (reduces the size of the installed gem significantly)

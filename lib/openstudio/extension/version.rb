@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -37,6 +35,6 @@
 
 module OpenStudio
   module Extension
-    VERSION = '0.2.2'
+    VERSION = '0.2.3'.freeze
   end
 end

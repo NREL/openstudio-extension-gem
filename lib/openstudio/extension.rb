@@ -226,5 +226,26 @@ module OpenStudio
 
       return osw
     end
+
+    ## 
+    # Module method used to check whether a measure is present in an OSW file
+    ##
+    #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized
+    #  @param [String] measure_dir_name Directory name of measure to set argument on
+    #  @param [String] step_name Optional argument, if present used to further identify the measure
+    #
+    #  @return [Boolean] true or false
+    def self.measure_in_osw(osw, measure_dir_name, step_name = nil)
+      result = false
+      osw[:steps].each do |step|
+        if step[:measure_dir_name] == measure_dir_name
+          if step_name.nil? || step[:name] == step_name
+            result = true
+          end
+        end
+      end
+
+      return result
+    end
   end
 end

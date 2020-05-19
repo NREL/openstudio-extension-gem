@@ -135,4 +135,36 @@ RSpec.describe OpenStudio::Extension::Runner do
     expect(File.exist?(out_osw_path)).to be false
     expect(File.exist?(failed_job_path)).to be false
   end
+
+  it 'can find a measure in the OSW' do
+    extension = OpenStudio::Extension::Extension.new
+    runner_options = { run_simulations: true }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
+    in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
+    expect(File.exist?(in_osw_path)).to be true
+
+    in_osw = {}
+    File.open(in_osw_path, 'r') do |file|
+      in_osw = JSON.parse(file.read, symbolize_names: true)
+    end
+
+    found_measure = OpenStudio::Extension.measure_in_osw(in_osw, 'openstudio_extension_test_measure')
+    expect(found_measure).to be true
+  end
+
+  it 'does not find a measure in the OSW' do
+    extension = OpenStudio::Extension::Extension.new
+    runner_options = { run_simulations: true }
+    runner = OpenStudio::Extension::Runner.new(extension.root_dir, nil, runner_options)
+    in_osw_path = File.join(File.dirname(__FILE__), '../files/in.osw')
+    expect(File.exist?(in_osw_path)).to be true
+
+    in_osw = {}
+    File.open(in_osw_path, 'r') do |file|
+      in_osw = JSON.parse(file.read, symbolize_names: true)
+    end
+
+    found_measure = OpenStudio::Extension.measure_in_osw(in_osw, 'measure_that_does_not_exist_in_osw')
+    expect(found_measure).to be false
+  end
 end

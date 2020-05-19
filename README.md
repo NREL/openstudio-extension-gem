@@ -146,14 +146,17 @@ Common Rake Tasks that are available to derivative extension gems include:
 
 | Rake Task | Description |
 | --------- | ----------- |
+| openstudio:bcl:test_login            | Test BCL login |
+| openstudio:bcl:search_measures       | Search BCL |
+| openstudio:bcl:stage[reset]          | Copy the measures/components to a staging location |
+| openstudio:bcl:push                  | Upload measures from the staging location |
+| openstudio:change_log[start_date,end_date,apikey] | Print the change log from GitHub. Specify dates in yyyy-mm-dd format |
 | openstudio:list_measures             | List all measures in the calling gem |
 | openstudio:measures:add_license      | Add License File to measures in the calling gem |
 | openstudio:measures:add_readme       | Add README.md.erb file if it and the README markdown file do not already exist for a measure |
 | openstudio:measures:copy_resources   | Copy the resources files to individual measures in the calling gem |
 | openstudio:measures:update_copyright | Update copyright on measure files in the calling gem |
 | openstudio`:runner:`init             | Create a runner.conf file running simulations |
-| openstudio:stage_bcl                 | Copy the measures to a location that can be uploaded to BCL |
-| openstudio:push_bcl                  | Upload measures from the specified location to the BCL |
 | openstudio:test_with_docker          | Use openstudio docker image to run tests |
 | openstudio:test_with_openstudio      | Use openstudio system ruby to run tests |
 | openstudio:update_measures           | Run the CLI task to check for measure updates and update the measure xml files |
@@ -176,8 +179,11 @@ The following table contains all current extension gems.
 | OpenStudio Common Measures Gem  | openstudio-common-measures | https://github.com/NREL/openstudio-common-measures-gem |
 | OpenStudio Model Articulation Gem   | openstudio-model-articulation | https://github.com/NREL/openstudio-model-articulation-gem |
 | OpenStudio AEDG Gem | openstudio-aedg | https://github.com/NREL/openstudio-aedg-gem | 
+| OpenStudio Calibration Gem | openstudio-calibration | https://github.com/NREL/openstudio-calibration-gem |
 | OpenStudio District Systems Gem | openstudio-district-systems | https://github.com/NREL/openstudio-district-systems-gem | 
-| UrbanOpt GeoJSON Gem | urbanopt-geojson | https://github.com/urbanopt/urbanopt-geojson-gem | 
+| URBANopt Core Gem | urbanopt-core | https://github.com/urbanopt/urbanopt-core-gem |
+| URBANopt GeoJSON Gem | urbanopt-geojson | https://github.com/urbanopt/urbanopt-geojson-gem | 
+| URBANopt Scenario Gem | urbanopt-scenario | https://github.com/urbanopt/urbanopt-scenario-gem |
 | BuildingSync Gem | buildingsync | https://github.com/BuildingSync/BuildingSync-gem | 
 
 ### Initializing a new Extension Gem
@@ -236,8 +242,6 @@ Or install it yourself as:
 
 # TODO
 
-- [ ] Rake task ```stage_bcl``` _DLM: BCL gem should be a development dependency only until we can reduce its dependencies and remove native dependencies? should probably put it into a special group so we can bundle without it in openstudio-gems._
-- [ ] Rake task ```push_bcl``` _DLM: how do we want to test this?
 - [ ] Capture useful output from Travis (measure dashboard results, log files, zip of build products, etc) and put it somewhere (s3?  naming convention?)
 - [ ] ```Extension::files_dir``` _DLM: I think this can have a default implementation, right?_
 - [ ] ```Extension::minimum_openstudio_version``` _DLM: should we rename? should people overwrite this in their class?_

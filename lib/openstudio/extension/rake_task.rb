@@ -138,7 +138,7 @@ module OpenStudio
             runner.update_copyright(@root_dir, @doc_templates_dir)
           end
 
-          desc 'Print the change log from GitHub'
+          desc 'Print the change log from GitHub. Date format: yyyy-mm-dd'
           task :change_log, [:start_date, :end_date, :apikey] do |t, args|
             require 'change_log'
             cl = ChangeLog.new(@github_repo, *args)

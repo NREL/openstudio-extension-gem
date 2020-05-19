@@ -2804,16 +2804,25 @@ module OsLib_ModelGeneration
       end
     end
 
-    # TODO: - when add methods below add bool to enable/disable them with default value to true
-
-    # add daylight controls, need to perform a sizing run for 2010
-    if args['template'] == '90.1-2010'
-      if standard.model_run_sizing_run(model, "#{Dir.pwd}/SRvt") == false
-        log_messages_to_runner(runner, debug = true)
-        return false
-      end
+    # add_daylighting_controls (since outdated measure don't have this default to true if arg not found)
+    if !args.has_key('add_daylighting_controls')
+      args['add_daylighting_controls'] = true
     end
+    if args['add_daylighting_controls']
+      # remove add_daylighting_controls objects
+      if args['remove_objects']
+        model.getDaylightingControls.each(&:remove)
+      end
+
+      # add daylight controls, need to perform a sizing run for 2010
+      if args['template'] == '90.1-2010'
+        if standard.model_run_sizing_run(model, "#{Dir.pwd}/SRvt") == false
+          log_messages_to_runner(runner, debug = true)
+          return false
+        end
+      end
     standard.model_add_daylighting_controls(model)
+    end
 
     # add refrigeration
     if args['add_refrigeration']
@@ -3010,7 +3019,7 @@ module OsLib_ModelGeneration
     end
 
     # set hvac controls and efficiencies (this should be last model articulation element)
-    if args['add_hvac']
+if args['add_internal_mass']
       # set additional properties for building
       props = model.getBuilding.additionalProperties
       props.setFeature('hvac_system_type',"#{args['system_type']}")

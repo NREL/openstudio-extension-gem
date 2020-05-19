@@ -3019,7 +3019,7 @@ module OsLib_ModelGeneration
     end
 
     # set hvac controls and efficiencies (this should be last model articulation element)
-if args['add_internal_mass']
+    if args['add_hvac']
       # set additional properties for building
       props = model.getBuilding.additionalProperties
       props.setFeature('hvac_system_type',"#{args['system_type']}")

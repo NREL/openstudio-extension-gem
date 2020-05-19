@@ -2462,6 +2462,20 @@ module OsLib_ModelGeneration
       end
     end
 
+    # validate climate zone
+    if !args.has_key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
+      climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
+      runner.registerInfo("Using climate zone #{climate_zone} from model")
+    else
+      climate_zone = args['climate_zone']
+      runner.registerInfo("Using climate zone #{climate_zone} from user arguments")
+    end
+    if climate_zone == ''
+      runner.registerError("Could not determine climate zone from measure arguments or model.")
+      return false
+    end
+
+
     # validate fraction parking
     fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => ['onsite_parking_fraction'])
     if !fraction then return false end
@@ -2645,13 +2659,6 @@ module OsLib_ModelGeneration
         is_residential = 'Yes'
       else
         is_residential = 'No'
-      end
-      if !args.has_key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
-        climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
-        runner.registerInfo("Using climate zone #{climate_zone} from model")
-      else
-        climate_zone = args['climate_zone']
-        runner.registerInfo("Using climate zone #{climate_zone} from user arguments")
       end
       bldg_def_const_set = standard.model_add_construction_set(model, climate_zone, lookup_building_type, nil, is_residential)
       if bldg_def_const_set.is_initialized

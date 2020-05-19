@@ -3041,20 +3041,6 @@ module OsLib_ModelGeneration
       end
     end
 
-    # add internal mass
-    if args['add_internal_mass']
-
-      if args['remove_objects']
-        model.getSpaceLoads.each do |instance|
-          next unless instance.to_InternalMass.is_initialized
-          instance.remove
-        end
-      end
-
-      # add internal mass to conditioned spaces; needs to happen after thermostats are applied
-      standard.model_add_internal_mass(model, primary_bldg_type)
-    end
-
     # set unmet hours tolerance
     unmet_hrs_tol_r = args['unmet_hours_tolerance']
     unmet_hrs_tol_k = OpenStudio.convert(unmet_hrs_tol_r, 'R', 'K').get

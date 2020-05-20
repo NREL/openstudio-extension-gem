@@ -2462,20 +2462,6 @@ module OsLib_ModelGeneration
       end
     end
 
-    # validate climate zone
-    if !args.has_key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
-      climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
-      runner.registerInfo("Using climate zone #{climate_zone} from model")
-    else
-      climate_zone = args['climate_zone']
-      runner.registerInfo("Using climate zone #{climate_zone} from user arguments")
-    end
-    if climate_zone == ''
-      runner.registerError("Could not determine climate zone from measure arguments or model.")
-      return false
-    end
-
-
     # validate fraction parking
     fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => ['onsite_parking_fraction'])
     if !fraction then return false end
@@ -2573,6 +2559,19 @@ module OsLib_ModelGeneration
 
     # Make the standard applier
     standard = Standard.build((args['template']).to_s)
+
+    # validate climate zone
+    if !args.has_key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
+      climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
+      runner.registerInfo("Using climate zone #{climate_zone} from model")
+    else
+      climate_zone = args['climate_zone']
+      runner.registerInfo("Using climate zone #{climate_zone} from user arguments")
+    end
+    if climate_zone == ''
+      runner.registerError("Could not determine climate zone from measure arguments or model.")
+      return false
+    end
 
     # make sure daylight savings is turned on up prior to any sizing runs being done.
     if args['enable_dst']
@@ -2805,7 +2804,7 @@ module OsLib_ModelGeneration
     end
 
     # add_daylighting_controls (since outdated measure don't have this default to true if arg not found)
-    if !args.has_key('add_daylighting_controls')
+    if !args.has_key?('add_daylighting_controls')
       args['add_daylighting_controls'] = true
     end
     if args['add_daylighting_controls']

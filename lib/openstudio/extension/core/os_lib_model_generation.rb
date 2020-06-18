@@ -884,6 +884,7 @@ module OsLib_ModelGeneration
     stories_flat = []
     stories_flat_counter = 0
     bar_hash[:stories].each_with_index do |(k, v), i|
+      #runner.registerInfo("STORY: k: #{k}, v: #{v}, index: #{i}")
       # k is invalid in some cases, old story object that has been removed, should be from low to high including basement
       # skip if source story insn't included in building area
       if v[:story_included_in_building_area].nil? || (v[:story_included_in_building_area] == true)
@@ -954,7 +955,7 @@ module OsLib_ModelGeneration
       story_hash['Top'] = { space_origin_z: footprint_origin.z + typical_story_height * (eff_above.ceil - 1), space_height: typical_story_height, multiplier: 1 }
     else # one story only
       story_hash['Ground'] = { space_origin_z: footprint_origin.z, space_height: typical_story_height, multiplier: 1 }
-    end
+    en
 
     # create footprints
     if bar_hash[:bar_division_method] == 'Multiple Space Types - Simple Sliced'
@@ -1105,7 +1106,7 @@ module OsLib_ModelGeneration
         end
         runner.registerInfo('Intersecting and matching surfaces in model, this will create additional geometry.')
       else #elsif bar_hash[:double_loaded_corridor] # only intersect spaces in each story, not between wtory
-        model.getBuilding.buildingStories.each do |story|
+        model.getBuilding.buildingStories.sort.each do |story|
           # intersect and surface match two pair by pair
           spaces_b = story.spaces.sort
           # looping through vector of each space
@@ -1136,7 +1137,7 @@ module OsLib_ModelGeneration
           runner.registerInfo('Intersecting and matching surfaces in model, this will create additional geometry.')
         end
       else #elsif bar_hash[:double_loaded_corridor] # only intersect spaces in each story, not between wtory
-        model.getBuilding.buildingStories.each do |story|
+        model.getBuilding.buildingStories.sort.each do |story|
           story_spaces = OpenStudio::Model::SpaceVector.new
           story.spaces.sort.each do |space|
             story_spaces << space

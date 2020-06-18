@@ -91,7 +91,7 @@ module OpenStudio
 
         result << obj
       end
-      return result.uniq
+      return result.uniq.sort
     end
 
     ##

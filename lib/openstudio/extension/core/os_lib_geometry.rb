@@ -1141,7 +1141,7 @@ module OsLib_Geometry
         # get vertices
         vertex_hash = {}
         vertex_counter = 0
-        surface.vertices.sort.each do |vertex|
+        surface.vertices.each do |vertex|
           vertex_counter += 1
           vertex_hash[vertex_counter] = [vertex.x, vertex.y, vertex.z]
         end

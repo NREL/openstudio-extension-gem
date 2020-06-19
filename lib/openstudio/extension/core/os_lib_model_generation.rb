@@ -820,9 +820,9 @@ module OsLib_ModelGeneration
     if options[:remove_site_shading] then model.getSite.shadingSurfaceGroups.each(&:remove) end
 
     # see if plant loop is swh or not and take proper action (booter loop doesn't have water use equipment)
-    model.getPlantLoops.sort.each do |plant_loop|
+    model.getPlantLoops.each do |plant_loop|
       is_swh_loop = false
-      plant_loop.supplyComponents.sort.each do |component|
+      plant_loop.supplyComponents.each do |component|
         if component.to_WaterHeaterMixed.is_initialized
           is_swh_loop = true
           next
@@ -955,7 +955,7 @@ module OsLib_ModelGeneration
       story_hash['Top'] = { space_origin_z: footprint_origin.z + typical_story_height * (eff_above.ceil - 1), space_height: typical_story_height, multiplier: 1 }
     else # one story only
       story_hash['Ground'] = { space_origin_z: footprint_origin.z, space_height: typical_story_height, multiplier: 1 }
-    en
+    end
 
     # create footprints
     if bar_hash[:bar_division_method] == 'Multiple Space Types - Simple Sliced'
@@ -1027,7 +1027,7 @@ module OsLib_ModelGeneration
 
       model.getPlanarSurfaces.sort.each do |surface|
         array = []
-        vertices = surface.vertices.sort
+        vertices = surface.vertices
         fixed = false
         vertices.each do |vertex|
           next if fixed
@@ -3246,5 +3246,4 @@ module OsLib_ModelGeneration
 
     return true
   end
-
 end

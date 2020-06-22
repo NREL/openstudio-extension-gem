@@ -334,6 +334,37 @@ module OpenStudio
               # grab all the updated content (measures and components) tar files and push to bcl
               items = []
               paths = Pathname.glob(@staged_path.to_s + '/update/*.tar.gz')
+              paths.each do |path|
+                # puts path
+                items << path.to_s
+              end
+              items.each do |item|
+                puts item.split('/').last
+                total_count += 1
+
+                receipt_file = File.dirname(item) + '/' + File.basename(item, '.tar.gz') + '.receipt'
+                if !reset && File.exist?(receipt_file)
+                  skipped += 1
+                  puts 'SKIP: receipt file found'
+                  next
+                end
+
+                valid, res = bcl.update_content(item, true)
+                if valid
+                  successes += 1
+                else
+                  errors += 1
+                  if res.key?(:error)
+                    puts "  ERROR MESSAGE: #{res[:error]}"
+                  else
+                    puts "ERROR MESSAGE: #{res.inspect.chomp}"
+                  end
+                end
+                puts "", "---"
+              end
+
+              puts "****UPLOAD DONE**** #{total_count} total, #{successes} success, #{errors} failures, #{skipped} skipped"
+
             end
           end
         end

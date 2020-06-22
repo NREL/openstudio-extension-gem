@@ -227,7 +227,7 @@ module OpenStudio
       return osw
     end
 
-    ## 
+    ##
     # Module method used to check whether a measure is present in an OSW file
     ##
     #  @param [Hash] in_osw Initial OSW object as a Hash, keys should be symbolized

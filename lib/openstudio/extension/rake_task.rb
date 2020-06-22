@@ -360,11 +360,10 @@ module OpenStudio
                     puts "ERROR MESSAGE: #{res.inspect.chomp}"
                   end
                 end
-                puts "", "---"
+                puts '', '---'
               end
 
               puts "****UPLOAD DONE**** #{total_count} total, #{successes} success, #{errors} failures, #{skipped} skipped"
-
             end
           end
         end

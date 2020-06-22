@@ -1,5 +1,13 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.4
+
+* Fixed upload of measures to BCL using rake tasks.
+* Support economizer modeling when create_typical measure is split into two parts
+
+Closed Issues: 1
+- Fixed [#64]( https://github.com/NREL/openstudio-extension-gem/issues/64 ), README updates
+
 ## Version 0.2.3
 
 * Use new version of rubocop style from S3

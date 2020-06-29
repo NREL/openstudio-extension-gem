@@ -268,7 +268,7 @@ module OpenStudio
 
                 # copy over only if 'reset_receipts' is set to TRUE. otherwise ignore if file exists already
                 if File.exist?(destination)
-                  if reset
+                  if options[:reset]
                     FileUtils.rm(destination)
                     ::BCL.tarball(destination, paths)
                   else

@@ -79,6 +79,11 @@ module OsLib_ModelGeneration
     array << 'Hospital'
     array << 'Outpatient'
     array << 'SuperMarket'
+    array << 'Laboratory'
+    array << 'LargeDataCenterLowITE'
+    array << 'LargeDataCenterHighITE'
+    array << 'SmallDataCenterLowITE'
+    array << 'SmallDataCenterHighITE'
 
     return array
   end
@@ -328,7 +333,7 @@ module OsLib_ModelGeneration
     supermarket_a = 45001.0
     supermarket_p = 866.0
     supermarket_wwr = 1880.0 / (supermarket_p * 20.0)
-    supermarket_aspet_ratio = calc_aspect_ratio(supermarket_a, supermarket_p)
+    supermarket_aspect_ratio = calc_aspect_ratio(supermarket_a, supermarket_p)
 
     hash['SmallOffice'] = { aspect_ratio: 1.5, wwr: 0.15, typical_story: 10.0, perim_mult: 1.0 }
     hash['MediumOffice'] = { aspect_ratio: 1.5, wwr: 0.33, typical_story: 13.0, perim_mult: 1.0 }
@@ -351,7 +356,14 @@ module OsLib_ModelGeneration
     hash['MidriseApartment'] = { aspect_ratio: 2.75, wwr: 0.15, typical_story: 10.0, perim_mult: 1.0 }
     hash['HighriseApartment'] = { aspect_ratio: 2.75, wwr: 0.15, typical_story: 10.0, perim_mult: 1.0 }
     # SuperMarket inputs come from prototype model
-    hash['SuperMarket'] = { aspect_ratio: supermarket_aspet_ratio.round(1), wwr: supermarket_wwr.round(2), typical_story: 20.0, perim_mult: 1.0 }
+    hash['SuperMarket'] = { aspect_ratio: supermarket_aspect_ratio.round(1), wwr: supermarket_wwr.round(2), typical_story: 20.0, perim_mult: 1.0 }
+
+    # Add Laboratory and Data Centers
+    hash['Laboratory'] = { aspect_ratio: 1.33, wwr: 0.12, typical_story: 10.0, perim_mult: 1.0 }
+    hash['LargeDataCenterLowITE'] = { aspect_ratio: 1.67, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
+    hash['LargeDataCenterHighITE'] = { aspect_ratio: 1.67, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
+    hash['SmallDataCenterLowITE'] = { aspect_ratio: 1.5, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
+    hash['SmallDataCenterHighITE'] = { aspect_ratio: 1.5, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
 
     # DEER Prototypes
     hash['Asm'] = { aspect_ratio: 1.0, wwr: 0.19, typical_story: 15.0 }
@@ -664,6 +676,19 @@ module OsLib_ModelGeneration
       hash['Meeting'] = { ratio: 0.99, space_type_gen: true, default: true }
       hash['Restroom'] = { ratio: 0.99, space_type_gen: true, default: true }
       hash['Vestibule'] = { ratio: 0.99, space_type_gen: true, default: true }
+    elsif building_type == 'Laboratory'
+      hash['Office'] = { ratio: 0.50, space_type_gen: true, default: true }
+      hash['Open lab'] = { ratio: 0.35, space_type_gen: true, default: true }
+      hash['Equipment corridor'] = { ratio: 0.05, space_type_gen: true, default: true }
+      hash['Lab with fume hood'] = { ratio: 0.10, space_type_gen: true, default: true }
+    elsif building_type == 'LargeDataCenterHighITE'
+      hash['StandaloneDataCenter'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'LargeDataCenterLowITE'
+      hash['StandaloneDataCenter'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'SmallDataCenterHighITE'
+      hash['ComputerRoom'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'SmallDataCenterLowITE'
+      hash['ComputerRoom'] = { ratio: 1.0, space_type_gen: true, default: true }
       # DEER Prototypes
     elsif building_type == 'Asm'
       hash['Auditorium'] = { ratio: 0.7658, space_type_gen: true, default: true }

@@ -68,20 +68,29 @@ module OpenStudio
         # in ~/OpenStudio/#{alias} or something like that?
 
         # if the dirname contains a runner.conf file, then use the config file to specify the parameters
+
+        @options = OpenStudio::Extension::RunnerConfig.default_config
+        # ORDER of PRECEDENCE: default config < runner.conf file < options passed in directly
         if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && options.empty?
           puts 'Using runner options from runner.conf file'
           runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
-          @options = runner_config.options
-        else
-          # use the passed values or defaults overriden by passed options
-          @options = OpenStudio::Extension::RunnerConfig.default_config.merge(options)
+          # use the default values overriden with runner.conf values
+          @options = @options.merge(runner_config.options)
         end
-
+        
+        # use the passed values or defaults overriden by passed options
+        @options = @options.merge(options)
+       
         puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
         @dirname = File.absolute_path(dirname)
-        @gemfile_path = File.join(@dirname, 'Gemfile')
-        @bundle_install_path = File.join(@dirname, '.bundle/install/')
+        
+        # use passed options, otherwise assume @dirname
+        @gemfile_path = (!@options.key?(:gemfile_path) || @options[:gemfile_path] === '') ? File.join(@dirname, 'Gemfile') : @options[:gemfile_path]
+        @bundle_install_path = (!@options.key?(:bundle_install_path) || @options[:bundle_install_path] === '')? File.join(@dirname, '.bundle/install/') : @options[:bundle_install_path]
         @original_dir = Dir.pwd
+        # puts "DIRNAME: #{@dirname}"
+        # puts "@gemfile_path set to: #{@gemfile_path}"
+        # puts "@bundle_install_path set to: #{@bundle_install_path}"
 
         @bundle_without = bundle_without || []
         @bundle_without_string = @bundle_without.join(' ')
@@ -155,7 +164,9 @@ module OpenStudio
 
             puts "needs_update = #{needs_update}"
             if needs_update
-              run_command('bundle update', get_clean_env)
+              # run_command('bundle update', get_clean_env)
+              # KAF: updated to include specified gemfile_path...this didn't seem to work before
+              run_command("bundle update --gemfile=#{@gemfile_path}", get_clean_env)
             end
           ensure
             Dir.chdir(@original_dir)

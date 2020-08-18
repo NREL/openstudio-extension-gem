@@ -48,6 +48,8 @@ RSpec.describe OpenStudio::Extension::RunnerConfig do
     expect(defaults[:num_parallel]).to eq 2
     expect(defaults[:run_simulations]).to eq true
     expect(defaults[:verbose]).to eq false
+    expect(defaults[:gemfile_path]).to eq ''
+    expect(defaults[:bundle_install_path]).to eq ''
   end
 
   it 'inits a new file' do

@@ -78,7 +78,9 @@ module OpenStudio
           max_datapoints: 1E9.to_i,
           num_parallel: 2,
           run_simulations: true,
-          verbose: false
+          verbose: false,
+          gemfile_path: '',
+          bundle_install_path: ''
         }
       end
 

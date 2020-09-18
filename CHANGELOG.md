@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.X (unreleased)
+
+* remove the os_lib_reporting.rb helpers. This file is only used for OS reporting measure and should not be shared with other users.
+
 ## Version 0.2.5
 
 * Support runner options for bundle_install_path and gemfile_path

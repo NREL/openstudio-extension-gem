@@ -1,5 +1,26 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.X (unreleased)
+
+* remove the os_lib_reporting.rb helpers. This file is only used for OS reporting measure and should not be shared with other users.
+
+## Version 0.2.5
+
+* Support runner options for bundle_install_path and gemfile_path
+* Laboratory and Data Center Support
+
+- Fixed [#71]( https://github.com/NREL/openstudio-extension-gem/pull/71 ), another fix for bcl rake tasks
+- Fixed [#72]( https://github.com/NREL/openstudio-extension-gem/pull/72 ), Add laboratory and data centers to os_lib_model_generation
+- Fixed [#74]( https://github.com/NREL/openstudio-extension-gem/pull/74 ), adding bundle path and gemfile path options
+
+## Version 0.2.4
+
+* Fixed upload of measures to BCL using rake tasks.
+* Support economizer modeling when create_typical measure is split into two parts
+
+Closed Issues: 1
+- Fixed [#64]( https://github.com/NREL/openstudio-extension-gem/issues/64 ), README updates
+
 ## Version 0.2.3
 
 * Use new version of rubocop style from S3

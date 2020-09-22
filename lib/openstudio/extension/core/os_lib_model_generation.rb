@@ -79,6 +79,11 @@ module OsLib_ModelGeneration
     array << 'Hospital'
     array << 'Outpatient'
     array << 'SuperMarket'
+    array << 'Laboratory'
+    array << 'LargeDataCenterLowITE'
+    array << 'LargeDataCenterHighITE'
+    array << 'SmallDataCenterLowITE'
+    array << 'SmallDataCenterHighITE'
 
     return array
   end
@@ -328,7 +333,7 @@ module OsLib_ModelGeneration
     supermarket_a = 45001.0
     supermarket_p = 866.0
     supermarket_wwr = 1880.0 / (supermarket_p * 20.0)
-    supermarket_aspet_ratio = calc_aspect_ratio(supermarket_a, supermarket_p)
+    supermarket_aspect_ratio = calc_aspect_ratio(supermarket_a, supermarket_p)
 
     hash['SmallOffice'] = { aspect_ratio: 1.5, wwr: 0.15, typical_story: 10.0, perim_mult: 1.0 }
     hash['MediumOffice'] = { aspect_ratio: 1.5, wwr: 0.33, typical_story: 13.0, perim_mult: 1.0 }
@@ -351,7 +356,14 @@ module OsLib_ModelGeneration
     hash['MidriseApartment'] = { aspect_ratio: 2.75, wwr: 0.15, typical_story: 10.0, perim_mult: 1.0 }
     hash['HighriseApartment'] = { aspect_ratio: 2.75, wwr: 0.15, typical_story: 10.0, perim_mult: 1.0 }
     # SuperMarket inputs come from prototype model
-    hash['SuperMarket'] = { aspect_ratio: supermarket_aspet_ratio.round(1), wwr: supermarket_wwr.round(2), typical_story: 20.0, perim_mult: 1.0 }
+    hash['SuperMarket'] = { aspect_ratio: supermarket_aspect_ratio.round(1), wwr: supermarket_wwr.round(2), typical_story: 20.0, perim_mult: 1.0 }
+
+    # Add Laboratory and Data Centers
+    hash['Laboratory'] = { aspect_ratio: 1.33, wwr: 0.12, typical_story: 10.0, perim_mult: 1.0 }
+    hash['LargeDataCenterLowITE'] = { aspect_ratio: 1.67, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
+    hash['LargeDataCenterHighITE'] = { aspect_ratio: 1.67, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
+    hash['SmallDataCenterLowITE'] = { aspect_ratio: 1.5, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
+    hash['SmallDataCenterHighITE'] = { aspect_ratio: 1.5, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
 
     # DEER Prototypes
     hash['Asm'] = { aspect_ratio: 1.0, wwr: 0.19, typical_story: 15.0 }
@@ -664,6 +676,19 @@ module OsLib_ModelGeneration
       hash['Meeting'] = { ratio: 0.99, space_type_gen: true, default: true }
       hash['Restroom'] = { ratio: 0.99, space_type_gen: true, default: true }
       hash['Vestibule'] = { ratio: 0.99, space_type_gen: true, default: true }
+    elsif building_type == 'Laboratory'
+      hash['Office'] = { ratio: 0.50, space_type_gen: true, default: true }
+      hash['Open lab'] = { ratio: 0.35, space_type_gen: true, default: true }
+      hash['Equipment corridor'] = { ratio: 0.05, space_type_gen: true, default: true }
+      hash['Lab with fume hood'] = { ratio: 0.10, space_type_gen: true, default: true }
+    elsif building_type == 'LargeDataCenterHighITE'
+      hash['StandaloneDataCenter'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'LargeDataCenterLowITE'
+      hash['StandaloneDataCenter'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'SmallDataCenterHighITE'
+      hash['ComputerRoom'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'SmallDataCenterLowITE'
+      hash['ComputerRoom'] = { ratio: 1.0, space_type_gen: true, default: true }
       # DEER Prototypes
     elsif building_type == 'Asm'
       hash['Auditorium'] = { ratio: 0.7658, space_type_gen: true, default: true }
@@ -2558,6 +2583,19 @@ module OsLib_ModelGeneration
     # Make the standard applier
     standard = Standard.build((args['template']).to_s)
 
+    # validate climate zone
+    if !args.has_key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
+      climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
+      runner.registerInfo("Using climate zone #{climate_zone} from model")
+    else
+      climate_zone = args['climate_zone']
+      runner.registerInfo("Using climate zone #{climate_zone} from user arguments")
+    end
+    if climate_zone == ''
+      runner.registerError("Could not determine climate zone from measure arguments or model.")
+      return false
+    end
+
     # make sure daylight savings is turned on up prior to any sizing runs being done.
     if args['enable_dst']
       start_date = '2nd Sunday in March'
@@ -2643,13 +2681,6 @@ module OsLib_ModelGeneration
         is_residential = 'Yes'
       else
         is_residential = 'No'
-      end
-      if !args.has_key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
-        climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
-        runner.registerInfo("Using climate zone #{climate_zone} from model")
-      else
-        climate_zone = args['climate_zone']
-        runner.registerInfo("Using climate zone #{climate_zone} from user arguments")
       end
       bldg_def_const_set = standard.model_add_construction_set(model, climate_zone, lookup_building_type, nil, is_residential)
       if bldg_def_const_set.is_initialized
@@ -2795,16 +2826,25 @@ module OsLib_ModelGeneration
       end
     end
 
-    # TODO: - when add methods below add bool to enable/disable them with default value to true
-
-    # add daylight controls, need to perform a sizing run for 2010
-    if args['template'] == '90.1-2010'
-      if standard.model_run_sizing_run(model, "#{Dir.pwd}/SRvt") == false
-        log_messages_to_runner(runner, debug = true)
-        return false
-      end
+    # add_daylighting_controls (since outdated measure don't have this default to true if arg not found)
+    if !args.has_key?('add_daylighting_controls')
+      args['add_daylighting_controls'] = true
     end
+    if args['add_daylighting_controls']
+      # remove add_daylighting_controls objects
+      if args['remove_objects']
+        model.getDaylightingControls.each(&:remove)
+      end
+
+      # add daylight controls, need to perform a sizing run for 2010
+      if args['template'] == '90.1-2010'
+        if standard.model_run_sizing_run(model, "#{Dir.pwd}/SRvt") == false
+          log_messages_to_runner(runner, debug = true)
+          return false
+        end
+      end
     standard.model_add_daylighting_controls(model)
+    end
 
     # add refrigeration
     if args['add_refrigeration']

@@ -909,6 +909,7 @@ module OsLib_ModelGeneration
     stories_flat = []
     stories_flat_counter = 0
     bar_hash[:stories].each_with_index do |(k, v), i|
+      #runner.registerInfo("STORY: k: #{k}, v: #{v}, index: #{i}")
       # k is invalid in some cases, old story object that has been removed, should be from low to high including basement
       # skip if source story insn't included in building area
       if v[:story_included_in_building_area].nil? || (v[:story_included_in_building_area] == true)
@@ -1049,7 +1050,7 @@ module OsLib_ModelGeneration
     # only intersect if make_mid_story_surfaces_adiabatic false
     if diagnostic_intersect
 
-      model.getPlanarSurfaces.each do |surface|
+      model.getPlanarSurfaces.sort.each do |surface|
         array = []
         vertices = surface.vertices
         fixed = false
@@ -1075,7 +1076,7 @@ module OsLib_ModelGeneration
       end
 
       # remove collinear points in a surface
-      model.getPlanarSurfaces.each do |surface|
+      model.getPlanarSurfaces.sort.each do |surface|
         new_vertices = OpenStudio.removeCollinear(surface.vertices)
         starting_count = surface.vertices.size
         final_count = new_vertices.size
@@ -1086,7 +1087,7 @@ module OsLib_ModelGeneration
       end
 
       # remove duplicate surfaces in a space (should be done after remove duplicate and collinear points)
-      model.getSpaces.each do |space|
+      model.getSpaces.sort.each do |space|
 
         # secondary array to compare against
         surfaces_b = space.surfaces.sort
@@ -1130,7 +1131,7 @@ module OsLib_ModelGeneration
         end
         runner.registerInfo('Intersecting and matching surfaces in model, this will create additional geometry.')
       else #elsif bar_hash[:double_loaded_corridor] # only intersect spaces in each story, not between wtory
-        model.getBuilding.buildingStories.each do |story|
+        model.getBuilding.buildingStories.sort.each do |story|
           # intersect and surface match two pair by pair
           spaces_b = story.spaces.sort
           # looping through vector of each space
@@ -1161,7 +1162,7 @@ module OsLib_ModelGeneration
           runner.registerInfo('Intersecting and matching surfaces in model, this will create additional geometry.')
         end
       else #elsif bar_hash[:double_loaded_corridor] # only intersect spaces in each story, not between wtory
-        model.getBuilding.buildingStories.each do |story|
+        model.getBuilding.buildingStories.sort.each do |story|
           story_spaces = OpenStudio::Model::SpaceVector.new
           story.spaces.sort.each do |space|
             story_spaces << space
@@ -1177,11 +1178,11 @@ module OsLib_ModelGeneration
     # set boundary conditions if not already set when geometry was created
     # todo - update this to use space original z value vs. story name
     if bar_hash[:num_stories_below_grade] > 0
-      model.getBuildingStorys.each do |story|
+      model.getBuildingStorys.sort.each do |story|
         next if !story.name.to_s.include?('Story B')
-        story.spaces.each do |space|
+        story.spaces.sort.each do |space|
           next if not new_spaces.include?(space)
-          space.surfaces.each do |surface|
+          space.surfaces.sort.each do |surface|
             next if surface.surfaceType != 'Wall'
             next if surface.outsideBoundaryCondition != 'Outdoors'
             surface.setOutsideBoundaryCondition('Ground')
@@ -1646,10 +1647,7 @@ module OsLib_ModelGeneration
           end
         end
       end
-
     end
-
-
   end
 
   # bar_from_building_type_ratios
@@ -2379,7 +2377,7 @@ module OsLib_ModelGeneration
     if args['party_wall_fraction'] > 0
       actual_ext_wall_area = model.getBuilding.exteriorWallArea
       actual_party_wall_area = 0.0
-      model.getSurfaces.each do |surface|
+      model.getSurfaces.sort.each do |surface|
         next if surface.outsideBoundaryCondition != 'Adiabatic'
         next if surface.surfaceType != 'Wall'
         actual_party_wall_area += surface.grossArea * surface.space.get.multiplier
@@ -2390,7 +2388,7 @@ module OsLib_ModelGeneration
     end
 
     # check ns/ew aspect ratio (harder to check when party walls are added)
-    wall_and_window_by_orientation = OsLib_Geometry.getExteriorWindowAndWllAreaByOrientation(model,model.getSpaces)
+    wall_and_window_by_orientation = OsLib_Geometry.getExteriorWindowAndWllAreaByOrientation(model,model.getSpaces.sort)
     wall_ns = (wall_and_window_by_orientation['northWall'] + wall_and_window_by_orientation['southWall'])
     wall_ew = wall_and_window_by_orientation['eastWall'] + wall_and_window_by_orientation['westWall']
     wall_ns_ip = OpenStudio.convert(wall_ns,'m^2','ft^2').get
@@ -2613,7 +2611,7 @@ module OsLib_ModelGeneration
 
       # remove internal loads
       if args['remove_objects']
-        model.getSpaceLoads.each do |instance|
+        model.getSpaceLoads.sort.each do |instance|
           next if instance.name.to_s.include?('Elevator') # most prototype building types model exterior elevators with name Elevator
           next if instance.to_InternalMass.is_initialized
           next if instance.to_WaterUseEquipment.is_initialized
@@ -2623,7 +2621,7 @@ module OsLib_ModelGeneration
         model.getDefaultScheduleSets.each(&:remove)
       end
 
-      model.getSpaceTypes.each do |space_type|
+      model.getSpaceTypes.sort.each do |space_type|
         # Don't add infiltration here; will be added later in the script
         test = standard.space_type_apply_internal_loads(space_type, true, true, true, true, true, false)
         if test == false
@@ -2642,7 +2640,7 @@ module OsLib_ModelGeneration
 
       # warn if spaces in model without space type
       spaces_without_space_types = []
-      model.getSpaces.each do |space|
+      model.getSpaces.sort.each do |space|
         next if space.spaceType.is_initialized
         spaces_without_space_types << space
       end
@@ -2653,7 +2651,7 @@ module OsLib_ModelGeneration
 
     # identify primary building type (used for construction, and ideally HVAC as well)
     building_types = {}
-    model.getSpaceTypes.each do |space_type|
+    model.getSpaceTypes.sort.each do |space_type|
       # populate hash of building types
       if space_type.standardsBuildingType.is_initialized
         bldg_type = space_type.standardsBuildingType.get
@@ -2697,7 +2695,7 @@ module OsLib_ModelGeneration
       end
 
       # address any adiabatic surfaces that don't have hard assigned constructions
-      model.getSurfaces.each do |surface|
+      model.getSurfaces.sort.each do |surface|
         next if surface.outsideBoundaryCondition != 'Adiabatic'
         next if surface.construction.is_initialized
         surface.setAdjacentSurface(surface)
@@ -2721,11 +2719,11 @@ module OsLib_ModelGeneration
     if args['add_elevators']
 
       # remove elevators as spaceLoads or exteriorLights
-      model.getSpaceLoads.each do |instance|
+      model.getSpaceLoads.sort.each do |instance|
         next if !instance.name.to_s.include?('Elevator') # most prototype building types model exterior elevators with name Elevator
         instance.remove
       end
-      model.getExteriorLightss.each do |ext_light|
+      model.getExteriorLightss.sort.each do |ext_light|
         next if !ext_light.name.to_s.include?('Fuel equipment') # some prototype building types model exterior elevators by this name
         ext_light.remove
       end
@@ -2746,7 +2744,7 @@ module OsLib_ModelGeneration
     if args['add_exterior_lights']
 
       if args['remove_objects']
-        model.getExteriorLightss.each do |ext_light|
+        model.getExteriorLightss.sort.each do |ext_light|
           next if ext_light.name.to_s.include?('Fuel equipment') # some prototype building types model exterior elevators by this name
           ext_light.remove
         end
@@ -2864,7 +2862,7 @@ module OsLib_ModelGeneration
     if args['add_internal_mass']
 
       if args['remove_objects']
-        model.getSpaceLoads.each do |instance|
+        model.getSpaceLoads.sort.each do |instance|
           next unless instance.to_InternalMass.is_initialized
           instance.remove
         end
@@ -2887,7 +2885,7 @@ module OsLib_ModelGeneration
         model.getThermostatSetpointDualSetpoints.each(&:remove)
       end
 
-      model.getSpaceTypes.each do |space_type|
+      model.getSpaceTypes.sort.each do |space_type|
         # create thermostat schedules
         # skip un-recognized space types
         next if standard.space_type_get_standards_data(space_type).empty?
@@ -2895,12 +2893,12 @@ module OsLib_ModelGeneration
         standard.space_type_apply_internal_load_schedules(space_type, false, false, false, false, false, false, true)
 
         # identify thermal thermostat and apply to zones (apply_internal_load_schedules names )
-        model.getThermostatSetpointDualSetpoints.each do |thermostat|
+        model.getThermostatSetpointDualSetpoints.sort.each do |thermostat|
           next if thermostat.name.to_s != "#{space_type.name} Thermostat"
           next if !thermostat.coolingSetpointTemperatureSchedule.is_initialized
           next if !thermostat.heatingSetpointTemperatureSchedule.is_initialized
           runner.registerInfo("Assigning #{thermostat.name} to thermal zones with #{space_type.name} assigned.")
-          space_type.spaces.each do |space|
+          space_type.spaces.sort.each do |space|
             next if !space.thermalZone.is_initialized
             space.thermalZone.get.setThermostatSetpointDualSetpoint(thermostat)
           end
@@ -3074,6 +3072,20 @@ module OsLib_ModelGeneration
       end
     end
 
+    # add internal mass
+    if args['add_internal_mass']
+
+      if args['remove_objects']
+        model.getSpaceLoads.sort.each do |instance|
+          next unless instance.to_InternalMass.is_initialized
+          instance.remove
+        end
+      end
+
+      # add internal mass to conditioned spaces; needs to happen after thermostats are applied
+      standard.model_add_internal_mass(model, primary_bldg_type)
+    end
+
     # set unmet hours tolerance
     unmet_hrs_tol_r = args['unmet_hours_tolerance']
     unmet_hrs_tol_k = OpenStudio.convert(unmet_hrs_tol_r, 'R', 'K').get
@@ -3117,8 +3129,8 @@ module OsLib_ModelGeneration
     set_building_defaults = runner.getBoolArgumentValue('set_building_defaults', user_arguments)
 
     # reporting initial condition of model
-    starting_spaceTypes = model.getSpaceTypes
-    starting_constructionSets = model.getDefaultConstructionSets
+    starting_spaceTypes = model.getSpaceTypes.sort
+    starting_constructionSets = model.getDefaultConstructionSets.sort
     runner.registerInitialCondition("The building started with #{starting_spaceTypes.size} space types and #{starting_constructionSets.size} construction sets.")
 
     # lookup space types for specified building type (false indicates not to use whole building type only)
@@ -3155,7 +3167,7 @@ module OsLib_ModelGeneration
     if create_space_types
 
       # array of starting space types
-      space_types_starting = model.getSpaceTypes
+      space_types_starting = model.getSpaceTypes.sort
 
       # create stub space types
       space_type_hash.each do |space_type_name, hash|
@@ -3268,11 +3280,10 @@ module OsLib_ModelGeneration
     end
 
     # reporting final condition of model
-    finishing_spaceTypes = model.getSpaceTypes
-    finishing_constructionSets = model.getDefaultConstructionSets
+    finishing_spaceTypes = model.getSpaceTypes.sort
+    finishing_constructionSets = model.getDefaultConstructionSets.sort
     runner.registerFinalCondition("The building finished with #{finishing_spaceTypes.size} space types and #{finishing_constructionSets.size} construction sets.")
 
     return true
   end
-
 end

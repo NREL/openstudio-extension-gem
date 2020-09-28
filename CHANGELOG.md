@@ -1,8 +1,9 @@
 # OpenStudio Extension Gem
 
-## Version 0.2.X (unreleased)
+## Version 0.2.6 (unreleased)
 
 * remove the os_lib_reporting.rb helpers. This file is only used for OS reporting measure and should not be shared with other users.
+* Upgrade dependency to openstudio-workflow gem to `~> 2.1.0`
 
 ## Version 0.2.5
 

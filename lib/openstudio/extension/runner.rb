@@ -77,16 +77,16 @@ module OpenStudio
           # use the default values overriden with runner.conf values
           @options = @options.merge(runner_config.options)
         end
-        
+
         # use the passed values or defaults overriden by passed options
         @options = @options.merge(options)
-       
+
         puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
         @dirname = File.absolute_path(dirname)
-        
+
         # use passed options, otherwise assume @dirname
-        @gemfile_path = (!@options.key?(:gemfile_path) || @options[:gemfile_path] === '') ? File.join(@dirname, 'Gemfile') : @options[:gemfile_path]
-        @bundle_install_path = (!@options.key?(:bundle_install_path) || @options[:bundle_install_path] === '')? File.join(@dirname, '.bundle/install/') : @options[:bundle_install_path]
+        @gemfile_path = !@options.key?(:gemfile_path) || @options[:gemfile_path] === '' ? File.join(@dirname, 'Gemfile') : @options[:gemfile_path]
+        @bundle_install_path = !@options.key?(:bundle_install_path) || @options[:bundle_install_path] === '' ? File.join(@dirname, '.bundle/install/') : @options[:bundle_install_path]
         @original_dir = Dir.pwd
         # puts "DIRNAME: #{@dirname}"
         # puts "@gemfile_path set to: #{@gemfile_path}"

@@ -765,7 +765,7 @@ module OsLib_Geometry
     story_hash.each_with_index do |(story_name, story_data), index|
       # make new story unless story at requested height already exists.
       story = nil
-      model.getBuildingStorys.each do |ext_story|
+      model.getBuildingStorys.sort.each do |ext_story|
         if (ext_story.nominalZCoordinate.to_f - story_data[:space_origin_z].to_f).abs < 0.01
           story = ext_story
         end
@@ -1133,11 +1133,11 @@ module OsLib_Geometry
   # todo - also odd with multi-height spaces
   def self.calculate_perimeter(model)
     perimeter = 0
-    model.getSpaces.each do |space|
+    model.getSpaces.sort.each do |space|
       # counter to use later
       edge_hash = {}
       edge_counter = 0
-      space.surfaces.each do |surface|
+      space.surfaces.sort.each do |surface|
         # get vertices
         vertex_hash = {}
         vertex_counter = 0

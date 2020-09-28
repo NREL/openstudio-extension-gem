@@ -148,7 +148,7 @@ module OsLib_ModelSimplification
     # loop through building type hash to create multiple blends
     space_type_hash.each do |collection_name, space_types|
       if collection_name == 'Building'
-        space_array = model.getSpaces # use all space types, not just space types passed in
+        space_array = model.getSpaces.sort # use all space types, not just space types passed in
       else
         space_array = []
         space_types.each do |space_type|
@@ -229,7 +229,7 @@ module OsLib_ModelSimplification
       if collection_name == 'Building'
         # count area of spaces that have no space type
         no_space_type_area_counter = 0
-        model.getSpaces.each do |space|
+        model.getSpaces.sort.each do |space|
           if space.spaceType.empty?
             next if !space.partofTotalFloorArea
             no_space_type_area_counter += space.floorArea * space.multiplier
@@ -400,7 +400,7 @@ module OsLib_ModelSimplification
       end
     end
 
-    return model.getSpaceTypes
+    return model.getSpaceTypes.sort
   end
 
   # blend internal loads used when working from existing model
@@ -788,10 +788,10 @@ module OsLib_ModelSimplification
   def sort_building_stories_and_get_min_multiplier(model)
     sorted_building_stories = {}
     # loop through stories
-    model.getBuildingStorys.each do |story|
+    model.getBuildingStorys.sort.each do |story|
       story_min_z = nil
       # loop through spaces in story.
-      story.spaces.each do |space|
+      story.spaces.sort.each do |space|
         space_z_min = OsLib_Geometry.getSurfaceZValues(space.surfaces.to_a).min + space.zOrigin
         if story_min_z.nil? || (story_min_z > space_z_min)
           story_min_z = space_z_min
@@ -829,8 +829,8 @@ module OsLib_ModelSimplification
 
     # get bounding_box
     bounding_box = OpenStudio::BoundingBox.new
-    model.getSpaces.each do |space|
-      space.surfaces.each do |spaceSurface|
+    model.getSpaces.sort.each do |space|
+      space.surfaces.sort.each do |spaceSurface|
         bounding_box.addPoints(space.transformation * spaceSurface.vertices)
       end
     end
@@ -844,7 +844,7 @@ module OsLib_ModelSimplification
     envelope_data_hash[:building_max_xyz] = [max_x, max_y, max_z]
 
     # add orientation specific wwr
-    ext_surfaces_hash = OsLib_Geometry.getExteriorWindowAndWllAreaByOrientation(model, model.getSpaces.to_a)
+    ext_surfaces_hash = OsLib_Geometry.getExteriorWindowAndWllAreaByOrientation(model, model.getSpaces.sort.to_a)
     envelope_data_hash[:building_wwr_n] = ext_surfaces_hash['northWindow'] / ext_surfaces_hash['northWall']
     envelope_data_hash[:building_wwr_s] = ext_surfaces_hash['southWindow'] / ext_surfaces_hash['southWall']
     envelope_data_hash[:building_wwr_e] = ext_surfaces_hash['eastWindow'] / ext_surfaces_hash['eastWall']
@@ -1038,7 +1038,7 @@ module OsLib_ModelSimplification
     envelope_data_hash[:building_overhang_proj_factor_w] = building_overhang_area_w / ext_surfaces_hash['westWindow']
 
     # warn for spaces that are not on a story (in future could infer stories for these)
-    model.getSpaces.each do |space|
+    model.getSpaces.sort.each do |space|
       if !space.buildingStory.is_initialized
         runner.registerWarning("#{space.name} is not on a building story, may have unexpected results.")
       end

@@ -91,6 +91,7 @@ module OpenStudio
 
         result << obj
       end
+
       return result.uniq
     end
 
@@ -105,7 +106,7 @@ module OpenStudio
         result << dir if dir
       rescue StandardError
       end
-      return result.uniq
+      return result.uniq.sort
     end
 
     ##
@@ -119,7 +120,7 @@ module OpenStudio
         result << dir if dir
       rescue StandardError
       end
-      return result.uniq
+      return result.uniq.sort
     end
 
     ##

@@ -2735,8 +2735,9 @@ module OsLib_ModelGeneration
         elevator_def = elevators.electricEquipmentDefinition
         design_level = elevator_def.designLevel.get
         runner.registerInfo("Adding #{elevators.multiplier.round(1)} elevators each with power of #{OpenStudio.toNeatString(design_level, 0, true)} (W), plus lights and fans.")
-        elevator_def.setFractionLost(1.0)
+        elevator_def.setFractionLatent(0.0)
         elevator_def.setFractionRadiant(0.0)
+        elevator_def.setFractionLost(1.0)
       end
     end
 

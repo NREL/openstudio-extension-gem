@@ -1,5 +1,8 @@
 # OpenStudio Extension Gem
 
+## Version 0.3.1
+* This change first zeroes-out latent (for good measure) and radiant fractions before setting lost fraction to 1.0 to avoid this error.
+
 ## Version 0.3.0
 
 * remove the os_lib_reporting.rb helpers. This file is only used for OS reporting measure and should not be shared with other users.

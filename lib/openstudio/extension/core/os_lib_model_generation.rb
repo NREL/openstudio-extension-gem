@@ -2493,13 +2493,6 @@ module OsLib_ModelGeneration
       end
     end
 
-    # check expected values of double arguments
-    fraction_args = ['bldg_type_b_fract_bldg_area',
-                     'bldg_type_c_fract_bldg_area',
-                     'bldg_type_d_fract_bldg_area',
-                     'wwr', 'party_wall_fraction']
-    fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => fraction_args)
-
     positive_args = ['total_bldg_floor_area']
     positive = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => nil, 'min_eq_bool' => false, 'max_eq_bool' => false, 'arg_array' => positive_args)
 
@@ -2518,7 +2511,6 @@ module OsLib_ModelGeneration
     non_neg = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => nil, 'min_eq_bool' => true, 'max_eq_bool' => false, 'arg_array' => non_neg_args)
 
     # return false if any errors fail
-    if !fraction then return false end
     if !positive then return false end
     if !one_or_greater then return false end
     if !non_neg then return false end
@@ -2558,13 +2550,6 @@ module OsLib_ModelGeneration
       runner.registerInfo("0.0 value for window to wall ratio will be replaced with smart default for #{args['bldg_type_a']} of #{building_form_defaults[:wwr]}.")
     end
 
-    # check that sum of fractions for b,c, and d is less than 1.0 (so something is left for primary building type)
-    bldg_type_a_fract_bldg_area = 1.0 - args['bldg_type_b_fract_bldg_area'] - args['bldg_type_c_fract_bldg_area'] - args['bldg_type_d_fract_bldg_area']
-    if bldg_type_a_fract_bldg_area <= 0.0
-      runner.registerError('Primary Building Type fraction of floor area must be greater than 0. Please lower one or more of the fractions for Building Type B-D.')
-      return false
-    end
-
     # Make the standard applier
     standard = Standard.build("#{args['template']}")
 
@@ -2583,44 +2568,29 @@ module OsLib_ModelGeneration
     # remove non-resource objects not removed by removing the building
     remove_non_resource_objects(runner, model)
 
-    # rename building to infer template in downstream measure
-    name_array = [args['template'], args['bldg_type_a']]
-    if args['bldg_type_b_fract_bldg_area'] > 0 then name_array << args['bldg_type_b'] end
-    if args['bldg_type_c_fract_bldg_area'] > 0 then name_array << args['bldg_type_c'] end
-    if args['bldg_type_d_fract_bldg_area'] > 0 then name_array << args['bldg_type_d'] end
-    model.getBuilding.setName(name_array.join('|').to_s)
+    # calculate length and with of bar
+    total_bldg_floor_area_si = OpenStudio.convert(args['total_bldg_floor_area'], 'ft^2', 'm^2').get
+    single_floor_area_si = OpenStudio.convert(args['single_floor_area'], 'ft^2', 'm^2').get
 
-    # hash to whole building type data
-    building_type_hash = {}
+    space_type_hash_string = args['space_type_hash_string']
 
-    # gather data for bldg_type_a
-    building_type_hash[args['bldg_type_a']] = {}
-    building_type_hash[args['bldg_type_a']][:frac_bldg_area] = bldg_type_a_fract_bldg_area
-    #building_type_hash[args['bldg_type_a']][:num_units] = args['bldg_type_a_num_units']
-    building_type_hash[args['bldg_type_a']][:space_types] = get_space_types_from_building_type(args['bldg_type_a'], args['template'], true)
+    # convert string argument to hash
+    space_type_hash_name = {}
+    space_type_hash_string[1..-2].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[1..-1].to_s] = value_str.nil? ? '' : value_str.strip[1..-2].to_f }
 
-    # gather data for bldg_type_b
-    if args['bldg_type_b_fract_bldg_area'] > 0
-      building_type_hash[args['bldg_type_b']] = {}
-      building_type_hash[args['bldg_type_b']][:frac_bldg_area] = args['bldg_type_b_fract_bldg_area']
-      #building_type_hash[args['bldg_type_b']][:num_units] = args['bldg_type_b_num_units']
-      building_type_hash[args['bldg_type_b']][:space_types] = get_space_types_from_building_type(args['bldg_type_b'], args['template'], true)
+    # sum of hash values
+    hash_values = 0
+
+    space_type_hash = {}
+    model.getSpaceTypes.each do |spaceType|
+      if space_type_hash_name.include?(spaceType.name.to_s)
+        space_type_hash[spaceType] = space_type_hash_name[spaceType.name.to_s] * total_bldg_floor_area_si # converting fractional value to area value to pass into method
+        hash_values += space_type_hash_name[spaceType.name.to_s]
+      end
     end
 
-    # gather data for bldg_type_c
-    if args['bldg_type_c_fract_bldg_area'] > 0
-      building_type_hash[args['bldg_type_c']] = {}
-      building_type_hash[args['bldg_type_c']][:frac_bldg_area] = args['bldg_type_c_fract_bldg_area']
-      #building_type_hash[args['bldg_type_c']][:num_units] = args['bldg_type_c_num_units']
-      building_type_hash[args['bldg_type_c']][:space_types] = get_space_types_from_building_type(args['bldg_type_c'], args['template'], true)
-    end
-
-    # gather data for bldg_type_d
-    if args['bldg_type_d_fract_bldg_area'] > 0
-      building_type_hash[args['bldg_type_d']] = {}
-      building_type_hash[args['bldg_type_d']][:frac_bldg_area] = args['bldg_type_d_fract_bldg_area']
-      #building_type_hash[args['bldg_type_d']][:num_units] = args['bldg_type_d_num_units']
-      building_type_hash[args['bldg_type_d']][:space_types] = get_space_types_from_building_type(args['bldg_type_d'], args['template'], true)
+    if hash_values != 1.0
+      runner.registerWarning('Fractional hash values do not add up to one. Resulting geometry may not have expected area.')
     end
 
     # creating space types for requested building types
@@ -2659,10 +2629,6 @@ module OsLib_ModelGeneration
       # store multiplier needed to adjust sum of ratios to equal 1.0
       building_type_hash[:ratio_adjustment_multiplier] = 1.0 / sum_of_ratios
     end
-
-    # calculate length and with of bar
-    total_bldg_floor_area_si = OpenStudio.convert(args['total_bldg_floor_area'], 'ft^2', 'm^2').get
-    single_floor_area_si = OpenStudio.convert(args['single_floor_area'], 'ft^2', 'm^2').get
 
     # store number of stories
     num_stories = args['num_stories_below_grade'] + args['num_stories_above_grade']

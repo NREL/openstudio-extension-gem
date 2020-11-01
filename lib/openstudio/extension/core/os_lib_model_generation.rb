@@ -1652,28 +1652,7 @@ module OsLib_ModelGeneration
 
   # bar_arg_check_setup
   # todo - move setup and check code here to use for both from_building_type and from_space_type measures
-  def bar_arg_check_setup
-
-  end
-
-  # bar_from_building_type_ratios
-  # used for varieties of measures that create bar from building type ratios
-  def bar_from_building_type_ratios(model, runner, user_arguments)
-
-    # todo - move code here to convert building type ratios to space type ratio
-
-    # call bar_from_building_space_type_ratios to generate bar
-    bar_from_building_space_type_ratios(model, runner, user_arguments,true)
-
-    return true
-
-  end
-
-  # bar_from_space_type_ratios
-  # used for varieties of measures that create bar from space type ratios
-  def bar_from_building_space_type_ratios(model, runner, user_arguments,arg_setup = false)
-
-    # todo - update inputs here to be space_type_ratios
+  def bar_arg_check_setup(model, runner, user_arguments)
 
     # assign the user inputs to variables
     args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments(model))
@@ -1738,6 +1717,38 @@ module OsLib_ModelGeneration
     if !positive then return false end
     if !one_or_greater then return false end
     if !non_neg then return false end
+
+    return args
+
+  end
+
+  # bar_from_building_type_ratios
+  # used for varieties of measures that create bar from building type ratios
+  def bar_from_building_type_ratios(model, runner, user_arguments)
+
+    # todo - move code here to convert building type ratios to space type ratio
+
+    # prep arguments
+    args = bar_arg_check_setup(model,runner,user_arguments)
+
+    # call bar_from_building_space_type_ratios to generate bar
+    bar_from_building_space_type_ratios(model, runner, user_arguments, args)
+
+    return true
+
+  end
+
+  # bar_from_space_type_ratios
+  # used for varieties of measures that create bar from space type ratios
+  def bar_from_building_space_type_ratios(model, runner, user_arguments, args = nil)
+
+    # todo - update inputs here to be space_type_ratios
+
+    # do not setup arguments if they were already passed in to this method
+    if args.nil?
+     # prep arguments
+      args = bar_arg_check_setup(model,runner,user_arguments)
+    end
 
     # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults
     building_form_defaults = building_form_defaults(args['bldg_type_a'])

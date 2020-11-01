@@ -44,9 +44,7 @@ require 'openstudio/measure/ShowRunnerOutput'
 
 RSpec.describe 'Bar Methods' do # include from building type ratios, space type ratios, and from building
   context 'bar_from_empty' do
-    before :all do
-
-      # todo - this only runs once for group of tests, I really need something that is fresh for each test
+    before :each do
 
       # create an empty model
       @model = OpenStudio::Model::Model.new

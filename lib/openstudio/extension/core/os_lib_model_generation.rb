@@ -1650,9 +1650,30 @@ module OsLib_ModelGeneration
     end
   end
 
+  # bar_arg_check_setup
+  # todo - move setup and check code here to use for both from_building_type and from_space_type measures
+  def bar_arg_check_setup
+
+  end
+
   # bar_from_building_type_ratios
   # used for varieties of measures that create bar from building type ratios
   def bar_from_building_type_ratios(model, runner, user_arguments)
+
+    # todo - move code here to convert building type ratios to space type ratio
+
+    # call bar_from_building_space_type_ratios to generate bar
+    bar_from_building_space_type_ratios(model, runner, user_arguments,true)
+
+    return true
+
+  end
+
+  # bar_from_space_type_ratios
+  # used for varieties of measures that create bar from space type ratios
+  def bar_from_building_space_type_ratios(model, runner, user_arguments,arg_setup = false)
+
+    # todo - update inputs here to be space_type_ratios
 
     # assign the user inputs to variables
     args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments(model))

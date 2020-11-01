@@ -46,6 +46,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
   context 'bar_from_empty' do
     before :all do
 
+      # todo - this only runs once for group of tests, I really need something that is fresh for each test
+
       # create an empty model
       @model = OpenStudio::Model::Model.new
 
@@ -70,15 +72,16 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
           # create agruments`
           args = OpenStudio::Measure::OSArgumentVector.new
-          # update all but 4-5 of these to ahve defaults so full set of arguments doesn't ahve to be passed in to the method
+          # todo - update all but 4-5 of these to ahve defaults so full set of arguments doesn't ahve to be passed in to the method
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_a', get_doe_building_types, true); arg.setValue('PrimarySchool'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_b', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_c', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_d', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2004'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_b_fract_bldg_area', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_c_fract_bldg_area', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_d_fract_bldg_area', true); arg.setValue(0.0); args << arg
+
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2004'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(50000.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('single_floor_area', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('floor_height', true); arg.setValue(0.0); args << arg
@@ -141,6 +144,104 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       expect(result.value.valueName).to eq 'Success'
 
     end
+
+    # test bar_from_space_type_ratios method
+    it 'bar_from_space_type_ratios runs' do
+
+      # start the measure
+      class BarFromSpaceTypeRatio_Test < OpenStudio::Measure::ModelMeasure
+
+        # resource file modules
+        include OsLib_HelperMethods
+        include OsLib_Geometry
+        include OsLib_ModelGeneration
+        include OsLib_ModelSimplification
+
+        # define the arguments that the user will input
+        def arguments(model)
+
+          # create agruments`
+          args = OpenStudio::Measure::OSArgumentVector.new
+          # todo - update all but 4-5 of these to ahve defaults so full set of arguments doesn't ahve to be passed in to the method
+
+          # this replaces arguemnts for building type a-d string and fraction
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("{MediumOffice - Conference => '0.2', PrimarySchool - Classroom => '0.3', QuickServiceRestaurant - Dining => '0.5'}"); args << arg
+
+          # todo - delete these once method is in place and make sure bar_arg_check_setup doesn't break without these arguments.
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_a', get_doe_building_types, true); arg.setValue('PrimarySchool'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_b', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_c', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_d', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_b_fract_bldg_area', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_c_fract_bldg_area', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_d_fract_bldg_area', true); arg.setValue(0.0); args << arg
+
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2013'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(50000.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('single_floor_area', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('floor_height', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('num_stories_above_grade', true); arg.setValue(2.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('num_stories_below_grade', true); arg.setValue(0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('building_rotation', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('ns_to_ew_ratio', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('perim_mult', true); arg.setValue(1.5); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_width', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_sep_dist_mult', true); arg.setValue(2.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wwr', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('party_wall_fraction', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_north', true); arg.setValue(1.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_south', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_east', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_west', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('bottom_story_ground_exposed_floor', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('top_story_exterior_exposed_roof', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
+          # can describe choice arguments here as string arguments
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('story_multiplier', true); arg.setValue('Basements Ground Mid Top'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('bar_division_method', true); arg.setValue('Multiple Space Types - Individual Stories Sliced'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('double_loaded_corridor', true); arg.setValue('Primary Space Type'); args << arg
+
+          # todo - see if this is still relevant for bar_from_space_type_ratios
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_sort_logic', true); arg.setValue('Building Type > Size'); args << arg
+          return args
+
+        end
+
+        # define what happens when the measure is run
+        def run(model, runner, user_arguments)
+
+          # method run from os_lib_model_generation.rb
+          # todo - update this to bar_from_space_type_ratios
+          result = bar_from_space_type_ratios(model, runner, user_arguments,nil)
+        end
+      end
+
+      # get the measure (using measure beacuse these methods take in meaasure arguments)
+      unit_test = BarFromSpaceTypeRatio_Test.new
+
+      # get arguments
+      arguments = unit_test.arguments(@model)
+      argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
+
+      # run the unit_test
+      unit_test.run(@model, @runner, argument_map)
+      result = @runner.result
+
+      # show the output
+      puts "method results for bar_from_space_type_ratios method."
+      show_output(result)
+
+      # save the model to test output directory
+      output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/bar_from_space_type_ratios_test_a.osm")
+      @model.save(output_file_path, true)
+
+      # confirm it ran correctly
+      expect(result.value.valueName).to eq 'Success'
+
+    end
+
   end
 
   # todo - add context with bar from non empty or running bar methods twice on same model

@@ -1732,15 +1732,15 @@ module OsLib_ModelGeneration
     args = bar_arg_check_setup(model,runner,user_arguments)
 
     # call bar_from_building_space_type_ratios to generate bar
-    bar_from_building_space_type_ratios(model, runner, user_arguments, args)
+    bar_from_space_type_ratios(model, runner, user_arguments, args)
 
     return true
 
   end
 
   # bar_from_space_type_ratios
-  # used for varieties of measures that create bar from space type ratios
-  def bar_from_building_space_type_ratios(model, runner, user_arguments, args = nil)
+  # used for varieties of measures that create bar from space type or building type ratios
+  def bar_from_space_type_ratios(model, runner, user_arguments, args = nil)
 
     # todo - update inputs here to be space_type_ratios
 
@@ -1748,6 +1748,9 @@ module OsLib_ModelGeneration
     if args.nil?
      # prep arguments
       args = bar_arg_check_setup(model,runner,user_arguments)
+
+      # todo - expand out space type ratio to match what comes from building type ratios
+      runner.registerWarning(args['space_type_hash_string'])
     end
 
     # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults

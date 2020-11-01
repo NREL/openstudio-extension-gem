@@ -9,6 +9,7 @@
 /pkg/
 /spec/reports/
 /spec/test/
+/spec/openstudio/core/output/*
 /tmp/
 /test/
 /lib/measures/test_results

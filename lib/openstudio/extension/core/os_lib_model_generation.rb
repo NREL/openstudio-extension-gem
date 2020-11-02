@@ -1651,8 +1651,7 @@ module OsLib_ModelGeneration
   end
 
   # bar_arg_check_setup
-  # todo - move setup and check code here to use for both from_building_type and from_space_type measures
-  def bar_arg_check_setup(model, runner, user_arguments)
+  def bar_arg_check_setup(model, runner, user_arguments, building_type_ratios = true)
 
     # assign the user inputs to variables
     args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments(model))
@@ -1689,10 +1688,12 @@ module OsLib_ModelGeneration
     end
 
     # check expected values of double arguments
-    fraction_args = ['bldg_type_b_fract_bldg_area',
-                     'bldg_type_c_fract_bldg_area',
-                     'bldg_type_d_fract_bldg_area',
-                     'wwr', 'party_wall_fraction']
+    fraction_args = ['wwr', 'party_wall_fraction']
+    if building_type_ratios
+      fraction_args << 'bldg_type_b_fract_bldg_area'
+      fraction_args << 'bldg_type_c_fract_bldg_area'
+      fraction_args << 'bldg_type_d_fract_bldg_area'
+    end
     fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => fraction_args)
 
     positive_args = ['total_bldg_floor_area']
@@ -1728,8 +1729,6 @@ module OsLib_ModelGeneration
 
     # prep arguments
     args = bar_arg_check_setup(model,runner,user_arguments)
-
-    # todo - move code here to convert building type ratios to space type ratio
 
     # check that sum of fractions for b,c, and d is less than 1.0 (so something is left for primary building type)
     bldg_type_a_fract_bldg_area = 1.0 - args['bldg_type_b_fract_bldg_area'] - args['bldg_type_c_fract_bldg_area'] - args['bldg_type_d_fract_bldg_area']
@@ -1790,33 +1789,47 @@ module OsLib_ModelGeneration
   # args and building_type_hash should both be nil or neither shoould be nill
   def bar_from_space_type_ratios(model, runner, user_arguments, args = nil, building_type_hash = nil)
 
-    # todo - update inputs here to be space_type_ratios
-
     # do not setup arguments if they were already passed in to this method
     if args.nil?
      # prep arguments
-      args = bar_arg_check_setup(model,runner,user_arguments)
+      args = bar_arg_check_setup(model,runner,user_arguments,false) # false stops it from checking args on used in bar_from_building_type_ratios
 
-      # todo - identify primary building type for building form defaults
+      # identify primary building type for building form defaults
       primary_building_type = "PrimarySchool" # see what building type represents the most floro area
       building_form_defaults = building_form_defaults(primary_building_type)
 
-      # todo - proess arg into hash
-      # todo - confirm that frations to not add up to more than 1.0. 
-      # todo Adjsut up to 1.0 if low and warn user
+      # proess arg into hash
       space_type_hash_name = {}
-      args['space_type_hash_string'][1..-2].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[1..-1].to_s] = value_str.nil? ? '' : value_str.strip[1..-2].to_f }
-      puts "hello, just want to see what space type hash looks like"
-      puts space_type_hash_name
+      args['space_type_hash_string'][0..-1].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[0..-1].to_s] = value_str.nil? ? '' : value_str.strip[0..-1].to_f }
 
-      # hash to whole building type data
+      # create building type hasn from space type ratios
       building_type_hash = {}
+      building_type_fraction_of_building = 0.0
+      space_type_hash_name.each do |building_space_type,ratio|
+        building_type = building_space_type.split("|")[0].strip
+        space_type = building_space_type.split("|")[1].strip
 
-      # todo - expand out space type ratio to match what comes from building type ratios
-      runner.registerWarning(args['space_type_hash_string'])
+        if building_type_hash.key?(building_type)
+          building_type_hash[building_type][:frac_bldg_area] += ratio
+          building_type_hash[building_type][:space_types][space_type] = {ratio: ratio}
+        else
+          building_type_hash[building_type] = {}
+          building_type_hash[building_type][:frac_bldg_area] = ratio
+          space_types = {}
+          space_types[space_type] = {ratio: ratio}
+          building_type_hash[building_type][:space_types] = space_types
+        end
+        building_type_fraction_of_building += ratio
+      end
+
+      # todo - confirm if this will get normlaized up/down later of if I shold fix or stop here instead of just a warning
+      if building_type_fraction_of_building > 1.0
+        runner.registerWarning("Sum of Space Type Ratio of #{building_type_fraction_of_building} is greater than the expected value of 1.0")
+      elsif building_type_fraction_of_building < 1.0
+        runner.registerWarning("Sum of Space Type Ratio of #{building_type_fraction_of_building} is less than the expected value of 1.0")
+      end
+
     else # else is used when bar_from_building_type_ratio is used
-
-      # todo - need to bring in buidling_type_hash from other method
 
       # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults
       primary_building_type = args['bldg_type_a']
@@ -1824,7 +1837,7 @@ module OsLib_ModelGeneration
     end
 
     # get defaults for the primary building type
-    building_form_defaults = building_form_defaults(args['bldg_type_a'])
+    building_form_defaults = building_form_defaults(primary_building_type)
 
     # store list of defaulted items
     defaulted_args = []

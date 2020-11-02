@@ -37,7 +37,7 @@ require 'openstudio/extension/core/os_lib_helper_methods'
 require 'openstudio/extension/core/os_lib_geometry'
 require 'openstudio/extension/core/os_lib_model_generation'
 require 'openstudio/extension/core/os_lib_model_simplification'
-require 'openstudio-standards' #todo - I thought this would already be setup as part of gem spec for extension gem
+require 'openstudio-standards'
 
 # adding this because I may want to inspect runner output
 require 'openstudio/measure/ShowRunnerOutput'
@@ -142,7 +142,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
     end
 
-=begin
     # test bar_from_space_type_ratios method
     it 'bar_from_space_type_ratios runs' do
 
@@ -162,8 +161,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           args = OpenStudio::Measure::OSArgumentVector.new
           # todo - update all but 4-5 of these to ahve defaults so full set of arguments doesn't ahve to be passed in to the method
 
-          # this replaces arguemnts for building type a-d string and fraction
-          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("{MediumOffice - Conference => '0.2', PrimarySchool - Classroom => '0.3', QuickServiceRestaurant - Dining => '0.5'}"); args << arg
+          # this replaces arguemnts for building type a-d string and fraction (note, this isn't expecting same building type | space type combo twice and likley will not handle it well without additinoal code to account for it)
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("MediumOffice | Conference => 0.2, PrimarySchool | Classroom => 0.125, PrimarySchool | Restroom => 0.175, QuickServiceRestaurant | Dining => 0.5"); args << arg
 
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2013'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(50000.0); args << arg
@@ -182,17 +181,18 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_south', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_east', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_west', true); arg.setValue(0.0); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('bottom_story_ground_exposed_floor', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('top_story_exterior_exposed_roof', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('story_multiplier', true); arg.setValue('Basements Ground Mid Top'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('bar_division_method', true); arg.setValue('Multiple Space Types - Individual Stories Sliced'); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeStringArgument('double_loaded_corridor', true); arg.setValue('Primary Space Type'); args << arg
-
-          # todo - see if this is still relevant for bar_from_space_type_ratios
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_sort_logic', true); arg.setValue('Building Type > Size'); args << arg
+
+          # these don't fucntion on this method now. I could make string more complex to hold this, or a cleaner apporach harvest non ratio data from get_space_types_from_building_type
+          #arg = OpenStudio::Measure::OSArgument.makeStringArgument('double_loaded_corridor', true); arg.setValue('Primary Space Type'); args << arg
+          #arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
+
           return args
 
         end
@@ -201,7 +201,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         def run(model, runner, user_arguments)
 
           # method run from os_lib_model_generation.rb
-          # todo - update this to bar_from_space_type_ratios
           result = bar_from_space_type_ratios(model, runner, user_arguments,nil)
         end
       end
@@ -229,7 +228,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       expect(result.value.valueName).to eq 'Success'
 
     end
-=end
 
   end
 

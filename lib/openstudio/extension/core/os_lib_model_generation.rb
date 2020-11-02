@@ -1726,67 +1726,10 @@ module OsLib_ModelGeneration
   # used for varieties of measures that create bar from building type ratios
   def bar_from_building_type_ratios(model, runner, user_arguments)
 
-    # todo - move code here to convert building type ratios to space type ratio
-
     # prep arguments
     args = bar_arg_check_setup(model,runner,user_arguments)
 
-    # call bar_from_building_space_type_ratios to generate bar
-    bar_from_space_type_ratios(model, runner, user_arguments, args)
-
-    return true
-
-  end
-
-  # bar_from_space_type_ratios
-  # used for varieties of measures that create bar from space type or building type ratios
-  def bar_from_space_type_ratios(model, runner, user_arguments, args = nil)
-
-    # todo - update inputs here to be space_type_ratios
-
-    # do not setup arguments if they were already passed in to this method
-    if args.nil?
-     # prep arguments
-      args = bar_arg_check_setup(model,runner,user_arguments)
-
-      # todo - expand out space type ratio to match what comes from building type ratios
-      runner.registerWarning(args['space_type_hash_string'])
-    end
-
-    # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults
-    building_form_defaults = building_form_defaults(args['bldg_type_a'])
-
-    # store list of defaulted items
-    defaulted_args = []
-
-    if args['ns_to_ew_ratio'] == 0.0
-      args['ns_to_ew_ratio'] = building_form_defaults[:aspect_ratio]
-      runner.registerInfo("0.0 value for aspect ratio will be replaced with smart default for #{args['bldg_type_a']} of #{building_form_defaults[:aspect_ratio]}.")
-    end
-
-    if args['perim_mult'] == 0.0
-      # if this is not defined then use default of 1.0
-      if !building_form_defaults.has_key?(:perim_mult)
-        args['perim_mult'] = 1.0
-      else
-        args['perim_mult'] = building_form_defaults[:perim_mult]
-      end
-      runner.registerInfo("0.0 value for minimum perimeter multiplier will be replaced with smart default for #{args['bldg_type_a']} of #{building_form_defaults[:perim_mult]}.")
-    elsif args['perim_mult'] < 1.0
-      runner.registerError("Other than the smart default value of 0, the minimum perimeter multiplier should be equal to 1.0 or greater.")
-      return false
-    end
-
-    if args['floor_height'] == 0.0
-      args['floor_height'] = building_form_defaults[:typical_story]
-      runner.registerInfo("0.0 value for floor height will be replaced with smart default for #{args['bldg_type_a']} of #{building_form_defaults[:typical_story]}.")
-      defaulted_args << 'floor_height'
-    end
-    # because of this can't set wwr to 0.0. If that is desired then we can change this to check for 1.0 instead of 0.0
-    if args['wwr'] == 0.0
-      args['wwr'] = building_form_defaults[:wwr]
-      runner.registerInfo("0.0 value for window to wall ratio will be replaced with smart default for #{args['bldg_type_a']} of #{building_form_defaults[:wwr]}.")
-    end
+    # todo - move code here to convert building type ratios to space type ratio
 
     # check that sum of fractions for b,c, and d is less than 1.0 (so something is left for primary building type)
     bldg_type_a_fract_bldg_area = 1.0 - args['bldg_type_b_fract_bldg_area'] - args['bldg_type_c_fract_bldg_area'] - args['bldg_type_d_fract_bldg_area']
@@ -1794,24 +1737,6 @@ module OsLib_ModelGeneration
       runner.registerError('Primary Building Type fraction of floor area must be greater than 0. Please lower one or more of the fractions for Building Type B-D.')
       return false
     end
-
-    # Make the standard applier
-    standard = Standard.build("#{args['template']}")
-
-    # report initial condition of model
-    runner.registerInitialCondition("The building started with #{model.getSpaces.size} spaces.")
-
-    # determine of ns_ew needs to be mirrored
-    mirror_ns_ew = false
-    rotation = model.getBuilding.northAxis
-    if rotation > 45.0 && rotation < 135.0
-      mirror_ns_ew = true
-    elsif rotation > 45.0 && rotation < 135.0
-      mirror_ns_ew = true
-    end
-
-    # remove non-resource objects not removed by removing the building
-    remove_non_resource_objects(runner, model)
 
     # rename building to infer template in downstream measure
     name_array = [args['template'], args['bldg_type_a']]
@@ -1852,6 +1777,104 @@ module OsLib_ModelGeneration
       #building_type_hash[args['bldg_type_d']][:num_units] = args['bldg_type_d_num_units']
       building_type_hash[args['bldg_type_d']][:space_types] = get_space_types_from_building_type(args['bldg_type_d'], args['template'], true)
     end
+
+    # call bar_from_building_space_type_ratios to generate bar
+    bar_from_space_type_ratios(model, runner, user_arguments, args, building_type_hash)
+
+    return true
+
+  end
+
+  # bar_from_space_type_ratios
+  # used for varieties of measures that create bar from space type or building type ratios
+  # args and building_type_hash should both be nil or neither shoould be nill
+  def bar_from_space_type_ratios(model, runner, user_arguments, args = nil, building_type_hash = nil)
+
+    # todo - update inputs here to be space_type_ratios
+
+    # do not setup arguments if they were already passed in to this method
+    if args.nil?
+     # prep arguments
+      args = bar_arg_check_setup(model,runner,user_arguments)
+
+      # todo - identify primary building type for building form defaults
+      primary_building_type = "PrimarySchool" # see what building type represents the most floro area
+      building_form_defaults = building_form_defaults(primary_building_type)
+
+      # todo - proess arg into hash
+      # todo - confirm that frations to not add up to more than 1.0. 
+      # todo Adjsut up to 1.0 if low and warn user
+      space_type_hash_name = {}
+      args['space_type_hash_string'][1..-2].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[1..-1].to_s] = value_str.nil? ? '' : value_str.strip[1..-2].to_f }
+      puts "hello, just want to see what space type hash looks like"
+      puts space_type_hash_name
+
+      # hash to whole building type data
+      building_type_hash = {}
+
+      # todo - expand out space type ratio to match what comes from building type ratios
+      runner.registerWarning(args['space_type_hash_string'])
+    else # else is used when bar_from_building_type_ratio is used
+
+      # todo - need to bring in buidling_type_hash from other method
+
+      # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults
+      primary_building_type = args['bldg_type_a']
+
+    end
+
+    # get defaults for the primary building type
+    building_form_defaults = building_form_defaults(args['bldg_type_a'])
+
+    # store list of defaulted items
+    defaulted_args = []
+
+    if args['ns_to_ew_ratio'] == 0.0
+      args['ns_to_ew_ratio'] = building_form_defaults[:aspect_ratio]
+      runner.registerInfo("0.0 value for aspect ratio will be replaced with smart default for #{primary_building_type} of #{building_form_defaults[:aspect_ratio]}.")
+    end
+
+    if args['perim_mult'] == 0.0
+      # if this is not defined then use default of 1.0
+      if !building_form_defaults.has_key?(:perim_mult)
+        args['perim_mult'] = 1.0
+      else
+        args['perim_mult'] = building_form_defaults[:perim_mult]
+      end
+      runner.registerInfo("0.0 value for minimum perimeter multiplier will be replaced with smart default for #{primary_building_type} of #{building_form_defaults[:perim_mult]}.")
+    elsif args['perim_mult'] < 1.0
+      runner.registerError("Other than the smart default value of 0, the minimum perimeter multiplier should be equal to 1.0 or greater.")
+      return false
+    end
+
+    if args['floor_height'] == 0.0
+      args['floor_height'] = building_form_defaults[:typical_story]
+      runner.registerInfo("0.0 value for floor height will be replaced with smart default for #{primary_building_type} of #{building_form_defaults[:typical_story]}.")
+      defaulted_args << 'floor_height'
+    end
+    # because of this can't set wwr to 0.0. If that is desired then we can change this to check for 1.0 instead of 0.0
+    if args['wwr'] == 0.0
+      args['wwr'] = building_form_defaults[:wwr]
+      runner.registerInfo("0.0 value for window to wall ratio will be replaced with smart default for #{primary_building_type} of #{building_form_defaults[:wwr]}.")
+    end
+
+    # Make the standard applier
+    standard = Standard.build("#{args['template']}")
+
+    # report initial condition of model
+    runner.registerInitialCondition("The building started with #{model.getSpaces.size} spaces.")
+
+    # determine of ns_ew needs to be mirrored
+    mirror_ns_ew = false
+    rotation = model.getBuilding.northAxis
+    if rotation > 45.0 && rotation < 135.0
+      mirror_ns_ew = true
+    elsif rotation > 45.0 && rotation < 135.0
+      mirror_ns_ew = true
+    end
+
+    # remove non-resource objects not removed by removing the building
+    remove_non_resource_objects(runner, model)
 
     # creating space types for requested building types
     building_type_hash.each do |building_type, building_type_hash|

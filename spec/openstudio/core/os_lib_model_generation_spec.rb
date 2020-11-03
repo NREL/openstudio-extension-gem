@@ -201,7 +201,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         def run(model, runner, user_arguments)
 
           # method run from os_lib_model_generation.rb
-          result = bar_from_space_type_ratios(model, runner, user_arguments,nil)
+          result = bar_from_space_type_ratios(model, runner, user_arguments) # to additinal arguments to this method when called by bar_from_building_type_ratios
         end
       end
 

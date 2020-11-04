@@ -1798,7 +1798,7 @@ module OsLib_ModelGeneration
       primary_building_type = "PrimarySchool" # see what building type represents the most floro area
       building_form_defaults = building_form_defaults(primary_building_type)
 
-      # proess arg into hash
+      # process arg into hash
       space_type_hash_name = {}
       args['space_type_hash_string'][0..-1].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[0..-1].to_s] = value_str.nil? ? '' : value_str.strip[0..-1].to_f }
 
@@ -1809,20 +1809,43 @@ module OsLib_ModelGeneration
         building_type = building_space_type.split("|")[0].strip
         space_type = building_space_type.split("|")[1].strip
 
+        # harvest height and circ info from get_space_types_from_building_type(building_type, template, whole_building = true)
+        building_type_lookup_info = get_space_types_from_building_type(building_type,args['template'])
+        if building_type_lookup_info.size == 0
+          runner.registerWarning("#{building_type} looks like an invalid building type for #{args['template']}")
+        end
+        space_type_info_hash = {}
+        if building_type_lookup_info.key?(space_type)
+          if building_type_lookup_info[space_type].key?(:story_height)
+            space_type_info_hash[:story_height] = building_type_lookup_info[space_type][:story_height]
+          end
+          if building_type_lookup_info[space_type].key?(:default)
+            space_type_info_hash[:default] = building_type_lookup_info[space_type][:default]
+          end
+          if building_type_lookup_info[space_type].key?(:circ)
+            space_type_info_hash[:circ] = building_type_lookup_info[space_type][:circ]
+          end
+        else
+          runner.registerWarning("#{space_type} looks like an invalid space type for #{building_type}")
+        end
+
+        # extend harvested data with custom ratios from space type ratio string argument.
         if building_type_hash.key?(building_type)
           building_type_hash[building_type][:frac_bldg_area] += ratio
-          building_type_hash[building_type][:space_types][space_type] = {ratio: ratio}
+          space_type_info_hash[:ratio] = ratio
+          building_type_hash[building_type][:space_types][space_type] = space_type_info_hash
         else
           building_type_hash[building_type] = {}
           building_type_hash[building_type][:frac_bldg_area] = ratio
+          space_type_info_hash[:ratio] = ratio
           space_types = {}
-          space_types[space_type] = {ratio: ratio}
+          space_types[space_type] = space_type_info_hash
           building_type_hash[building_type][:space_types] = space_types
         end
         building_type_fraction_of_building += ratio
       end
 
-      # todo - confirm if this will get normlaized up/down later of if I shold fix or stop here instead of just a warning
+      # todo - confirm if this will get normalized up/down later of if I should fix or stop here instead of just a warning
       if building_type_fraction_of_building > 1.0
         runner.registerWarning("Sum of Space Type Ratio of #{building_type_fraction_of_building} is greater than the expected value of 1.0")
       elsif building_type_fraction_of_building < 1.0

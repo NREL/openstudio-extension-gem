@@ -1,6 +1,11 @@
 # OpenStudio Extension Gem
 
+## Version 0.3.x (Unreleased)
+
+* Update Extension Gem Template
+
 ## Version 0.3.1
+
 * This change first zeroes-out latent (for good measure) and radiant fractions before setting lost fraction to 1.0 to avoid this error.
 
 ## Version 0.3.0

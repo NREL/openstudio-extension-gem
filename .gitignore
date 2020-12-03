@@ -1,6 +1,7 @@
 /.bundle/
 /.yardoc
 /.ruby-version
+/.python-version
 /Gemfile.lock
 /gems
 /_yardoc/

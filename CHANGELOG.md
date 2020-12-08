@@ -1,8 +1,9 @@
 # OpenStudio Extension Gem
 
-## Version 0.3.x (Unreleased)
+## Version 0.3.2
 
 * Update Extension Gem Template
+* Add gemfile path instead of just dirname to the initialization
 
 ## Version 0.3.1
 

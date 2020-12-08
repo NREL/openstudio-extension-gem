@@ -4,6 +4,7 @@
 
 * Update Extension Gem Template
 * Add gemfile path instead of just dirname to the initialization
+* Update to latest workflow gem to support URBANopt Workflow
 
 ## Version 0.3.1
 

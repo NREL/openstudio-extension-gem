@@ -1,6 +1,13 @@
 # OpenStudio Extension Gem
 
+## Version 0.3.2
+
+* Update Extension Gem Template
+* Add gemfile path instead of just dirname to the initialization
+* Update to latest workflow gem to support URBANopt Workflow
+
 ## Version 0.3.1
+
 * This change first zeroes-out latent (for good measure) and radiant fractions before setting lost fraction to 1.0 to avoid this error.
 
 ## Version 0.3.0

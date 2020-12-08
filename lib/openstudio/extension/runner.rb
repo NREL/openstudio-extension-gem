@@ -62,6 +62,8 @@ module OpenStudio
       #  @option options [String] :num_parallel Number of simulations to run in parallel at a time
       #  @option options [String] :run_simulations Set to true to run the simulations
       #  @option options [String] :verbose Set to true to receive extra information while running simulations
+      #  @option options [String] :gemfile_path Path to gemfile to use
+      #  @option options [String] :bundle_install_path Path where the bundle should be installed
       def initialize(dirname = Dir.pwd, bundle_without = [], options = {})
         # DLM: I am not sure if we want to use the main root directory to create these bundles
         # had the idea of passing in a Gemfile name/alias and path to Gemfile, then doing the bundle
@@ -88,9 +90,14 @@ module OpenStudio
         @gemfile_path = !@options.key?(:gemfile_path) || @options[:gemfile_path] === '' ? File.join(@dirname, 'Gemfile') : @options[:gemfile_path]
         @bundle_install_path = !@options.key?(:bundle_install_path) || @options[:bundle_install_path] === '' ? File.join(@dirname, '.bundle/install/') : @options[:bundle_install_path]
         @original_dir = Dir.pwd
+
+        # gemfile directory
+        @gemfile_dir = File.dirname(@gemfile_path)
+
         # puts "DIRNAME: #{@dirname}"
         # puts "@gemfile_path set to: #{@gemfile_path}"
         # puts "@bundle_install_path set to: #{@bundle_install_path}"
+        # puts "@gemfile directory: #{@gemfile_dir}"
 
         @bundle_without = bundle_without || []
         @bundle_without_string = @bundle_without.join(' ')
@@ -106,8 +113,8 @@ module OpenStudio
         else
           # there is a gemfile, attempt to create a bundle
           begin
-            # go to the directory with the gemfile
-            Dir.chdir(@dirname)
+            # go to the directory with the gemfile to run these commands
+            Dir.chdir(@gemfile_dir)
 
             # test to see if bundle is installed
             check_bundle = run_command('bundle -v', get_clean_env)
@@ -119,7 +126,7 @@ module OpenStudio
 
             # check existing config
             needs_config = true
-            if File.exist?('./.bundle/config')
+            if File.exist?('./.bundle/config')  # checking wrt gemfile_dir
               puts 'config exists'
               needs_config = false
               config = YAML.load_file('./.bundle/config')
@@ -135,7 +142,7 @@ module OpenStudio
 
             # check existing platform
             needs_platform = true
-            if File.exist?('Gemfile.lock')
+            if File.exist?('Gemfile.lock') # checking wrt gemfile_dir
               puts 'Gemfile.lock exists'
               gemfile_lock = Bundler::LockfileParser.new(Bundler.read_file('Gemfile.lock'))
               if gemfile_lock.platforms.include?('ruby')
@@ -164,9 +171,7 @@ module OpenStudio
 
             puts "needs_update = #{needs_update}"
             if needs_update
-              # run_command('bundle update', get_clean_env)
-              # KAF: updated to include specified gemfile_path...this didn't seem to work before
-              run_command("bundle update --gemfile=#{@gemfile_path}", get_clean_env)
+              run_command('bundle update', get_clean_env)
             end
           ensure
             Dir.chdir(@original_dir)
@@ -220,8 +225,7 @@ module OpenStudio
         result = false
         original_dir = Dir.pwd
         begin
-          Dir.chdir(@dirname)
-
+          Dir.chdir(@gemfile_dir)
           # DLM: using popen3 here can result in deadlocks
           stdout_str, stderr_str, status = Open3.capture3(env, command)
           if status.success?

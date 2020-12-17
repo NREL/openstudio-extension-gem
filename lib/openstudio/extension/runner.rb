@@ -81,7 +81,7 @@ module OpenStudio
         end
 
         if !options.empty?
-          puts 'Merging in passed in options'
+          puts 'Merging in passed-in options'
           # use the passed values or defaults overriden by passed options
           @options = @options.merge(options)
         end

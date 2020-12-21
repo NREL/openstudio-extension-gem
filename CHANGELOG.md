@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version 0.3.X (Unreleased)
+
+* Fix merging of options on initialization. Options hash will overwrite the default config AND the runner.conf files.
+
 ## Version 0.3.2
 
 * Update Extension Gem Template

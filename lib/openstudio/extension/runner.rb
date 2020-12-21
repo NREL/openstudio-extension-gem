@@ -73,15 +73,18 @@ module OpenStudio
 
         @options = OpenStudio::Extension::RunnerConfig.default_config
         # ORDER of PRECEDENCE: default config < runner.conf file < options passed in directly
-        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME)) && options.empty?
+        if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME))
           puts 'Using runner options from runner.conf file'
           runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
           # use the default values overriden with runner.conf values
           @options = @options.merge(runner_config.options)
         end
 
-        # use the passed values or defaults overriden by passed options
-        @options = @options.merge(options)
+        if !options.empty?
+          puts 'Merging in passed-in options'
+          # use the passed values or defaults overriden by passed options
+          @options = @options.merge(options)
+        end
 
         puts "Initializing runner with dirname: '#{dirname}' and options: #{@options}"
         @dirname = File.absolute_path(dirname)

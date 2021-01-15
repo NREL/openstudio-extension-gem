@@ -37,7 +37,7 @@ module OsLib_OutdoorAirAndInfiltration
   # delete any infiltration objects used in the model.
   def self.eraseInfiltrationUsedInModel(model, runner)
     # get space infiltration objects.
-    space_infiltration_objects = model.getSpaceInfiltrationDesignFlowRates
+    space_infiltration_objects = model.getSpaceInfiltrationDesignFlowRates.sort
 
     # hash to hold schedules used for infiltration objects in the model
     @infiltrationSchedulesHardAssigned = {}
@@ -126,7 +126,7 @@ module OsLib_OutdoorAirAndInfiltration
 
       # change objects to be all space types used in the model
       objects = []
-      space_types = model.getSpaceTypes
+      space_types = model.getSpaceTypes.sort
       space_types.each do |space_type|
         if !space_type.spaces.empty?
           objects << space_type

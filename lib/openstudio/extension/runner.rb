@@ -656,13 +656,15 @@ module OpenStudio
           puts 'simulations are not performed, since to the @options[:run_simulations] is set to false'
         end
 
-        # Additional checks for failed CLI
-        if File.exist?(File.join(run_dir, 'failed.job'))
-          result = false
-        end
+        if @options[:run_simulations]
+          # Additional checks for failed CLI
+          if File.exist?(File.join(run_dir, 'failed.job'))
+            result = false
+          end
 
-        if !File.exist?(File.join(run_dir, 'finished.job'))
-          result = false
+          if !File.exist?(File.join(run_dir, 'finished.job'))
+            result = false
+          end
         end
         
         return result

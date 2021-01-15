@@ -1,5 +1,10 @@
 # OpenStudio Extension Gem
 
+## Version 0.2.6
+
+- Check that `failed.job` doesn't exist and `finished.job` does exist.
+
+- Fixed [#98](https://github.com/NREL/openstudio-extension-gem/issues/98)
 ## Version 0.2.5
 
 * Support runner options for bundle_install_path and gemfile_path

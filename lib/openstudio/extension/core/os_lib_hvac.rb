@@ -117,7 +117,7 @@ module OsLib_HVAC
     zonesUnconditioned = []
 
     # get thermal zones
-    zones = model.getThermalZones
+    zones = model.getThermalZones.sort
     zones.each do |zone|
       # assign appropriate zones to zonesPlenum or zonesUnconditioned (those that don't have thermostats or zone HVAC equipment)
       # if not conditioned then add to zonesPlenum or zonesUnconditioned
@@ -177,9 +177,9 @@ module OsLib_HVAC
 
   def self.reportConditions(model, runner, condition,extra_string = '')
 
-    airloops = model.getAirLoopHVACs
-    plantLoops = model.getPlantLoops
-    zones = model.getThermalZones
+    airloops = model.getAirLoopHVACs.sort
+    plantLoops = model.getPlantLoops.sort
+    zones = model.getThermalZones.sort
 
     # count up zone equipment (not counting zone exhaust fans)
     zoneHasEquip = false
@@ -205,9 +205,9 @@ module OsLib_HVAC
   end
 
   def self.removeEquipment(model, runner)
-    airloops = model.getAirLoopHVACs
-    plantLoops = model.getPlantLoops
-    zones = model.getThermalZones
+    airloops = model.getAirLoopHVACs.sort
+    plantLoops = model.getPlantLoops.sort
+    zones = model.getThermalZones.sort
 
     # remove all airloops
     airloops.each(&:remove)
@@ -244,7 +244,7 @@ module OsLib_HVAC
     require "#{File.dirname(__FILE__)}/os_lib_schedules"
 
     schedulesHVAC = {}
-    airloops = model.getAirLoopHVACs
+    airloops = model.getAirLoopHVACs.sort
 
     # find airloop with most primary spaces
     max_primary_spaces = 0
@@ -628,7 +628,7 @@ module OsLib_HVAC
 
     # check for water-cooled chillers
     waterCooledChiller = false
-    model.getChillerElectricEIRs.each do |chiller|
+    model.getChillerElectricEIRs.sort.each do |chiller|
       next if waterCooledChiller == true
       if chiller.condenserType == 'WaterCooled'
         waterCooledChiller = true
@@ -678,7 +678,7 @@ module OsLib_HVAC
       pipe_supply_outlet.addToNode(condenser_loop.supplyOutletNode)
       setpoint_manager_follow_oa.addToNode(condenser_loop.supplyOutletNode)
       # demand side components
-      model.getChillerElectricEIRs.each do |chiller|
+      model.getChillerElectricEIRs.sort.each do |chiller|
         if chiller.condenserType == 'WaterCooled' # works only if chillers not already connected to condenser loop(s)
           condenser_loop.addDemandBranchForComponent(chiller)
         end
@@ -771,7 +771,7 @@ module OsLib_HVAC
     primary_airloops = []
     # create primary airloop for each story
     assignedThermalZones = []
-    model.getBuildingStorys.each do |building_story|
+    model.getBuildingStorys.sort.each do |building_story|
       # ML stories need to be reordered from the ground up
       thermalZonesToAdd = []
       building_story.spaces.each do |space|
@@ -1069,7 +1069,7 @@ module OsLib_HVAC
   def self.createSecondaryAirLoops(model, runner, options)
     secondary_airloops = []
     # create secondary airloop for each secondary zone
-    model.getThermalZones.each do |zone|
+    model.getThermalZones.sort.each do |zone|
       if options['zonesSecondary'].include? zone
         # create secondary airloop
         airloop_secondary = OpenStudio::Model::AirLoopHVAC.new(model)
@@ -1314,7 +1314,7 @@ module OsLib_HVAC
   end
 
   def self.createPrimaryZoneEquipment(model, runner, options)
-    model.getThermalZones.each do |zone|
+    model.getThermalZones.sort.each do |zone|
       if options['zonesPrimary'].include? zone
         if options['zoneHVAC'] == 'FanCoil'
           # create fan coil
@@ -1521,7 +1521,7 @@ module OsLib_HVAC
   def self.get_or_add_hot_water_loop(model)
     # How water loop
     hw_loop = nil
-    model.getLoops.each do |loop|
+    model.getLoops.sort.each do |loop|
       if loop.name.to_s == 'Hot Water Loop' # sizingPlant has loopType method to do this better
         hw_loop = loop.to_PlantLoop.get
       end
@@ -1580,7 +1580,7 @@ module OsLib_HVAC
     # Chilled Water Plant
     # todo - add in logic here that if existing chw_loop is air cooled, replace it with this one.
     chw_loop = nil
-    model.getLoops.each do |loop|
+    model.getLoops.sort.each do |loop|
       if loop.name.to_s == 'Chilled Water Loop'
         chw_loop = loop.to_PlantLoop.get
       end
@@ -1658,7 +1658,7 @@ module OsLib_HVAC
 
     # Condenser System
     cw_loop = nil
-    model.getLoops.each do |loop|
+    model.getLoops.sort.each do |loop|
       if loop.name.to_s == 'Condenser Water Loop'
         cw_loop = loop.to_PlantLoop.get
       end
@@ -1702,7 +1702,7 @@ module OsLib_HVAC
   def self.get_or_add_air_cooled_chiller_loop(model)
     # Chilled Water Plant
     chw_loop = nil
-    model.getLoops.each do |loop|
+    model.getLoops.sort.each do |loop|
       if loop.name.to_s == 'Chilled Water Loop'
         chw_loop = loop.to_PlantLoop.get
       end

@@ -3,6 +3,7 @@
 ## Version 0.3.X (Unreleased)
 
 * Fix merging of options on initialization. Options hash will overwrite the default config AND the runner.conf files.
+* Includes patch of 0.2.6 (failed.job and finished.job)
 
 ## Version 0.3.2
 
@@ -23,7 +24,6 @@
 ## Version 0.2.6
 
 - Check that `failed.job` doesn't exist and `finished.job` does exist.
-
 - Fixed [#98](https://github.com/NREL/openstudio-extension-gem/issues/98)
 
 ## Version 0.2.5

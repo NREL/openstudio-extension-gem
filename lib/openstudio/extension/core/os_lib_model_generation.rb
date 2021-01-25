@@ -1,3 +1,6 @@
+# ComStock™, Copyright (c) 2020 Alliance for Sustainable Energy, LLC. All rights reserved.
+# See top level LICENSE.txt file for license terms.
+
 # *******************************************************************************
 # OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
@@ -2672,8 +2675,10 @@ module OsLib_ModelGeneration
       # TODO: - allow building type and space type specific constructions set selection.
       if ['SmallHotel', 'LargeHotel', 'MidriseApartment', 'HighriseApartment'].include?(primary_bldg_type)
         is_residential = 'Yes'
+        occ_type = 'Residential'
       else
         is_residential = 'No'
+        occ_type = 'Nonresidential'
       end
       bldg_def_const_set = standard.model_add_construction_set(model, climate_zone, lookup_building_type, nil, is_residential)
       if bldg_def_const_set.is_initialized
@@ -2685,6 +2690,31 @@ module OsLib_ModelGeneration
         runner.registerError("Could not create default construction set for the building type #{lookup_building_type} in climate zone #{climate_zone}.")
         log_messages_to_runner(runner, debug = true)
         return false
+      end
+
+      # Replace the construction of any outdoor-facing "AtticFloor" surfaces
+      # with the "ExteriorRoof" - "IEAD" construction for the specific climate zone and template.
+      # This prevents creation of buildings where the DOE Prototype building construction set
+      # assumes an attic but the supplied geometry used does not have an attic.
+      new_construction = nil
+      climate_zone_set = standard.model_find_climate_zone_set(model, climate_zone)
+      model.getSurfaces.sort.each do |surf|
+        next unless surf.outsideBoundaryCondition == 'Outdoors'
+        next unless surf.surfaceType == 'RoofCeiling'
+        next if surf.construction.empty?
+        construction = surf.construction.get
+        standards_info = construction.standardsInformation
+        next if standards_info.intendedSurfaceType.empty?
+        next unless standards_info.intendedSurfaceType.get == 'AtticFloor'
+        if new_construction.nil?
+          new_construction = standard.model_find_and_add_construction(model,
+                                                                      climate_zone_set,
+                                                                      'ExteriorRoof',
+                                                                      'IEAD',
+                                                                      occ_type)
+        end
+        surf.setConstruction(new_construction)
+        runner.registerInfo("Changed the construction for #{surf.name} from #{construction.name} to #{new_construction.name} to avoid outdoor-facing attic floor constructions in buildings with no attic space.")
       end
 
       # address any adiabatic surfaces that don't have hard assigned constructions

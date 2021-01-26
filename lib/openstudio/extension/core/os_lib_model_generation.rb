@@ -3026,7 +3026,10 @@ module OsLib_ModelGeneration
           # Add the user specified HVAC system for each story.
           # Single-zone systems will get one per zone.
           story_groups.each do |zones|
-            model.add_cbecs_hvac_system(standard, args['system_type'], zones)
+            unless model.add_cbecs_hvac_system(standard, args['system_type'], zones)
+              runner.registerError("HVAC system type '#{args['system_type']}' not recognized. Check input system type argument against Model.hvac.rb for valid hvac system type names.")
+              return false
+            end
           end
         end
       end

@@ -1,6 +1,18 @@
 # OpenStudio Extension Gem
 
+## Version 0.3.X (Unreleased)
+
+* Fix merging of options on initialization. Options hash will overwrite the default config AND the runner.conf files.
+* Includes patch of 0.2.6 (failed.job and finished.job)
+
+## Version 0.3.2
+
+* Update Extension Gem Template
+* Add gemfile path instead of just dirname to the initialization
+* Update to latest workflow gem to support URBANopt Workflow
+
 ## Version 0.3.1
+
 * This change first zeroes-out latent (for good measure) and radiant fractions before setting lost fraction to 1.0 to avoid this error.
 
 ## Version 0.3.0
@@ -8,6 +20,11 @@
 * remove the os_lib_reporting.rb helpers. This file is only used for OS reporting measure and should not be shared with other users.
 * Upgrade dependency to openstudio-workflow gem to `~> 2.1.0`
 * This version works only with EnergyPlus 9.4 since it depends on OpenStudio workflow `~> 2.1.0`
+
+## Version 0.2.6
+
+- Check that `failed.job` doesn't exist and `finished.job` does exist.
+- Fixed [#98](https://github.com/NREL/openstudio-extension-gem/issues/98)
 
 ## Version 0.2.5
 

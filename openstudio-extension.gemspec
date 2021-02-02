@@ -26,10 +26,10 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '~> 2.5.0'
+  spec.required_ruby_version = '~> 2.7.0'
 
   spec.add_dependency 'bcl', '~> 0.6.1'
-  spec.add_dependency 'bundler', '~> 2.1'
+  spec.add_dependency 'bundler', '~> 2.2'
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   spec.add_dependency 'openstudio-workflow', '~> 2.1.1'
   spec.add_dependency 'openstudio_measure_tester', '~> 0.2.3'

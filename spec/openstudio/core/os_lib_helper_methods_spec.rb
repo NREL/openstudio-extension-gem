@@ -69,11 +69,21 @@ RSpec.describe 'OS Lib Helper Methods' do
     # todo - will have to setup pre-populated OSW in this for that method to work
     it 'check upstream argument values in upstream measure from test osw' do
 
-      # floor area of spaces
+      # use of template as string
       res = OsLib_HelperMethods.check_upstream_measure_for_arg(@runner,'template')
       expect(res[:value]).to eq '90.1-2010'
 
-      # todo - add tests using non string values once method is updated
+      # use of template as double
+      res = OsLib_HelperMethods.check_upstream_measure_for_arg(@runner,'elec_rate')
+      expect(res[:value]).to eq 0.12
+
+      # use of template as integer
+      res = OsLib_HelperMethods.check_upstream_measure_for_arg(@runner,'expected_life')
+      expect(res[:value]).to eq 15
+
+      # use of template as bool
+      res = OsLib_HelperMethods.check_upstream_measure_for_arg(@runner,'demo_cost_initial_const')
+      expect(res[:value]).to eq false
 
     end
 

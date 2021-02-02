@@ -35,32 +35,24 @@
 
 # TODO: should we load all this files when we require 'openstudio/extension'? I vote yes, but have to be careful with
 # conflicts.
-require 'openstudio/extension/core/os_lib_helper_methods'
+require 'openstudio/extension/core/os_lib_geometry'
 
-RSpec.describe 'OS Lib Helper Methods' do
-  context 'test methods' do
+RSpec.describe 'OS Lib Geometry' do
+  context 'z-values' do
     before :all do
       @model = OpenStudio::Model.exampleModel
     end
 
-    it 'floor area and exterior wall area from spaces in model' do
-      spaces = []
-      @model.getSpaces.each do |space|
-        spaces << space
+    it 'should find all z values' do
+      surfaces = []
+      @model.getSurfaces.each do |surface|
+        surfaces << surface
       end
 
-      # floor area of spaces
-      res = OsLib_HelperMethods.getAreaOfSpacesInArray(@model,spaces)
-      expect(res['totalArea']).to eq 400.0
-
-      # exterior wall area of spaces
-      res = OsLib_HelperMethods.getAreaOfSpacesInArray(@model,spaces,'exteriorWallArea')
-      expect(res['totalArea']).to eq 240.0
+      res = OsLib_Geometry.getSurfaceZValues(surfaces)
+      expect(res.max).to eq 3.0
+      expect(res.min).to eq 0
+      expect(res.length).to eq 96
     end
-
-
-    # todo - add test for check_upstream_measure_for_arg (test string, double, inteter, bool)
-    # todo - will have to setup pre-populated OSW in this for that method to work
-
   end
 end

@@ -1716,7 +1716,7 @@ module OsLib_ModelGeneration
     # return false if any errors fail
     if !fraction then return false end
     if !positive then return false end
-    if !one_or_greater then return false end
+    return false if !one_or_greater
     if !non_neg then return false end
 
     return args

@@ -265,7 +265,20 @@ module OsLib_HelperMethods
           result = measure_step.result.get
           result.stepValues.each do |arg|
             name = arg.name
-            value = arg.valueAsVariant.to_s
+            # check if value, double, int, or bool
+            value_type = arg.variantType.valueDescription
+            if value_type == "Double"
+              value = arg.valueAsDouble
+            elsif value_type == "Integer"
+              value = arg.valueAsInteger
+            elsif value_type == "Boolean"
+              value = arg.valueAsBoolean
+            elsif value_type == "String"
+              value = arg.valueAsString
+            else
+              # catchall for unexpected value types
+              value = arg.valueAsVariant.to_s
+            end
             if name == arg_name
               arg_name_value[:value] = value
               arg_name_value[:measure_name] = measure_name

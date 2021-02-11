@@ -31,3 +31,6 @@ lib/measures/test_results/*
 
 # runner conf
 runner.conf
+
+# Sizing run made as part of spec that tests typical_building_from_model method
+SR1

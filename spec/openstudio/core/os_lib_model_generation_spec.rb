@@ -49,14 +49,42 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # create an empty model
       @model = OpenStudio::Model::Model.new
 
+      # setup climate zone, design days and epw (mimic critical elements of ChangeBuildingLocation measure)
+      # this is needed for typical_building_from_model which uses CZ for construction and does a sizing run
+
+      # set climate_zone
+      climate_zone = "ASHRAE 169-2013-5A" # this is for Boston weather file, hard coding vs. getting form stat file
+      climate_zones = @model.getClimateZones
+      climate_zones.setClimateZone('ASHRAE', climate_zone.gsub('ASHRAE 169-2013-', ''))
+
+      # set epw file
+      target_path = File.expand_path("../../files", File.dirname(__FILE__))
+      epw_path = target_path + "/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.epw"
+      weather_file = @model.getWeatherFile
+      weather_file.setString(10, epw_path)
+      # not setting lat, long, elevation, etc for now, it will run but results may not be meaningful
+
+      # add design days
+      # todo - may be adding some unnecessary design days that slow the test down
+      ddy_path = target_path + "/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.ddy"
+      ddy_model = OpenStudio::EnergyPlus.loadAndTranslateIdf(ddy_path).get
+      ddy_model.getDesignDays.sort.each do |d|
+        @model.addObject(d.clone)
+      end
+
+      # setting year will get rid of these warnings
+      # [openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
+      @model.getYearDescription.setCalendarYear(2021)
+
       # create a runner
       @runner = OpenStudio::Measure::OSRunner.new(OpenStudio::WorkflowJSON.new)
+
     end
 
-    # test bar_from_building_type_ratios method
+    # test bar_from_building_type_ratios method and typical_building_from_model
     it 'bar_from_building_type_ratios runs' do
 
-      # start the measure
+      # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatio_Test < OpenStudio::Measure::ModelMeasure
 
         # resource file modules
@@ -68,9 +96,9 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         # define the arguments that the user will input
         def arguments(model)
 
-          # create agruments`
+          # create arguments`
           args = OpenStudio::Measure::OSArgumentVector.new
-          # all but 4-5 of these to have defaults so full set of arguments doesn't have to be passed in to the method
+          # all but 4-5 of these to have defaults so full set of arguments
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_a', get_doe_building_types, true); arg.setValue('PrimarySchool'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_b', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_c', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
@@ -140,12 +168,95 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # confirm it ran correctly
       expect(result.value.valueName).to eq 'Success'
 
+      # define the measure class for typical_building_from_model
+      class TypicalBuildingFromModel_Test < OpenStudio::Measure::ModelMeasure
+
+        # resource file modules
+        include OsLib_HelperMethods
+        include OsLib_Geometry
+        include OsLib_ModelGeneration
+        include OsLib_ModelSimplification
+
+        # define the arguments that the user will input
+        def arguments(model)
+
+          # create arguments
+          #  need to include double and integer args so method to check doesnt fail,
+          # try to dynamically create these in the future
+          args = OpenStudio::Measure::OSArgumentVector.new
+
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2004'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('system_type', ['Inferred'], true); arg.setValue('Inferred'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('hvac_delivery_type', ['Forced Air'], true); arg.setValue('Forced Air'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('htg_src', ['NaturalGas'], true); arg.setValue('NaturalGas'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('clg_src', ['Electricity'], true); arg.setValue('Electricity'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('swh_src', ['Inferred'], true); arg.setValue('Inferred'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('kitchen_makeup', ['Adjacent'], true); arg.setValue('Adjacent'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('exterior_lighting_zone', ['3 - All Other Areas'], true); arg.setValue('3 - All Other Areas'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_constructions', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_space_type_loads', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_elevators', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_internal_mass', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_exterior_lights', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('onsite_parking_fraction', true); arg.setValue(1.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_exhaust', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_swh', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_thermostat', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_hvac', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_refrigeration', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wkdy_op_hrs', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wkdy_op_hrs_start_time', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wkdy_op_hrs_duration', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wknd_op_hrs', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wknd_op_hrs_start_time', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wknd_op_hrs_duration', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('unmet_hours_tolerance', true); arg.setValue(1.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('remove_objects', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true); arg.setValue(true); args << arg
+
+          return args
+
+        end
+
+        # define what happens when the measure is run
+        def run(model, runner, user_arguments)
+
+          # method run from os_lib_model_generation.rb
+          result = typical_building_from_model(model, runner, user_arguments)
+        end
+      end
+
+      # get the measure (using measure beacuse these methods take in measure arguments)
+      unit_test_typical = TypicalBuildingFromModel_Test.new
+
+      # get arguments
+      arguments_typical = unit_test_typical.arguments(@model)
+      argument_map_typical = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments_typical)
+
+      # todo - before run typical need to assign climate and and weather file. This would typically be done change building location measure.
+
+      # run the unit_test
+      unit_test_typical.run(@model, @runner, argument_map_typical)
+      result_typical = @runner.result
+
+      # show the output
+      puts "method results for typical_building_from_model method."
+      show_output(result_typical)
+
+      # save the model to test output directory
+      output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/typical_building_from_model_test_a.osm")
+      @model.save(output_file_path, true)
+
+      # confirm it ran correctly
+      expect(result.value.valueName).to eq 'Success'
+
     end
 
     # test bar_from_space_type_ratios method
     it 'bar_from_space_type_ratios runs' do
 
-      # start the measure
+      # define the measure class
       class BarFromSpaceTypeRatio_Test < OpenStudio::Measure::ModelMeasure
 
         # resource file modules
@@ -157,9 +268,9 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         # define the arguments that the user will input
         def arguments(model)
 
-          # create agruments`
+          # create arguments`
           args = OpenStudio::Measure::OSArgumentVector.new
-          # todo - update all but 4-5 of these to have defaults so full set of arguments doesn't have to be passed in to the method
+          # all but 4-5 of these to have defaults so full set of arguments
 
           # this replaces arguments for building type a-d string and fraction (note, this isn't expecting same building type | space type combo twice and likley will not handle it well without additional code to account for it)
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("MediumOffice | MediumOffice - Conference => 0.2, PrimarySchool | Corridor => 0.125, PrimarySchool | Classroom => 0.175, Warehouse | Office => 0.5"); args << arg
@@ -224,6 +335,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
       # confirm it ran correctly
       expect(result.value.valueName).to eq 'Success'
+
+      # todo - run typical_building_from_model method on model that comes out of create_bar
 
     end
 

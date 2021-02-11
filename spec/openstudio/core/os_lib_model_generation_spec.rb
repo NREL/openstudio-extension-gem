@@ -70,7 +70,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
           # create agruments`
           args = OpenStudio::Measure::OSArgumentVector.new
-          # todo - update all but 4-5 of these to have defaults so full set of arguments doesn't have to be passed in to the method
+          # all but 4-5 of these to have defaults so full set of arguments doesn't have to be passed in to the method
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_a', get_doe_building_types, true); arg.setValue('PrimarySchool'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_b', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_c', get_doe_building_types, true); arg.setValue('MediumOffice'); args << arg
@@ -161,8 +161,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           args = OpenStudio::Measure::OSArgumentVector.new
           # todo - update all but 4-5 of these to have defaults so full set of arguments doesn't have to be passed in to the method
 
-          # this replaces arguemnts for building type a-d string and fraction (note, this isn't expecting same building type | space type combo twice and likley will not handle it well without additinoal code to account for it)
-          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("MediumOffice | Conference => 0.2, PrimarySchool | Corridor => 0.125, PrimarySchool | Classroom => 0.175, Warehouse | Office => 0.5"); args << arg
+          # this replaces arguments for building type a-d string and fraction (note, this isn't expecting same building type | space type combo twice and likley will not handle it well without additional code to account for it)
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("MediumOffice | MediumOffice - Conference => 0.2, PrimarySchool | Corridor => 0.125, PrimarySchool | Classroom => 0.175, Warehouse | Office => 0.5"); args << arg
 
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2013'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(50000.0); args << arg

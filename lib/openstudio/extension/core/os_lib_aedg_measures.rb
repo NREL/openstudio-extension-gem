@@ -1,5 +1,5 @@
 # *******************************************************************************
-# OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC.
+# OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC.
 # All rights reserved.
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -204,7 +204,7 @@ module OsLib_AedgMeasures
     @aedgK12HowToTipHash['EL20'] = 'EL20 Twenty-Four Hour Lighting'
     @aedgK12HowToTipHash['EL21'] = 'EL21 Exterior Lighting Power-Parking Lots and Drives'
     @aedgK12HowToTipHash['EL22'] = 'EL22 Exterior Lighting Power-Walkways'
-    @aedgK12HowToTipHash['EL23'] = 'EL23 Decorative Façade Lighting'
+    @aedgK12HowToTipHash['EL23'] = 'EL23 Decorative Facade Lighting'
     @aedgK12HowToTipHash['EL24'] = 'EL24 Sources'
     @aedgK12HowToTipHash['EL25'] = 'EL25 Controls'
 
@@ -273,7 +273,7 @@ module OsLib_AedgMeasures
 
     # commissioning tips
     @aedgK12HowToTipHash['QA01'] = 'QA1 Design and Construction Team'
-    @aedgK12HowToTipHash['QA02'] = 'QA2 Owner’s Project Requirements and Basis of Design'
+    @aedgK12HowToTipHash['QA02'] = 'QA2 Owner\'s Project Requirements and Basis of Design'
     @aedgK12HowToTipHash['QA03'] = 'QA3 Selection of Quality Assurance Provider'
     @aedgK12HowToTipHash['QA04'] = 'QA4 Design and Construction Schedule'
     @aedgK12HowToTipHash['QA05'] = 'QA5 Design Review'
@@ -398,7 +398,7 @@ module OsLib_AedgMeasures
     aedgSmMdOffHowToTipHash['EL20'] = 'EL20 Twenty-Four Hour Lighting'
     aedgSmMdOffHowToTipHash['EL21'] = 'EL21 Exterior Lighting Power-Parking Lots and Drives'
     aedgSmMdOffHowToTipHash['EL22'] = 'EL22 Exterior Lighting Power-Walkways'
-    aedgSmMdOffHowToTipHash['EL23'] = 'EL23 Decorative Façade Lighting'
+    aedgSmMdOffHowToTipHash['EL23'] = 'EL23 Decorative Facade Lighting'
     aedgSmMdOffHowToTipHash['EL24'] = 'EL24 Sources'
     aedgSmMdOffHowToTipHash['EL25'] = 'EL25 Controls'
 
@@ -463,7 +463,7 @@ Gas-Fired Boiler"
     # commissioning tips
     aedgSmMdOffHowToTipHash['QA01'] = 'QA1 Selecting the Design and Construction Team'
     aedgSmMdOffHowToTipHash['QA02'] = 'QA2 Selecting the QA Provider'
-    aedgSmMdOffHowToTipHash['QA03'] = 'QA3 Owner’s Project Requirements (OPR) and Basis of Design (BoD)'
+    aedgSmMdOffHowToTipHash['QA03'] = 'QA3 Owner\'s Project Requirements (OPR) and Basis of Design (BoD)'
     aedgSmMdOffHowToTipHash['QA04'] = 'QA4 Design and Construction Schedule'
     aedgSmMdOffHowToTipHash['QA05'] = 'QA5 Design Review'
     aedgSmMdOffHowToTipHash['QA06'] = 'QA6 Defining QA at Pre-Bid'

@@ -65,8 +65,6 @@ RSpec.describe 'OS Lib Helper Methods' do
       expect(res['totalArea']).to eq 240.0
     end
 
-    # todo - add test for check_upstream_measure_for_arg (test string, double, inteter, bool)
-    # todo - will have to setup pre-populated OSW in this for that method to work
     it 'check upstream argument values in upstream measure from test osw' do
 
       # use of template as string

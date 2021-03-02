@@ -3135,6 +3135,17 @@ module OsLib_ModelGeneration
       end
     end
 
+    # change night cycling control to "Thermostat" cycling and increase thermostat tolerance to 1.99999
+    manager_night_cycles = model.getAvailabilityManagerNightCycles
+
+    manager_night_cycles.each do |night_cycle|
+      unless night_cycle.empty?
+        night_cycle.setThermostatTolerance(1.9999)
+        night_cycle.setCyclingRunTimeControlType("Thermostat")
+        runner.registerInfo(" night_cycle == #{night_cycle}")
+      end
+    end
+
     # report final condition of model
     runner.registerFinalCondition("The building finished with #{model.getModelObjects.size} objects.")
 

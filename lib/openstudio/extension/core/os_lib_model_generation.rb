@@ -3252,11 +3252,9 @@ module OsLib_ModelGeneration
     manager_night_cycles = model.getAvailabilityManagerNightCycles
     
     manager_night_cycles.each do |night_cycle|
-      unless night_cycle.empty?
-        night_cycle.setThermostatTolerance(1.9999)
-        night_cycle.setCyclingRunTimeControlType("Thermostat")
-        runner.registerInfo(" night_cycle == #{night_cycle}")
-      end
+      night_cycle.setThermostatTolerance(1.9999)
+      night_cycle.setCyclingRunTimeControlType("Thermostat")
+      runner.registerInfo(" night_cycle == #{night_cycle}")
     end
 
     # report final condition of model

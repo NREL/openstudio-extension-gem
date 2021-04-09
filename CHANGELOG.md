@@ -1,9 +1,11 @@
 # OpenStudio Extension Gem
 
-## Version 0.3.X (Unreleased)
+## Version 0.4.0
 
 * Fix merging of options on initialization. Options hash will overwrite the default config AND the runner.conf files.
 * Includes patch of 0.2.6 (failed.job and finished.job)
+* Support Ruby 2.7.0, Bundler > 2.2
+* Update copyrights
 
 ## Version 0.3.2
 

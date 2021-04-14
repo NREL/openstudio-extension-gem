@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'openstudio_measure_tester', '~> 0.3.0'
   spec.add_dependency 'parallel', '~> 1.19.1'
 
-  spec.add_development_dependency 'openstudio-standards', '~> 0.2.13' # for os_lib unit tests
+  spec.add_development_dependency 'openstudio-standards', '~> 0.2.13.rc3' # for os_lib unit tests
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
 end

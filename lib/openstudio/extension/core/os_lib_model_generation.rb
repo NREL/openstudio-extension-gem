@@ -1728,6 +1728,7 @@ module OsLib_ModelGeneration
 
     # prep arguments
     args = bar_arg_check_setup(model,runner,user_arguments)
+    if !args then return false end
 
     # check that sum of fractions for b,c, and d is less than 1.0 (so something is left for primary building type)
     bldg_type_a_fract_bldg_area = 1.0 - args['bldg_type_b_fract_bldg_area'] - args['bldg_type_c_fract_bldg_area'] - args['bldg_type_d_fract_bldg_area']
@@ -1808,8 +1809,9 @@ module OsLib_ModelGeneration
 
     # do not setup arguments if they were already passed in to this method
     if args.nil?
-     # prep arguments
+      # prep arguments
       args = bar_arg_check_setup(model,runner,user_arguments,false) # false stops it from checking args on used in bar_from_building_type_ratios
+      if !args then return false end
 
       # identify primary building type for building form defaults
       primary_building_type = "PrimarySchool" # see what building type represents the most floro area
@@ -3246,6 +3248,15 @@ module OsLib_ModelGeneration
       if objects_after_cleanup > 0
         runner.registerInfo("Removing #{objects_after_cleanup} objects from model")
       end
+    end
+
+    # change night cycling control to "Thermostat" cycling and increase thermostat tolerance to 1.99999
+    manager_night_cycles = model.getAvailabilityManagerNightCycles
+    
+    manager_night_cycles.each do |night_cycle|
+      night_cycle.setThermostatTolerance(1.9999)
+      night_cycle.setCyclingRunTimeControlType("Thermostat")
+      runner.registerInfo(" night_cycle == #{night_cycle}")
     end
 
     # report final condition of model

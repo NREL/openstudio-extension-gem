@@ -360,7 +360,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           # this replaces arguments for building type a-d string and fraction (note, this isn't expecting same building type | space type combo twice and likley will not handle it well without additional code to account for it)
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("MediumOffice | MediumOffice - Conference => 0.2, PrimarySchool | Corridor => 0.125, PrimarySchool | Classroom => 0.175, Warehouse | Office => 0.5"); args << arg
 
-          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2019'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2013'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(50000.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('single_floor_area', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('floor_height', true); arg.setValue(0.0); args << arg
@@ -438,7 +438,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           # try to dynamically create these in the future
           args = OpenStudio::Measure::OSArgumentVector.new
 
-          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2019'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2004'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('system_type', ['Inferred'], true); arg.setValue('Inferred'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('hvac_delivery_type', ['Forced Air'], true); arg.setValue('Forced Air'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('htg_src', ['NaturalGas'], true); arg.setValue('NaturalGas'); args << arg

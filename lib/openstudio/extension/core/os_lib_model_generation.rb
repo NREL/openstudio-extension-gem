@@ -159,6 +159,7 @@ module OsLib_ModelGeneration
     array << '90.1-2010'
     array << '90.1-2013'
     array << '90.1-2016'
+    array << '90.1-2019'
     array << 'ComStock DOE Ref Pre-1980'
     array << 'ComStock DOE Ref 1980-2004'
     array << 'ComStock 90.1-2004'

@@ -1,11 +1,16 @@
 # OpenStudio Extension Gem
 
+## Version 0.4.2
+
+* Updatd version of openstudio-standards for development to openstudio-standards 0.2.13
+* Added ASHRAE 90.1 2016 and 2019 to get_doe_templates method in os_lib_model_generation.rb file. This method is used by a number of measures to generate allowable argument values
+
 ## Version 0.4.1
 
 * Fixed [#95]( https://github.com/NREL/openstudio-extension-gem/issues/95 ), Extend exceptions on standards error messages for curves used on multiple objects
 * Fixed [#113]( https://github.com/NREL/openstudio-extension-gem/issues/113 ), Fix bad args behavior on bar_from_building_type_ratios
 * Fixed [#111]( https://github.com/NREL/openstudio-extension-gem/pull/111 ), night cycling change - for 0.4.x
-* Updated version of openstudio-standards for development to openstudio-standards 0.2.13
+* Updated version of openstudio-standards for development to openstudio-standards 0.2.13.rc3	
 
 ## Version 0.4.0
 

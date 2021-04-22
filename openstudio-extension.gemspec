@@ -6,12 +6,12 @@ Gem::Specification.new do |spec|
   spec.name          = 'openstudio-extension'
   spec.version       = OpenStudio::Extension::VERSION
   spec.platform      = Gem::Platform::RUBY
-  spec.authors       = ['Katherine Fleming', 'Nicholas Long', 'Daniel Macumber']
-  spec.email         = ['katherine.fleming@nrel.gov', 'nicholas.long@nrel.gov', 'daniel.macumber@nrel.gov']
+  spec.authors       = ['Katherine Fleming', 'Nicholas Long', 'Daniel Macumber', 'David Goldwasser']
+  spec.email         = ['katherine.fleming@nrel.gov', 'nicholas.long@nrel.gov', 'daniel.macumber@nrel.gov', 'david.goldwasser@nrel.gov']
 
   spec.homepage      = 'https://openstudio.net'
   spec.summary       = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
-  spec.description   = 'openstudio base gem for creating generic extensions with encapsulated data and measures.'
+  spec.description   = 'openstudio base gem for creating generic extensions with encapsulated data and measures. Also contains ruby libraries that required by many measures.'
   spec.metadata = {
     'bug_tracker_uri' => 'https://github.com/NREL/openstudio-extension-gem/issues',
     'changelog_uri' => 'https://github.com/NREL/openstudio-extension-gem/blob/develop/CHANGELOG.md',
@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'openstudio_measure_tester', '~> 0.3.0'
   spec.add_dependency 'parallel', '~> 1.19.1'
 
-  spec.add_development_dependency 'openstudio-standards', '~> 0.2.13.rc3' # for os_lib unit tests
+  spec.add_development_dependency 'openstudio-standards', '~> 0.2.13' # for os_lib unit tests
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
 end

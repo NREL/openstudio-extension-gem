@@ -31,8 +31,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'bcl', '~> 0.7.0'
   spec.add_dependency 'bundler', '>= 2.1.0'
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
-  spec.add_dependency 'openstudio-workflow', '~> 2.2.0'
   spec.add_dependency 'openstudio_measure_tester', '~> 0.3.1'
+  spec.add_dependency 'openstudio-workflow', '~> 2.2.0'
   spec.add_dependency 'parallel', '~> 1.19.1'
 
   spec.add_development_dependency 'openstudio-standards', '~> 0.2.13' # for os_lib unit tests

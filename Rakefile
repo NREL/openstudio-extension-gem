@@ -45,10 +45,10 @@ desc 'Initialize a new gem'
 task :init_new_gem do
   puts 'Initializing a new extension gem'
   print "\n Enter the name of the new gem directory (ex: openstudio-something-gem. Should end with '-gem'): "
-  gem_name = STDIN.gets.chomp
+  gem_name = $stdin.gets.chomp
 
   print "\n Enter the path (full or relative to this repo) where you want the new gem directory to be created: "
-  dir_path = STDIN.gets.chomp
+  dir_path = $stdin.gets.chomp
 
   # check if directory already exists at path, if so error
   full_dir_name = dir_path + gem_name
@@ -61,7 +61,7 @@ task :init_new_gem do
   end
 
   # copy file structure
-  FileUtils.cp('.gitignore', full_dir_name + '/.gitignore')
+  FileUtils.cp('.gitignore', "#{full_dir_name}/.gitignore")
   FileUtils.cp_r(File.join(File.dirname(__FILE__), 'init_templates/template_gemfile.txt'), File.join(full_dir_name, 'Gemfile'))
   FileUtils.cp_r(File.join(File.dirname(__FILE__), 'doc_templates'), full_dir_name)
 

@@ -45,7 +45,6 @@ require 'openstudio/measure/ShowRunnerOutput'
 RSpec.describe 'Bar Methods' do # include from building type ratios, space type ratios, and from building
   context 'bar_from_empty' do
     before :each do
-
       # create an empty model
       @model = OpenStudio::Model::Model.new
 
@@ -53,20 +52,20 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # this is needed for typical_building_from_model which uses CZ for construction and does a sizing run
 
       # set climate_zone
-      climate_zone = "ASHRAE 169-2013-5A" # this is for Boston weather file, hard coding vs. getting form stat file
+      climate_zone = 'ASHRAE 169-2013-5A' # this is for Boston weather file, hard coding vs. getting form stat file
       climate_zones = @model.getClimateZones
       climate_zones.setClimateZone('ASHRAE', climate_zone.gsub('ASHRAE 169-2013-', ''))
 
       # set epw file
-      target_path = File.expand_path("../../files", File.dirname(__FILE__))
-      epw_path = target_path + "/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.epw"
+      target_path = File.expand_path('../../files', File.dirname(__FILE__))
+      epw_path = "#{target_path}/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.epw"
       weather_file = @model.getWeatherFile
       weather_file.setString(10, epw_path)
       # not setting lat, long, elevation, etc for now, it will run but results may not be meaningful
 
       # add design days
       # todo - may be adding some unnecessary design days that slow the test down
-      ddy_path = target_path + "/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.ddy"
+      ddy_path = "#{target_path}/USA_MA_Boston-Logan.Intl.AP.725090_TMY3.ddy"
       ddy_model = OpenStudio::EnergyPlus.loadAndTranslateIdf(ddy_path).get
       ddy_model.getDesignDays.sort.each do |d|
         @model.addObject(d.clone)
@@ -78,17 +77,14 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
       # create a runner
       @runner = OpenStudio::Measure::OSRunner.new(OpenStudio::WorkflowJSON.new)
-
     end
 
     # test bad argument
-        # test bar_from_building_type_ratios method and typical_building_from_model
+    # test bar_from_building_type_ratios method and typical_building_from_model
     # after geometry is created typical_building_from_model method is run on the resulting model
     it 'bad_args_bar_from_building_type_ratios runs' do
-
       # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatio_Test < OpenStudio::Measure::ModelMeasure
-
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -97,7 +93,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
         # define the arguments that the user will input
         def arguments(model)
-
           # create arguments`
           args = OpenStudio::Measure::OSArgumentVector.new
           # all but 4-5 of these to have defaults so full set of arguments
@@ -137,12 +132,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_sort_logic', true); arg.setValue('Building Type > Size'); args << arg
 
           return args
-
         end
 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)
-
           # method run from os_lib_model_generation.rb
           result = bar_from_building_type_ratios(model, runner, user_arguments)
         end
@@ -160,7 +153,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result = @runner.result
 
       # show the output
-      puts "method results for bar_from_building_type_ratios method."
+      puts 'method results for bar_from_building_type_ratios method.'
       show_output(result)
 
       # confirm it failed and stopped with bad argument instead of running and getting ruby error
@@ -170,10 +163,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
     # test bar_from_building_type_ratios method and typical_building_from_model
     # after geometry is created typical_building_from_model method is run on the resulting model
     it 'bar_from_building_type_ratios runs' do
-
       # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatio_Test < OpenStudio::Measure::ModelMeasure
-
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -182,7 +173,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
         # define the arguments that the user will input
         def arguments(model)
-
           # create arguments`
           args = OpenStudio::Measure::OSArgumentVector.new
           # all but 4-5 of these to have defaults so full set of arguments
@@ -222,12 +212,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_sort_logic', true); arg.setValue('Building Type > Size'); args << arg
 
           return args
-
         end
 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)
-
           # method run from os_lib_model_generation.rb
           result = bar_from_building_type_ratios(model, runner, user_arguments)
         end
@@ -245,11 +233,11 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result = @runner.result
 
       # show the output
-      puts "method results for bar_from_building_type_ratios method."
+      puts 'method results for bar_from_building_type_ratios method.'
       show_output(result)
 
       # save the model to test output directory
-      output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/bar_from_building_type_ratios_test_a1.osm")
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_test_a1.osm")
       @model.save(output_file_path, true)
 
       # confirm it ran correctly
@@ -257,7 +245,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
       # define the measure class for typical_building_from_model
       class TypicalBuildingFromModel_Test < OpenStudio::Measure::ModelMeasure
-
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -266,7 +253,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
         # define the arguments that the user will input
         def arguments(model)
-
           # create arguments
           #  need to include double and integer args so method to check doesnt fail,
           # try to dynamically create these in the future
@@ -303,12 +289,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true); arg.setValue(true); args << arg
 
           return args
-
         end
 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)
-
           # method run from os_lib_model_generation.rb
           result = typical_building_from_model(model, runner, user_arguments)
         end
@@ -326,24 +310,21 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result_typical = @runner.result
 
       # show the output
-      puts "method results for typical_building_from_model method. This will also show output from earlier bar method"
+      puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
       show_output(result_typical)
 
       # save the model to test output directory
-      output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/bar_from_building_type_ratios_typical_test_a2.osm")
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_typical_test_a2.osm")
       @model.save(output_file_path, true)
 
       # confirm it ran correctly
       expect(result.value.valueName).to eq 'Success'
-
     end
 
     # test bar_from_space_type_ratios method
     it 'bar_from_space_type_ratios runs' do
-
       # define the measure class
       class BarFromSpaceTypeRatio_Test < OpenStudio::Measure::ModelMeasure
-
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -352,13 +333,12 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
         # define the arguments that the user will input
         def arguments(model)
-
           # create arguments`
           args = OpenStudio::Measure::OSArgumentVector.new
           # all but 4-5 of these to have defaults so full set of arguments
 
           # this replaces arguments for building type a-d string and fraction (note, this isn't expecting same building type | space type combo twice and likley will not handle it well without additional code to account for it)
-          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue("MediumOffice | MediumOffice - Conference => 0.2, PrimarySchool | Corridor => 0.125, PrimarySchool | Classroom => 0.175, Warehouse | Office => 0.5"); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_hash_string', true); arg.setValue('MediumOffice | MediumOffice - Conference => 0.2, PrimarySchool | Corridor => 0.125, PrimarySchool | Classroom => 0.175, Warehouse | Office => 0.5'); args << arg
 
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2019'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(50000.0); args << arg
@@ -388,12 +368,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
 
           return args
-
         end
 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)
-
           # method run from os_lib_model_generation.rb
           result = bar_from_space_type_ratios(model, runner, user_arguments) # to additinal arguments to this method when called by bar_from_building_type_ratios
         end
@@ -411,11 +389,11 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result = @runner.result
 
       # show the output
-      puts "method results for bar_from_space_type_ratios method."
+      puts 'method results for bar_from_space_type_ratios method.'
       show_output(result)
 
       # save the model to test output directory
-      output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/bar_from_space_type_ratios_test_b1.osm")
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_space_type_ratios_test_b1.osm")
       @model.save(output_file_path, true)
 
       # confirm it ran correctly
@@ -423,7 +401,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
       # define the measure class for typical_building_from_model
       class TypicalBuildingFromModel_Test < OpenStudio::Measure::ModelMeasure
-
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -432,7 +409,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
         # define the arguments that the user will input
         def arguments(model)
-
           # create arguments
           #  need to include double and integer args so method to check doesnt fail,
           # try to dynamically create these in the future
@@ -469,12 +445,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true); arg.setValue(true); args << arg
 
           return args
-
         end
 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)
-
           # method run from os_lib_model_generation.rb
           result = typical_building_from_model(model, runner, user_arguments)
         end
@@ -492,20 +466,17 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result_typical = @runner.result
 
       # show the output
-      puts "method results for typical_building_from_model method. This will also show output from earlier bar method"
+      puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
       show_output(result_typical)
 
       # save the model to test output directory
-      output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/bar_from_space_type_ratios_typical_test_b2.osm")
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_space_type_ratios_typical_test_b2.osm")
       @model.save(output_file_path, true)
 
       # confirm it ran correctly
       expect(result.value.valueName).to eq 'Success'
-
     end
-
   end
 
-  # todo - add context with bar from non empty or running bar methods twice on same model
-
+  # TODO: - add context with bar from non empty or running bar methods twice on same model
 end

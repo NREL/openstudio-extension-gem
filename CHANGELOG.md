@@ -1,7 +1,14 @@
 # OpenStudio Extension Gem
 
+## Version 0.4.3
+
+* Update measure tester gem which upgrades Rubocop to 1.15
+* Update styles to v4 based on new version of Rubocop
+
 ## Version 0.4.2
 
+* Fixes [#113](https://github.com/NREL/openstudio-extension-gem/issues/113) Fix bad args behavior on bar_from_building_type_ratios
+* Fixes [#103](https://github.com/NREL/openstudio-extension-gem/issues/103) make check_upstream_measure_for_arg more robust for non string arguments
 * Updatd version of openstudio-standards for development to openstudio-standards 0.2.13
 * Added ASHRAE 90.1 2016 and 2019 to get_doe_templates method in os_lib_model_generation.rb file. This method is used by a number of measures to generate allowable argument values
 

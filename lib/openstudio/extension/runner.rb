@@ -121,15 +121,15 @@ module OpenStudio
 
             # test to see if bundle is installed
             check_bundle = run_command('bundle -v', get_clean_env)
-            if !check_bundle
-              raise "Failed to run command 'bundle -v', check that bundle is installed" if !File.exist?(@dirname)
+            if !check_bundle && !File.exist?(@dirname)
+              raise "Failed to run command 'bundle -v', check that bundle is installed"
             end
 
             # TODO: check that ruby version is correct
 
             # check existing config
             needs_config = true
-            if File.exist?('./.bundle/config')  # checking wrt gemfile_dir
+            if File.exist?('./.bundle/config') # checking wrt gemfile_dir
               puts 'config exists'
               needs_config = false
               config = YAML.load_file('./.bundle/config')
@@ -166,10 +166,8 @@ module OpenStudio
             end
 
             needs_update = needs_config || needs_platform
-            if !needs_update
-              if !File.exist?('Gemfile.lock') || File.mtime(@gemfile_path) > File.mtime('Gemfile.lock')
-                needs_update = true
-              end
+            if !needs_update && (!File.exist?('Gemfile.lock') || File.mtime(@gemfile_path) > File.mtime('Gemfile.lock'))
+              needs_update = true
             end
 
             puts "needs_update = #{needs_update}"
@@ -241,7 +239,7 @@ module OpenStudio
             puts "Error running command: '#{command}'"
             puts "stdout: #{stdout_str}"
             puts "stderr: #{stderr_str}"
-            STDOUT.flush
+            $stdout.flush
             result = false
           end
         ensure
@@ -318,10 +316,10 @@ module OpenStudio
 
         puts 'SYSTEM CALL:'
         puts the_call
-        STDOUT.flush
+        $stdout.flush
         result = run_command(the_call, get_clean_env)
         puts "DONE, result = #{result}"
-        STDOUT.flush
+        $stdout.flush
 
         return result
       end
@@ -358,10 +356,10 @@ module OpenStudio
 
           puts 'SYSTEM CALL:'
           puts the_call
-          STDOUT.flush
+          $stdout.flush
           result &&= run_command(the_call, get_clean_env)
           puts "DONE, result = #{result}"
-          STDOUT.flush
+          $stdout.flush
         end
 
         return result
@@ -425,7 +423,7 @@ module OpenStudio
           measures = Dir.glob(File.join(measures_dir, '**/**/resources/*.rb'))
         end
 
-        # Note: some older measures like AEDG use 'OsLib_SomeName' instead of 'os_lib_some_name'
+        # NOTE: some older measures like AEDG use 'OsLib_SomeName' instead of 'os_lib_some_name'
         # this script isn't replacing those copies
 
         # loop through resource files
@@ -523,11 +521,9 @@ module OpenStudio
           return false
         end
 
-        if File.exist?(File.join(doc_templates_dir, 'LICENSE.md'))
-          if File.exist?(File.join(root_dir, 'LICENSE.md'))
-            puts 'updating LICENSE.md in root dir'
-            FileUtils.cp(File.join(doc_templates_dir, 'LICENSE.md'), File.join(root_dir, 'LICENSE.md'))
-          end
+        if File.exist?(File.join(doc_templates_dir, 'LICENSE.md')) && File.exist?(File.join(root_dir, 'LICENSE.md'))
+          puts 'updating LICENSE.md in root dir'
+          FileUtils.cp(File.join(doc_templates_dir, 'LICENSE.md'), File.join(root_dir, 'LICENSE.md'))
         end
 
         ruby_regex = /^\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*$/mi
@@ -593,7 +589,7 @@ module OpenStudio
                 puts '  CANNOT add license to file automatically, add it manually and it will update automatically in the future'
                 next
               end
-              File.open(dir_file, 'w') { |write| write << f.insert(0, path[:license] + "\n") }
+              File.open(dir_file, 'w') { |write| write << f.insert(0, "#{path[:license]}\n") }
             end
           end
         end
@@ -631,7 +627,7 @@ module OpenStudio
 
         if @options[:run_simulations]
           cli = OpenStudio.getOpenStudioCLI
-          out_log = run_osw_path + '.log'
+          out_log = "#{run_osw_path}.log"
           # if Gem.win_platform?
           #   # out_log = "nul"
           # else
@@ -655,10 +651,10 @@ module OpenStudio
 
           puts 'SYSTEM CALL:'
           puts the_call
-          STDOUT.flush
+          $stdout.flush
           result = run_command(the_call, get_clean_env)
           puts "DONE, result = #{result}"
-          STDOUT.flush
+          $stdout.flush
         else
           puts 'simulations are not performed, since to the @options[:run_simulations] is set to false'
         end

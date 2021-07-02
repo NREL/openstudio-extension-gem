@@ -2509,7 +2509,7 @@ module OsLib_ModelGeneration
     runner.registerValue('ew_wall_area_ip', wall_ew_ip, 'ft^2')
     # for now using perimeter of ground floor and average story area (building area / num_stories)
     runner.registerValue('floor_area_to_perim_ratio', model.getBuilding.floorArea / (OsLib_Geometry.calculate_perimeter(model) * num_stories))
-    runner.registerValue('bar_width', OpenStudio.convert(bars['primary'][:width], 'm', 'ft').get, 'ft')
+    runner.registerValue('bar_width_output', OpenStudio.convert(bars['primary'][:width], 'm', 'ft').get, 'ft')
 
     if args['party_wall_fraction'] > 0 || args['party_wall_stories_north'] > 0 || args['party_wall_stories_south'] > 0 || args['party_wall_stories_east'] > 0 || args['party_wall_stories_west'] > 0
       runner.registerInfo('Target facade area by orientation not validated when party walls are applied')

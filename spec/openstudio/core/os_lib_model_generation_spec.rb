@@ -566,7 +566,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
     # same as bar_from_building_type_ratios_hos_intersect_test but using non-0 perimeter multiplier 
     it 'bar_from_building_type_ratios_hos_intersect2_test runs' do
       # define the measure class for bar_from_building_type_ratios
-      class BarFromBuildingTypeRatioHosInt_Test < OpenStudio::Measure::ModelMeasure
+      class BarFromBuildingTypeRatioHosInt2_Test < OpenStudio::Measure::ModelMeasure
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -652,7 +652,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
     # same as bar_from_building_type_ratios_hos_intersect_test but having it do intersection and matching between stories
     it 'bar_from_building_type_ratios_hos_intersect3_test runs' do
       # define the measure class for bar_from_building_type_ratios
-      class BarFromBuildingTypeRatioHosInt_Test < OpenStudio::Measure::ModelMeasure
+      class BarFromBuildingTypeRatioHosInt3_Test < OpenStudio::Measure::ModelMeasure
         # resource file modules
         include OsLib_HelperMethods
         include OsLib_Geometry
@@ -682,7 +682,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('ns_to_ew_ratio', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('perim_mult', true); arg.setValue(1.5); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_width', true); arg.setValue(0.0); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_sep_dist_mult', true); arg.setValue(10.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_sep_dist_mult', true); arg.setValue(1.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wwr', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('party_wall_fraction', true); arg.setValue(0.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_north', true); arg.setValue(0.0); args << arg

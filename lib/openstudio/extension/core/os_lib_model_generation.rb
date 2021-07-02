@@ -1697,9 +1697,6 @@ module OsLib_ModelGeneration
     end
     fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => fraction_args)
 
-    positive_args = ['total_bldg_floor_area']
-    positive = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => nil, 'min_eq_bool' => false, 'max_eq_bool' => false, 'arg_array' => positive_args)
-
     one_or_greater_args = ['num_stories_above_grade']
     one_or_greater = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 1.0, 'max' => nil, 'min_eq_bool' => true, 'max_eq_bool' => false, 'arg_array' => one_or_greater_args)
 
@@ -1710,6 +1707,7 @@ module OsLib_ModelGeneration
                     'party_wall_stories_south',
                     'party_wall_stories_east',
                     'party_wall_stories_west',
+                    'total_bldg_floor_area',
                     'single_floor_area',
                     'bar_width']
     non_neg = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => nil, 'min_eq_bool' => true, 'max_eq_bool' => false, 'arg_array' => non_neg_args)

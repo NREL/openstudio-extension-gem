@@ -31,14 +31,15 @@ Each OpenStudio extension gem should define its own module name to ensure that t
 
 ## Installation
 
-To use this and other extension gems, you will need Ruby 2.5.x and OpenStudio 3.0.0 or greater.  
+To use the latest version of this and other extension gems, you will need Ruby 2.7.x and OpenStudio 3.1.0 or greater.  
 
 ### Windows Installation
-Install Ruby using the [RubyInstaller](https://rubyinstaller.org/downloads/archives/) for [Ruby 2.5.5 (x64)](https://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.5.5-x64.exe).
+Install Ruby with Devkit using the [RubyInstaller](https://rubyinstaller.org/downloads/archives/) for [Ruby 2.7.2 (x64)](
+https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.2-1/rubyinstaller-devkit-2.7.2-1-x64.exe).
 
-Install Devkit using the [mingw64](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe) installer.
+Make sure that you select **option 3: MSYS2 and MINGW development toolchain** during the installation process.
 
-Check the ruby installation returns the correct Ruby version (2.5.x):
+Check the ruby installation returns the correct Ruby version (2.7.x):
 ```
 ruby -v
 ```
@@ -48,10 +49,10 @@ Install bundler from the command line
 gem install bundler -v 2.1
 ```
 
-Install OpenStudio.  Create a file ```C:\ruby-2.5.5-x64-mingw32\lib\ruby\site_ruby\openstudio.rb``` and point it to your OpenStudio installation by editing the contents.  E.g.:
+Install OpenStudio.  Create a file ```C:\ruby-2.7.2-1-x64-mingw32\lib\ruby\site_ruby\openstudio.rb``` and point it to your OpenStudio installation by editing the contents.  E.g.:
 
 ```ruby
-require 'C:\openstudio-3.0.0\Ruby\openstudio.rb'
+require 'C:\openstudio-3.1.0\Ruby\openstudio.rb'
 ```
 
 Verify your OpenStudio and Ruby configuration:
@@ -65,7 +66,7 @@ rbenv can be installed via [Homebrew](https://brew.sh/):
 ```
 brew install rbenv
 rbenv init
-rbenv install 2.5.5
+rbenv install 2.7.2
 ```
 
 Also install bundler
@@ -76,9 +77,9 @@ gem install bundler -v 2.1
 Install [OpenStudio](https://www.openstudio.net/downloads).
 
 Add the RUBYLIB environment variable to your `bash_profile` (or similar) file. It should point to the Ruby folder within
-the OpenStudio Application you just downloaded (replace 3.0.0 with the version you are using):
+the OpenStudio Application you just downloaded (replace 3.1.0 with the version you are using):
 ```
-export RUBYLIB=/Applications/OpenStudio-3.0.0/Ruby
+export RUBYLIB=/Applications/OpenStudio-3.1.0/Ruby
 ```
 
 
@@ -182,9 +183,10 @@ The following table contains all current extension gems.
 | OpenStudio Calibration Gem | openstudio-calibration | https://github.com/NREL/openstudio-calibration-gem |
 | OpenStudio EE Gem | openstudio-ee | https://github.com/NREL/openstudio-ee-gem | 
 | OpenStudio District Systems Gem | openstudio-district-systems | https://github.com/NREL/openstudio-district-systems-gem | 
+| OpenStudio Load Flexibility Measures Gem | openstudio-load-flexibility-measures | https://github.com/NREL/openstudio-load-flexibility-measures-gem |
 | URBANopt Core Gem | urbanopt-core | https://github.com/urbanopt/urbanopt-core-gem |
 | URBANopt GeoJSON Gem | urbanopt-geojson | https://github.com/urbanopt/urbanopt-geojson-gem | 
-| URBANopt Scenario Gem | urbanopt-scenario | https://github.com/urbanopt/urbanopt-scenario-gem |
+| URBANopt Reporting Gem | urbanopt-reporting | https://github.com/urbanopt/urbanopt-reporting-gem |
 | BuildingSync Gem | buildingsync | https://github.com/BuildingSync/BuildingSync-gem | 
 
 ### Initializing a new Extension Gem

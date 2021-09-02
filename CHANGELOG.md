@@ -1,8 +1,9 @@
 # OpenStudio Extension Gem
 
-## Version 0.4.4 (Unreleased)
+## Version 0.4.4
 
 * Update BCL gem to version 0.7.1 which upgrades REXML and Spreadsheet with security patches
+* Minor updates to documentation
 
 ## Version 0.4.3
 

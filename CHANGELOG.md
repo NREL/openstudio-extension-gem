@@ -1,5 +1,10 @@
 # OpenStudio Extension Gem
 
+## Version 0.4.4
+
+* Update BCL gem to version 0.7.1 which upgrades REXML and Spreadsheet with security patches
+* Minor updates to documentation
+
 ## Version 0.4.3
 
 * Update measure tester gem which upgrades Rubocop to 1.15

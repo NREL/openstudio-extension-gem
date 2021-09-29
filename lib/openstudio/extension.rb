@@ -209,11 +209,9 @@ module OpenStudio
     def self.set_measure_argument(osw, measure_dir_name, argument_name, argument_value, step_name = nil)
       result = false
       osw[:steps].each do |step|
-        if step[:measure_dir_name] == measure_dir_name
-          if step_name.nil? || step[:name] == step_name
-            step[:arguments][argument_name.to_sym] = argument_value
-            result = true
-          end
+        if step[:measure_dir_name] == measure_dir_name && (step_name.nil? || step[:name] == step_name)
+          step[:arguments][argument_name.to_sym] = argument_value
+          result = true
         end
       end
 
@@ -239,10 +237,8 @@ module OpenStudio
     def self.measure_in_osw(osw, measure_dir_name, step_name = nil)
       result = false
       osw[:steps].each do |step|
-        if step[:measure_dir_name] == measure_dir_name
-          if step_name.nil? || step[:name] == step_name
-            result = true
-          end
+        if step[:measure_dir_name] == measure_dir_name && (step_name.nil? || step[:name] == step_name)
+          result = true
         end
       end
 

@@ -144,7 +144,7 @@ class ChangeLog
     puts "Total Open Issues: #{@total_open_issues.length}"
     puts "Total Open Pull Requests: #{@total_open_pull_requests.length}"
     puts "\nDate Range: #{@start_date.strftime('%m/%d/%y')} - #{@end_date.strftime('%m/%d/%y')}:"
-    puts "\nNew Issues: #{@new_issues.length} (" + @new_issues.map(&:number).join(', ') + ')'
+    puts "\nNew Issues: #{@new_issues.length} (#{@new_issues.map(&:number).join(', ')})"
 
     puts "\nClosed Issues: #{@closed_issues.length}"
     @closed_issues.each { |issue| puts print_issue(issue) }

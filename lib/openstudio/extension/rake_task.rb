@@ -55,7 +55,7 @@ module OpenStudio
         @root_dir = @extension.root_dir
         # Catch if measures_dir is nil, then just make it an empty string
         @measures_dir = @extension.measures_dir || ''
-        @staged_path = @measures_dir + '/staged'
+        @staged_path = "#{@measures_dir}/staged"
         @core_dir = @extension.core_dir
         @doc_templates_dir = @extension.doc_templates_dir
         @files_dir = @extension.files_dir
@@ -201,9 +201,9 @@ module OpenStudio
               end
 
               # create new and existing directories
-              FileUtils.mkdir_p(@staged_path.to_s + '/update')
-              FileUtils.mkdir_p(@staged_path.to_s + '/push/component')
-              FileUtils.mkdir_p(@staged_path.to_s + '/push/measure')
+              FileUtils.mkdir_p("#{@staged_path}/update")
+              FileUtils.mkdir_p("#{@staged_path}/push/component")
+              FileUtils.mkdir_p("#{@staged_path}/push/measure")
 
               # keep track of noop, update, push
               noops = 0
@@ -215,6 +215,7 @@ module OpenStudio
 
               dirs.each do |dir|
                 next if dir.include?('Rakefile') || File.basename(dir) == 'staged'
+
                 current_d = Dir.pwd
                 content_name = File.basename(dir)
                 puts '', '---'
@@ -235,6 +236,7 @@ module OpenStudio
                   next if file.to_s.start_with?('tests/test') # From openstudio-measure-tester-gem
                   next if file.to_s.start_with?('tests/coverage') # From openstudio-measure-tester-gem
                   next if file.to_s.start_with?('test_results') # From openstudio-measure-tester-gem
+
                   paths << file.to_s
                   if file.to_s =~ /^.{0,2}component.xml$/ || file.to_s =~ /^.{0,2}measure.xml$/
                     if file.to_s.match?(/^.{0,2}component.xml$/)
@@ -246,21 +248,22 @@ module OpenStudio
                 end
                 puts "UUID: #{uuid}, VID: #{vid}"
 
-                # note: if uuid is missing, will assume new content
+                # NOTE: if uuid is missing, will assume new content
                 action = bcl.search_by_uuid(uuid, vid)
                 puts "#{content_name} ACTION TO TAKE: #{action}"
                 # new content functionality needs to know if measure or component.  update is agnostic.
-                if action == 'noop' # ignore up-to-date content
+                case action
+                when 'noop' # ignore up-to-date content
                   puts "  - WARNING: local #{content_name} uuid and vid match BCL... no update will be performed"
                   noops += 1
                   next
-                elsif action == 'update'
+                when 'update'
                   # puts "#{content_name} labeled as update for BCL"
-                  destination = @staged_path + '/' + action + '/' + "#{content_name}.tar.gz"
+                  destination = "#{@staged_path}/#{action}/#{content_name}.tar.gz"
                   updates += 1
-                elsif action == 'push'
+                when 'push'
                   # puts "#{content_name} labeled as new content for BCL"
-                  destination = @staged_path + '/' + action + '/' + content_type + "/#{content_name}.tar.gz"
+                  destination = "#{@staged_path}/#{action}/#{content_type}/#{content_name}.tar.gz"
                   new_ones += 1
                 end
 
@@ -309,7 +312,7 @@ module OpenStudio
                   puts item.split('/').last
                   total_count += 1
 
-                  receipt_file = File.dirname(item) + '/' + File.basename(item, '.tar.gz') + '.receipt'
+                  receipt_file = "#{File.dirname(item)}/#{File.basename(item, '.tar.gz')}.receipt"
                   if !reset && File.exist?(receipt_file)
                     skipped += 1
                     puts 'SKIP: receipt file found'
@@ -333,7 +336,7 @@ module OpenStudio
 
               # grab all the updated content (measures and components) tar files and push to bcl
               items = []
-              paths = Pathname.glob(@staged_path.to_s + '/update/*.tar.gz')
+              paths = Pathname.glob("#{@staged_path}/update/*.tar.gz")
               paths.each do |path|
                 # puts path
                 items << path.to_s
@@ -342,7 +345,7 @@ module OpenStudio
                 puts item.split('/').last
                 total_count += 1
 
-                receipt_file = File.dirname(item) + '/' + File.basename(item, '.tar.gz') + '.receipt'
+                receipt_file = "#{File.dirname(item)}/#{File.basename(item, '.tar.gz')}.receipt"
                 if !reset && File.exist?(receipt_file)
                   skipped += 1
                   puts 'SKIP: receipt file found'

@@ -75,8 +75,11 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # [openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
       @model.getYearDescription.setCalendarYear(2021)
 
-      # create a runner
-      @runner = OpenStudio::Measure::OSRunner.new(OpenStudio::WorkflowJSON.new)
+	  # create an instance of a runner with OSW
+      target_path = File.expand_path("../../files", File.dirname(__FILE__))
+      osw_path = OpenStudio::Path.new(target_path + '/model_test.osw')
+      osw = OpenStudio::WorkflowJSON.load(osw_path).get
+      @runner = OpenStudio::Measure::OSRunner.new(osw)
     end
 
     # test bad argument
@@ -443,6 +446,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('remove_objects', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true); arg.setValue(true); args << arg
+
+          # new optional method argument that measures can add if they want load and use haystakc JSOn file
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('haystack_file', true); arg.setValue('SmallOffice_model.json'); args << arg
+
 
           return args
         end

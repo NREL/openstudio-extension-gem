@@ -1812,10 +1812,6 @@ module OsLib_ModelGeneration
       args = bar_arg_check_setup(model,runner,user_arguments,false) # false stops it from checking args on used in bar_from_building_type_ratios
       if !args then return false end
 
-      # identify primary building type for building form defaults
-      primary_building_type = "PrimarySchool" # see what building type represents the most floro area
-      building_form_defaults = building_form_defaults(primary_building_type)
-
       # process arg into hash
       space_type_hash_name = {}
       args['space_type_hash_string'][0..-1].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[0..-1].to_s] = value_str.nil? ? '' : value_str.strip[0..-1].to_f }
@@ -1863,6 +1859,11 @@ module OsLib_ModelGeneration
         building_type_fraction_of_building += ratio
       end
 
+      # identify primary building type for building form defaults
+      primary_building_type = building_type_hash.keys.first # update to choose building with highest ratio
+      runner.registerInfo("Creating bar with space type ratio proided as argument.")
+      runner.registerInfo("Using building type from first ratio #{primary_building_type} as the primary building type. This is used for building form defaults.")
+
       # todo - confirm if this will get normalized up/down later of if I should fix or stop here instead of just a warning
       if building_type_fraction_of_building > 1.0
         runner.registerWarning("Sum of Space Type Ratio of #{building_type_fraction_of_building} is greater than the expected value of 1.0")
@@ -1874,6 +1875,8 @@ module OsLib_ModelGeneration
 
       # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults
       primary_building_type = args['bldg_type_a']
+      runner.registerInfo("Creating bar space type ratios by building type based on ratios from prototype models.")
+      runner.registerInfo("#{primary_building_type} will be used for building form defaults.")
 
     end
 

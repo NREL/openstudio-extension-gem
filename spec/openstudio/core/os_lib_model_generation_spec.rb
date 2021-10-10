@@ -42,6 +42,9 @@ require 'openstudio-standards'
 # adding this because I may want to inspect runner output
 require 'openstudio/measure/ShowRunnerOutput'
 
+# use this flag only when testing locally too turn of create_typical portion of tests when testing geometry generatioon
+run_create_typical = true  # should commit as true, only false for testing.
+
 RSpec.describe 'Bar Methods' do # include from building type ratios, space type ratios, and from building
   context 'bar_from_empty' do
     before :each do
@@ -305,17 +308,19 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       arguments_typical = unit_test_typical.arguments(@model)
       argument_map_typical = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments_typical)
 
-      # run the unit_test
-      unit_test_typical.run(@model, @runner, argument_map_typical)
-      result_typical = @runner.result
+      if run_create_typical
+        # run the unit_test
+        unit_test_typical.run(@model, @runner, argument_map_typical)
+        result_typical = @runner.result
 
-      # show the output
-      puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
-      show_output(result_typical)
+        # show the output
+        puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
+        show_output(result_typical)
 
-      # save the model to test output directory
-      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_typical_test_a2.osm")
-      @model.save(output_file_path, true)
+        # save the model to test output directory
+        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_typical_test_a2.osm")
+        @model.save(output_file_path, true)
+      end
 
       # confirm it ran correctly
       expect(result.value.valueName).to eq 'Success'
@@ -373,7 +378,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)
           # method run from os_lib_model_generation.rb
-          result = bar_from_space_type_ratios(model, runner, user_arguments) # to additinal arguments to this method when called by bar_from_building_type_ratios
+          result = bar_from_space_type_ratios(model, runner, user_arguments) # two additioonal arguments to this method when called by bar_from_building_type_ratios
         end
       end
 
@@ -461,17 +466,19 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       arguments_typical = unit_test_typical.arguments(@model)
       argument_map_typical = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments_typical)
 
-      # run the unit_test
-      unit_test_typical.run(@model, @runner, argument_map_typical)
-      result_typical = @runner.result
+      if run_create_typical
+        # run the unit_test
+        unit_test_typical.run(@model, @runner, argument_map_typical)
+        result_typical = @runner.result
 
-      # show the output
-      puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
-      show_output(result_typical)
+        # show the output
+        puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
+        show_output(result_typical)
 
-      # save the model to test output directory
-      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_space_type_ratios_typical_test_b2.osm")
-      @model.save(output_file_path, true)
+        # save the model to test output directory
+        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_space_type_ratios_typical_test_b2.osm")
+        @model.save(output_file_path, true)
+      end
 
       # confirm it ran correctly
       expect(result.value.valueName).to eq 'Success'
@@ -645,7 +652,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # confirm it failed and stopped with bad argument instead of running and getting ruby error
       expect(result.value.valueName).to eq 'Success'
     end
-
 
     # test hospital model with intersection issues
     # test bar_from_building_type_ratios method and typical_building_from_model

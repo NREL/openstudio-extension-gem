@@ -1144,8 +1144,9 @@ module OsLib_ModelGeneration
               spaces_temp << space_a
               spaces_temp << space_b
               # intersect and sort
-              OpenStudio::Model.intersectSurfaces(spaces_temp)
-              OpenStudio::Model.matchSurfaces(spaces_temp)
+              # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+              # OpenStudio::Model.intersectSurfaces(spaces_temp)
+              # OpenStudio::Model.matchSurfaces(spaces_temp)
             end
           end
           runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
@@ -1169,9 +1170,11 @@ module OsLib_ModelGeneration
           story.spaces.sort.each do |space|
             story_spaces << space
           end
-          OpenStudio::Model.intersectSurfaces(story_spaces)
-          OpenStudio::Model.matchSurfaces(story_spaces)
-          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
+          # intersect and sort
+          # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+          # OpenStudio::Model.intersectSurfaces(story_spaces)
+          # OpenStudio::Model.matchSurfaces(story_spaces)
+          #runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
         end
       end
 
@@ -1645,6 +1648,72 @@ module OsLib_ModelGeneration
           space.surfaces.each do |surface|
             next if !(surface.surfaceType == 'RoofCeiling' && surface.outsideBoundaryCondition == 'Outdoors')
             surface.setOutsideBoundaryCondition('Adiabatic')
+          end
+        end
+      end
+    end
+
+    # Make interior walls adiabatic if requested
+    # could add new wal_match_error check, but for now if adiabatic is requested will bypass intersectino and matching in call cases.
+    if bar_hash[:make_mid_story_surfaces_adiabatic]
+
+      runner.registerInfo("Finding non-exterior walls and setting boundary condition too adiabatic")
+
+      # min/max x and y values as well to identify exteerior vs. interior walls
+      # if top story is partial this will not be the same across all stories
+      # needs to be global not space coordinates
+      story_bounding = {}
+
+      # gather new spaces by story
+      new_spaces.each do |space|
+        story = space.buildingStory.get
+          if story_bounding.has_key?(story)
+            story_bounding[story][:spaces] << space
+          else
+            story_bounding[story] = {:spaces => [space]}
+          end
+      end
+
+      # get bounding box for each story
+      story_bounding.each do |story,v|
+
+        # get bounding_box
+        bounding_box = OpenStudio::BoundingBox.new
+        v[:spaces].each do |space|
+          space.surfaces.each do |space_surface|
+            bounding_box.addPoints(space.transformation * space_surface.vertices)
+          end
+        end
+        min_x = bounding_box.minX.get
+        min_y = bounding_box.minY.get
+        min_z = bounding_box.minZ.get # not using z for now but just storing it
+        max_x = bounding_box.maxX.get
+        max_y = bounding_box.maxY.get
+        max_z = bounding_box.maxZ.get # not using z for now but just storing it
+        ext_wall_toll = 0.01
+
+        # check surfaces again against min/max and change to adiabatic if not fully on one min or max x or y
+        # todo - confirm how constructions are handled in downstream measures
+        v[:spaces].each do |space|
+          space.surfaces.each do |space_surface|
+            surface_bounding_box = OpenStudio::BoundingBox.new
+            surface_bounding_box.addPoints(space.transformation * space_surface.vertices)
+            surface_on_outside = false
+            # check xmin
+            if (surface_bounding_box.minX.get - min_x).abs < ext_wall_toll && (surface_bounding_box.maxX.get - min_x).abs < ext_wall_toll then surface_on_outside = true end
+            # check xmax
+            if (surface_bounding_box.minX.get - max_x).abs < ext_wall_toll && (surface_bounding_box.maxX.get - max_x).abs < ext_wall_toll then surface_on_outside = true end
+            # check ymin
+            if (surface_bounding_box.minY.get - min_y).abs < ext_wall_toll && (surface_bounding_box.maxY.get - min_y).abs < ext_wall_toll then surface_on_outside = true end
+            # check ymax
+            if (surface_bounding_box.minY.get - max_y).abs < ext_wall_toll && (surface_bounding_box.maxY.get - max_y).abs < ext_wall_toll then surface_on_outside = true end
+
+            # change if not exterior
+            if !surface_on_outside
+              # todo windows are getting added everywhere, I should try and add this code sooner?
+              #next if space_surface.subSurfaces.size > 0 # temmp check don't keep this, use tollerance instead
+              space_surface.setOutsideBoundaryCondition("Adiabatic")
+            end
           end
         end
       end

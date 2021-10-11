@@ -1,0 +1,1411 @@
+{
+  "meta": {
+    "ver": "3.0"
+  },
+  "cols": [
+    {
+      "name": "id"
+    },
+    {
+      "name": "dis"
+    },
+    {
+      "name": "site"
+    },
+    {
+      "name": "outdoor"
+    },
+    {
+      "name": "air"
+    },
+    {
+      "name": "temp"
+    },
+    {
+      "name": "sensor"
+    },
+    {
+      "name": "point"
+    },
+    {
+      "name": "equipRef"
+    },
+    {
+      "name": "humidity"
+    },
+    {
+      "name": "dewPoint"
+    },
+    {
+      "name": "flow"
+    },
+    {
+      "name": "mixed"
+    },
+    {
+      "name": "discharge"
+    },
+    {
+      "name": "dicharge"
+    },
+    {
+      "name": "return"
+    },
+    {
+      "name": "exhaust"
+    },
+    {
+      "name": "singleDuct"
+    },
+    {
+      "name": "constantAirVolume"
+    },
+    {
+      "name": "equip"
+    },
+    {
+      "name": "heatPump"
+    },
+    {
+      "name": "siteRef"
+    },
+    {
+      "name": "cav"
+    },
+    {
+      "name": "airRef"
+    },
+    {
+      "name": "space"
+    },
+    {
+      "name": "hvac"
+    },
+    {
+      "name": "zone"
+    },
+    {
+      "name": "spaceRef"
+    },
+    {
+      "name": "fan"
+    },
+    {
+      "name": "motor"
+    },
+    {
+      "name": "dxHeating"
+    },
+    {
+      "name": "stage"
+    },
+    {
+      "name": "heatingCoil"
+    },
+    {
+      "name": "dxCooling"
+    },
+    {
+      "name": "coolingCoil"
+    },
+    {
+      "name": "natualGasHeating"
+    },
+    {
+      "name": "elec"
+    },
+    {
+      "name": "meter"
+    },
+    {
+      "name": "power"
+    },
+    {
+      "name": "submeterOf"
+    },
+    {
+      "name": "naturalGas"
+    },
+    {
+      "name": "siteMeter"
+    },
+    {
+      "name": "natualGas"
+    },
+    {
+      "name": "energy"
+    }
+  ],
+  "rows": [
+    {
+      "id": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5",
+      "dis": "-SmallOffice-ASHRAE 169-2013-5A created: 2020-11-04 14:29:13 -0700",
+      "site": ":m"
+    },
+    {
+      "id": "1c940bc8-a7ff-4299-b5fc-78af273eb5ec",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Outside_Air_Temperature_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "7ea1a03e-b089-4924-9257-f5b14d39deec",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Outside_Air_Humidity_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "1c708717-e054-4f99-bac9-db0f80f6679a",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Outside_Air_Dewpoint_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "dewPoint": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "02339a1a-92ea-45fd-b1dd-f8c403b8841d",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Outside_Air_Flow_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "400783f2-e5c4-44fc-ad72-53b4ee4cb032",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Mixed_Air_Temperature_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "cae06e91-7e88-42b9-a888-3825d8682fc0",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Air_Humidity_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "7dc4cdac-5ae3-40fb-be7c-9e82ae12b277",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Air_Flow_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "e61276d5-81b8-4c27-a5a0-ed712f97f965",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Discharge_Air_Temperature_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "35c57744-2534-4bb5-9815-454f55abb61f",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Discharge_Air_Humidity_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "0bf86ca3-2c64-40ea-8d1f-a79049f14633",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Discharge_Air_Flow_Sensor",
+      "dicharge": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "74d9b0cd-1de6-4d59-8d71-d1e0250f889d",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Return_Air_Temperature_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "0e7f9e9e-aa55-4683-9bce-755dac1acc5a",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Return_Air_Humidity_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "1ba2d2f5-f692-47f3-8843-4458c0f676ba",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Return_Air_Flow_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "aa340d4e-7ce6-44d2-90fa-0267e244998d",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Exhaust_Air_Temperature_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "2d9d233e-1b0f-4d50-9030-626b79f5c37d",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Exhaust_Air_Humidity_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "9686ced4-3eb5-4397-8b78-34d84366373c",
+      "dis": "Perimeter_ZN_3_ZN_PSZ_AC_4_Exhaust_Air_Flow_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "9279ea66-a2e1-44ed-902b-698d20dd715b",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Outside_Air_Temperature_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "1ea04718-ca45-4904-ae2d-85b6048c880f",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Outside_Air_Humidity_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "55c16d6f-4aa6-4a82-8799-679f2c143b37",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Outside_Air_Dewpoint_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "dewPoint": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "74b73177-ae5a-40d0-a491-0c49edf9ab6d",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Outside_Air_Flow_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "167979d9-825c-4c02-b8d9-7048f41bbb97",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Mixed_Air_Temperature_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "5dda0548-7a3c-4686-9ce3-95a94e70bd9e",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Air_Humidity_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "fa8c8959-7549-4d1a-9014-47b4f0c6e02e",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Air_Flow_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "f79872fa-c8b1-4a15-aeeb-ec2bb0428f99",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Discharge_Air_Temperature_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "5665f871-5d96-4aed-bcb2-6d2ed6044b23",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Discharge_Air_Humidity_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "dafd67fa-27fe-4b1b-a537-622f94bdcaf8",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Discharge_Air_Flow_Sensor",
+      "dicharge": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "b0f2fe87-1814-4867-b55b-dd6789b08af0",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Return_Air_Temperature_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "15ea6718-3bdc-40db-9cdd-f689ef2068d4",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Return_Air_Humidity_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "4df764da-785a-4ac8-bd44-81792e3b50e1",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Return_Air_Flow_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "e61a7443-ef6d-4d4e-aedc-bb36a896b6e8",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Exhaust_Air_Temperature_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "bbc15bac-7512-41fd-8dd2-b29cac61cf46",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Exhaust_Air_Humidity_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "824f4975-ab97-40f3-8abf-f60c430c1a69",
+      "dis": "Core_ZN_ZN_PSZ_AC_1_Exhaust_Air_Flow_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "185a910e-e260-4cb3-b3ff-331bb326fc16",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Outside_Air_Temperature_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "ac3c8798-8a43-49f0-8876-8ab0f751ccb1",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Outside_Air_Humidity_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "61d2397d-e1cc-47a8-9b50-ee1deca9f7d5",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Outside_Air_Dewpoint_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "dewPoint": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "e8693c5c-376d-4f3f-8b9e-831859fe1bb4",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Outside_Air_Flow_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "15c6ce20-d5f3-4ee1-935c-fbb4af941192",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Mixed_Air_Temperature_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "b0ed7f7e-8648-41b3-8f63-2f39e2dcaee0",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Air_Humidity_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "b911b1ba-ce31-47cf-a88f-1e17b8cb5c1f",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Air_Flow_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "4a1fd002-8ff2-4d36-8e35-d9259cb3e033",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Discharge_Air_Temperature_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "7bb6131e-4941-4053-9702-163935615b78",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Discharge_Air_Humidity_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "cc4a3846-a1f5-404c-899c-c863bf40157c",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Discharge_Air_Flow_Sensor",
+      "dicharge": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "07f0ef5b-9ee9-4708-b6cf-44ce805035a8",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Return_Air_Temperature_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "7e39430b-c39a-4e51-b457-50b0201ec2c5",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Return_Air_Humidity_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "c7c6d374-ecb8-47d4-b7e8-f87de4f3b0d0",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Return_Air_Flow_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "3af57270-1a7a-4eab-8533-cc5c39d565ec",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Exhaust_Air_Temperature_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "5cbaa56e-942a-4ae5-b617-baf498b0cfe0",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Exhaust_Air_Humidity_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "7be9033b-3b4d-4da2-aea8-21924af9bae6",
+      "dis": "Perimeter_ZN_4_ZN_PSZ_AC_5_Exhaust_Air_Flow_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "ecbd9100-d34f-4923-a694-3c71a2fd3b7d",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Outside_Air_Temperature_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "99139908-0c22-4626-a84f-205e6a9bc95f",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Outside_Air_Humidity_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "17490388-14ae-40b6-a81f-9671a843e8e5",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Outside_Air_Dewpoint_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "dewPoint": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "4d39c088-136a-4ad8-8cb2-e07b5c6f9817",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Outside_Air_Flow_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "29685b02-0d31-4a57-9ea9-61969e2b2dcd",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Mixed_Air_Temperature_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "077e6368-bef0-4357-a9cd-675e0b2b0f67",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Air_Humidity_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "a38221b4-9d92-4542-a15c-57fc66a9a5c2",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Air_Flow_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "a803232d-ba5e-4cc5-b513-9aa3be60c381",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Discharge_Air_Temperature_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "5015b0b0-f4d0-45d4-b5ee-8441e58c5725",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Discharge_Air_Humidity_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "64af44ae-95ad-4891-ba43-214c291c9a9d",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Discharge_Air_Flow_Sensor",
+      "dicharge": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "bf34cfc8-cfe2-44d0-bf0a-ce462e2dc1c2",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Return_Air_Temperature_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "ecd0a0ce-589b-422e-99d6-3cc2e89fe348",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Return_Air_Humidity_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "f71e19de-1d06-4ad3-a11b-8a230102a69e",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Return_Air_Flow_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "84201e3c-f56d-4f5c-af0a-72acedf6b8f0",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Exhaust_Air_Temperature_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "5d4c3ff0-601f-44a7-99b9-441018941926",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Exhaust_Air_Humidity_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "897a7010-0eb9-47f3-b4c8-cd5a41b7ddc0",
+      "dis": "Perimeter_ZN_2_ZN_PSZ_AC_3_Exhaust_Air_Flow_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "b9e3afab-f7be-42d9-8900-1817c3f04d0b",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Outside_Air_Temperature_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "ca91f507-ef97-40f9-8aa0-ebb6e50ce6c4",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Outside_Air_Humidity_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "ed7754c5-53b1-49a8-a2db-1ffe7851fb45",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Outside_Air_Dewpoint_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "dewPoint": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "b279d67d-0d30-4ef1-89db-7d974ec8c4d6",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Outside_Air_Flow_Sensor",
+      "outdoor": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "c8c6a1f2-b436-467f-aad9-f2a307bf3588",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Mixed_Air_Temperature_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "3f968f39-db52-46dd-a919-5bab34a2dad2",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Air_Humidity_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "66b99970-a0e0-4de5-8b51-e37177449180",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Air_Flow_Sensor",
+      "mixed": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "acc79d58-769f-4dbf-b284-05cbf891aba4",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Discharge_Air_Temperature_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "3138c165-87e6-459f-acb2-216332ae5d97",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Discharge_Air_Humidity_Sensor",
+      "discharge": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "680fdaf1-2786-4e9c-af9c-25e25dd4d921",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Discharge_Air_Flow_Sensor",
+      "dicharge": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "eebbbbfb-9af1-42df-90a7-1e8f43c0b03f",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Return_Air_Temperature_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "6497804b-d545-491a-954b-43d0cf7b8210",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Return_Air_Humidity_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "7d73e3b7-9232-450e-9f61-3a18c44fd094",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Return_Air_Flow_Sensor",
+      "return": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "a5987630-e0cd-42a7-a689-2ea64c350729",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Exhaust_Air_Temperature_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "f211de02-8911-4466-8de6-4cf3380c7539",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Exhaust_Air_Humidity_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "ce9944f5-c9ba-4acd-bbbd-6ba83fe1af87",
+      "dis": "Perimeter_ZN_1_ZN_PSZ_AC_2_Exhaust_Air_Flow_Sensor",
+      "exhaust": ":m",
+      "air": ":m",
+      "flow": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "473dc842-f759-4c7a-a5ce-898cbcf0a943",
+      "dis": "Core_ZN ZN PSZ-AC-1 Unitary HP",
+      "singleDuct": ":m",
+      "constantAirVolume": ":m",
+      "equip": ":m",
+      "heatPump": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "9380d128-47b7-4a71-a5bf-955ac5b0bc88",
+      "dis": "Perimeter_ZN_4 ZN PSZ-AC-5 Unitary HP",
+      "singleDuct": ":m",
+      "constantAirVolume": ":m",
+      "equip": ":m",
+      "heatPump": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7",
+      "dis": "Perimeter_ZN_3 ZN PSZ-AC-4 Unitary HP",
+      "singleDuct": ":m",
+      "constantAirVolume": ":m",
+      "equip": ":m",
+      "heatPump": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "ee349ca0-f8aa-4b83-9fc6-86d727399914",
+      "dis": "Perimeter_ZN_2 ZN PSZ-AC-3 Unitary HP",
+      "singleDuct": ":m",
+      "constantAirVolume": ":m",
+      "equip": ":m",
+      "heatPump": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "938a6123-4d46-4012-8895-01b4a2de57a4",
+      "dis": "Perimeter_ZN_1 ZN PSZ-AC-2 Unitary HP",
+      "singleDuct": ":m",
+      "constantAirVolume": ":m",
+      "equip": ":m",
+      "heatPump": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "4725a632-0d44-4416-b66b-f4c0be91cb51",
+      "dis": "Core_ZN ZN PSZ-AC-1 Diffuser",
+      "equip": ":m",
+      "cav": ":m",
+      "airRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "9d041650-1713-4149-b7e9-50170a372557",
+      "dis": "Perimeter_ZN_3 ZN PSZ-AC-4 Diffuser",
+      "equip": ":m",
+      "cav": ":m",
+      "airRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "7a4a61ad-0748-4292-89d3-a4d545c227b0",
+      "dis": "Perimeter_ZN_2 ZN PSZ-AC-3 Diffuser",
+      "equip": ":m",
+      "cav": ":m",
+      "airRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "80d44586-cab5-40a9-b127-aca67bf896af",
+      "dis": "Perimeter_ZN_4 ZN PSZ-AC-5 Diffuser",
+      "equip": ":m",
+      "cav": ":m",
+      "airRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "00821882-c758-49f8-ab51-33f0964154e8",
+      "dis": "Perimeter_ZN_1 ZN PSZ-AC-2 Diffuser",
+      "equip": ":m",
+      "cav": ":m",
+      "airRef": "938a6123-4d46-4012-8895-01b4a2de57a4",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "70a22f98-841f-4f5d-956c-4930aba84c24",
+      "dis": "Perimeter_ZN_4 ZN",
+      "space": ":m",
+      "hvac": ":m",
+      "zone": ":m",
+      "airRef": "80d44586-cab5-40a9-b127-aca67bf896af",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "c557f1b2-960c-4989-a4e8-567c67f45f8e",
+      "dis": "Perimeter_ZN_4_ZN_Zone_Air_Temperature_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "70a22f98-841f-4f5d-956c-4930aba84c24"
+    },
+    {
+      "id": "5beb9632-b3ed-4c9f-a460-0d5d3d45db02",
+      "dis": "Perimeter_ZN_4_ZN_Zone_Air_Humidity_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "70a22f98-841f-4f5d-956c-4930aba84c24"
+    },
+    {
+      "id": "e42bdbc9-c780-4f37-a015-9b7f43f2ee0b",
+      "dis": "Perimeter_ZN_3 ZN",
+      "space": ":m",
+      "hvac": ":m",
+      "zone": ":m",
+      "airRef": "9d041650-1713-4149-b7e9-50170a372557",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "0f18ab73-3d5e-462d-a10b-eb30a263d546",
+      "dis": "Perimeter_ZN_3_ZN_Zone_Air_Temperature_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "e42bdbc9-c780-4f37-a015-9b7f43f2ee0b"
+    },
+    {
+      "id": "e68046bb-0aff-48fc-a1b2-7e05d2a16982",
+      "dis": "Perimeter_ZN_3_ZN_Zone_Air_Humidity_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "e42bdbc9-c780-4f37-a015-9b7f43f2ee0b"
+    },
+    {
+      "id": "650c4ead-6f06-4315-9ecf-b47cb07f9856",
+      "dis": "Perimeter_ZN_2 ZN",
+      "space": ":m",
+      "hvac": ":m",
+      "zone": ":m",
+      "airRef": "7a4a61ad-0748-4292-89d3-a4d545c227b0",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "8261bee3-3765-4cfb-aed2-5c2d812d4ea1",
+      "dis": "Perimeter_ZN_2_ZN_Zone_Air_Temperature_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "650c4ead-6f06-4315-9ecf-b47cb07f9856"
+    },
+    {
+      "id": "9b3a1f96-f012-44aa-8ee1-8ee84c908b3d",
+      "dis": "Perimeter_ZN_2_ZN_Zone_Air_Humidity_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "650c4ead-6f06-4315-9ecf-b47cb07f9856"
+    },
+    {
+      "id": "f4c0e500-1a2f-45f3-95bf-ec7a60532ac9",
+      "dis": "Perimeter_ZN_1 ZN",
+      "space": ":m",
+      "hvac": ":m",
+      "zone": ":m",
+      "airRef": "00821882-c758-49f8-ab51-33f0964154e8",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "8c21d025-df68-486b-afad-5f2682435ca1",
+      "dis": "Perimeter_ZN_1_ZN_Zone_Air_Temperature_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "f4c0e500-1a2f-45f3-95bf-ec7a60532ac9"
+    },
+    {
+      "id": "4635903f-2e09-448d-a232-a41d94363b0d",
+      "dis": "Perimeter_ZN_1_ZN_Zone_Air_Humidity_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "f4c0e500-1a2f-45f3-95bf-ec7a60532ac9"
+    },
+    {
+      "id": "4d46fe7f-461a-4047-b39d-9631559e001a",
+      "dis": "Core_ZN ZN",
+      "space": ":m",
+      "hvac": ":m",
+      "zone": ":m",
+      "airRef": "4725a632-0d44-4416-b66b-f4c0be91cb51",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "98883864-4a1d-490c-b2e8-08a5d115da25",
+      "dis": "Core_ZN_ZN_Zone_Air_Temperature_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "temp": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "4d46fe7f-461a-4047-b39d-9631559e001a"
+    },
+    {
+      "id": "3b044477-cc18-4be2-9f6d-5ca07fbbe4d3",
+      "dis": "Core_ZN_ZN_Zone_Air_Humidity_Sensor",
+      "zone": ":m",
+      "air": ":m",
+      "humidity": ":m",
+      "sensor": ":m",
+      "point": ":m",
+      "spaceRef": "4d46fe7f-461a-4047-b39d-9631559e001a"
+    },
+    {
+      "id": "f81c6d39-674e-45d8-aca0-3eeb72e33526",
+      "dis": "Attic ZN",
+      "space": ":m",
+      "hvac": ":m",
+      "zone": ":m"
+    },
+    {
+      "id": "68b10899-b431-4634-878a-636d5dbfe4ae",
+      "dis": "Perimeter_ZN_3 ZN PSZ-AC-4 Fan",
+      "equip": ":m",
+      "fan": ":m",
+      "motor": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "8dd8fdd4-0c2f-462e-acd1-37afa6ff3273",
+      "dis": "Core_ZN ZN PSZ-AC-1 Fan",
+      "equip": ":m",
+      "fan": ":m",
+      "motor": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "1c369927-d35e-4fe0-93a5-21deb8d26279",
+      "dis": "Perimeter_ZN_4 ZN PSZ-AC-5 Fan",
+      "equip": ":m",
+      "fan": ":m",
+      "motor": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "ce731aa1-fb9c-40b9-8f6b-ec6c42c9eadb",
+      "dis": "Perimeter_ZN_2 ZN PSZ-AC-3 Fan",
+      "equip": ":m",
+      "fan": ":m",
+      "motor": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "82f7a8fa-40bc-4c07-b229-263e775f68e5",
+      "dis": "Perimeter_ZN_1 ZN PSZ-AC-2 Fan",
+      "equip": ":m",
+      "fan": ":m",
+      "motor": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "c4e9f108-d51e-4273-bfde-fa56ed42f004",
+      "dis": "Core_ZN ZN HP Htg Coil",
+      "dxHeating": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "3a3d6628-d812-4c1a-82ae-98d832c28b30",
+      "dis": "Perimeter_ZN_4 ZN HP Htg Coil",
+      "dxHeating": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "91344cea-aa8d-4522-9de5-b8822949d601",
+      "dis": "Perimeter_ZN_2 ZN HP Htg Coil",
+      "dxHeating": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "d74b71b9-b346-4f24-8384-c777784056fc",
+      "dis": "Perimeter_ZN_3 ZN HP Htg Coil",
+      "dxHeating": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "698c4f1d-02a5-491a-bdd9-0aadfba3cddb",
+      "dis": "Perimeter_ZN_1 ZN HP Htg Coil",
+      "dxHeating": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "b082b0ad-f484-49db-a835-a8feb5c910d6",
+      "dis": "Core_ZN ZN PSZ-AC-1 1spd DX HP Clg Coil",
+      "dxCooling": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "coolingCoil": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "d13782d6-3d4a-4ec6-b8f3-2cd5ada18f9b",
+      "dis": "Perimeter_ZN_3 ZN PSZ-AC-4 1spd DX HP Clg Coil",
+      "dxCooling": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "coolingCoil": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "2813be7c-f5e7-4532-9e9e-23753b63ae81",
+      "dis": "Perimeter_ZN_2 ZN PSZ-AC-3 1spd DX HP Clg Coil",
+      "dxCooling": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "coolingCoil": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "80ac3877-d040-4b62-b774-de724ada598b",
+      "dis": "Perimeter_ZN_4 ZN PSZ-AC-5 1spd DX HP Clg Coil",
+      "dxCooling": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "coolingCoil": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "fda11ffb-ada0-42d1-b692-ceecffd5b7c7",
+      "dis": "Perimeter_ZN_1 ZN PSZ-AC-2 1spd DX HP Clg Coil",
+      "dxCooling": ":m",
+      "stage": 1,
+      "equip": ":m",
+      "coolingCoil": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "e3918eed-5ec1-4b6b-b0a4-67ebd93c6f43",
+      "dis": "Core_ZN ZN PSZ-AC-1 Gas Backup Htg Coil",
+      "natualGasHeating": ":m",
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "473dc842-f759-4c7a-a5ce-898cbcf0a943"
+    },
+    {
+      "id": "a3ed74ec-d214-4f82-bec3-6e093b3e5d64",
+      "dis": "Perimeter_ZN_4 ZN PSZ-AC-5 Gas Backup Htg Coil",
+      "natualGasHeating": ":m",
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "9380d128-47b7-4a71-a5bf-955ac5b0bc88"
+    },
+    {
+      "id": "d4520aa6-ee4c-49bd-8f45-5d4aa2c30acd",
+      "dis": "Perimeter_ZN_3 ZN PSZ-AC-4 Gas Backup Htg Coil",
+      "natualGasHeating": ":m",
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "947a48e9-dd9a-4e65-8aeb-9c1003999bf7"
+    },
+    {
+      "id": "c7974313-bc3f-401f-a589-8fa1689af2d3",
+      "dis": "Perimeter_ZN_2 ZN PSZ-AC-3 Gas Backup Htg Coil",
+      "natualGasHeating": ":m",
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "ee349ca0-f8aa-4b83-9fc6-86d727399914"
+    },
+    {
+      "id": "be2604a1-849f-4a23-9b68-8db0c9ec033a",
+      "dis": "Perimeter_ZN_1 ZN PSZ-AC-2 Gas Backup Htg Coil",
+      "natualGasHeating": ":m",
+      "equip": ":m",
+      "heatingCoil": ":m",
+      "equipRef": "938a6123-4d46-4012-8895-01b4a2de57a4"
+    },
+    {
+      "id": "9d5596a2-6846-46d2-adf5-ce2454c06d54",
+      "dis": "Electricity:Facility Meter Equipment",
+      "elec": ":m",
+      "equip": ":m",
+      "meter": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "d446ed18-52cc-487c-bf58-c78a8edaa642",
+      "dis": "Electricity:Facility Sensor",
+      "sensor": ":m",
+      "elec": ":m",
+      "power": ":m",
+      "point": ":m",
+      "equipRef": "9d5596a2-6846-46d2-adf5-ce2454c06d54"
+    },
+    {
+      "id": "17e7662f-b0dd-4f5a-965e-d649d3d5b42a",
+      "dis": "InteriorLights:Electricity:Facility Meter Equipment",
+      "equip": ":m",
+      "elec": ":m",
+      "meter": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5",
+      "submeterOf": "9d5596a2-6846-46d2-adf5-ce2454c06d54"
+    },
+    {
+      "id": "0594715d-3b82-443a-8ab6-7d7d81200aad",
+      "dis": "InteriorLights:Electricity:Facility Sensor",
+      "sensor": ":m",
+      "elec": ":m",
+      "power": ":m",
+      "point": ":m",
+      "equipRef": "17e7662f-b0dd-4f5a-965e-d649d3d5b42a"
+    },
+    {
+      "id": "205d6fa9-6b45-47ae-b223-bd58b082a1ed",
+      "dis": "Gas:Facility Meter Equipment",
+      "naturalGas": ":m",
+      "siteMeter": ":m",
+      "equip": ":m",
+      "meter": ":m",
+      "siteRef": "6b25c3c7-39e4-4be7-84a9-17e80feecaf5"
+    },
+    {
+      "id": "abc5d571-df7f-47b1-bf8b-892a6dadede3",
+      "dis": "Gas:Facility Sensor",
+      "sensor": ":m",
+      "natualGas": ":m",
+      "energy": ":m",
+      "point": ":m",
+      "equipRef": "205d6fa9-6b45-47ae-b223-bd58b082a1ed"
+    }
+  ]
+}

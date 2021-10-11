@@ -36,6 +36,9 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # *******************************************************************************
 
+# used to load haystack json in typical_building_from_model
+require 'json'
+
 module OsLib_ModelGeneration
   # simple list of building types that are valid for get_space_types_from_building_type
   # for general public use use extended = false
@@ -2772,6 +2775,29 @@ module OsLib_ModelGeneration
       return false
     end
 
+    # if haystack_file used find the file
+    # todo - may want to allow NA, empty string or some other value to skip so a measure can ake this optional witht using optional measure arguments
+    if args['haystack_file']
+      haystack_file = runner.workflow.findFile(args['haystack_file'])
+      if haystack_file.is_initialized
+        haystack_file = haystack_file.get.to_s
+
+        # load JSON file
+        json = nil
+        File.open(haystack_file, 'r') do |file|
+          json = file.read
+          # uncomment to inspect haystack json
+          # puts json
+        end
+
+      else
+        runner.registerError("Did not find #{args['haystack_file']} in paths described in OSW file.")
+        return false
+      end
+    else
+      haystack_file = nil
+    end
+
     # make sure daylight savings is turned on up prior to any sizing runs being done.
     if args['enable_dst']
       start_date = '2nd Sunday in March'
@@ -3155,12 +3181,20 @@ module OsLib_ModelGeneration
                            sys_type # same as primary system type
                          end
 
-          # Group zones by story
-          story_zone_lists = standard.model_group_zones_by_story(model, sys_group['zones'])
+          # group zones
+          if haystack_file.nil?
+            # Group zones by story
+            bldg_zone_lists = standard.model_group_zones_by_story(model, sys_group['zones'])
+          else
+            # todo - group zones using haystack file instead of building stories
+            # todo - need to do something similar to use haystack to indentify secondary zones
+            bldg_zone_lists = standard.model_group_zones_by_story(model, sys_group['zones'])
+            runner.registerInfo("***This code will define which zones are on air loops for inferred system***")
+          end
 
           # On each story, add the primary system to the primary zones
           # and add the secondary system to any zones that are different.
-          story_zone_lists.each do |story_group|
+          bldg_zone_lists.each do |story_group|
             # Differentiate primary and secondary zones, based on
             # operating hours and internal loads (same as 90.1 PRM)
             pri_sec_zone_lists = standard.model_differentiate_primary_secondary_thermal_zones(model, story_group)
@@ -3200,12 +3234,21 @@ module OsLib_ModelGeneration
         # Group the zones by occupancy type.  Only split out non-dominant groups if their total area exceeds the limit.
         sys_groups = standard.model_group_zones_by_type(model, OpenStudio.convert(20_000, 'ft^2', 'm^2').get)
         sys_groups.each do |sys_group|
-          # Group the zones by story
-          story_groups = standard.model_group_zones_by_story(model, sys_group['zones'])
+
+          # group zones
+          if haystack_file.nil?
+            # Group zones by story
+            bldg_zone_groups = standard.model_group_zones_by_story(model, sys_group['zones'])
+          else
+            # todo - group zones using haystack file instead of building stories
+            # todo - need to do something similar to use haystack to indentify secondary zones
+            bldg_zone_groups = standard.model_group_zones_by_story(model, sys_group['zones'])
+            runner.registerInfo("***This code will define which zones are on air loops for user specified system***")
+          end
 
           # Add the user specified HVAC system for each story.
           # Single-zone systems will get one per zone.
-          story_groups.each do |zones|
+          bldg_zone_groups.each do |zones|
             unless model.add_cbecs_hvac_system(standard, args['system_type'], zones)
               runner.registerError("HVAC system type '#{args['system_type']}' not recognized. Check input system type argument against Model.hvac.rb for valid hvac system type names.")
               return false

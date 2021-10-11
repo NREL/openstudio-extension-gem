@@ -327,8 +327,7 @@ module OsLib_Geometry
     end
 
     # sort array by floor area, this hash will be altered to reduce floor area for each space type to 0
-    #space_types_running_count = space_types.sort_by { |k, v| v[:floor_area] }
-    space_types_running_count = space_types
+    space_types_running_count = space_types.sort_by { |k, v| v[:floor_area] }
 
     # array entry for each story
     footprints = []

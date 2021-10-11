@@ -656,7 +656,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
     # test hospital model with intersection issues
     # test bar_from_building_type_ratios method and typical_building_from_model
-    # same as bar_from_building_type_ratios_hos_intersect_test but having it do intersection and matching between stories
+    # same as bar_from_building_type_ratios_hos_intersect_test but using custom perim_mult value
+    # fix foor this is like in make_sliced_bar_multi_polygons method in os_lib_geometry
     it 'bar_from_building_type_ratios_hos_intersect3_test runs' do
       # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatioHosInt3_Test < OpenStudio::Measure::ModelMeasure
@@ -699,7 +700,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('bottom_story_ground_exposed_floor', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('top_story_exterior_exposed_roof', true); arg.setValue(true); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('story_multiplier', true); arg.setValue('None'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('bar_division_method', true); arg.setValue('Multiple Space Types - Individual Stories Sliced'); args << arg
@@ -728,7 +729,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result = @runner.result
 
       # show the output
-      puts 'method results for bar_from_building_type_ratios method with hospital inputs that results in error related to intersection.'
+      puts 'method results for bar_from_building_type_ratios method with hospital inputs that results in error related to space type ratios.'
       show_output(result)
 
       # save the model to test output directory

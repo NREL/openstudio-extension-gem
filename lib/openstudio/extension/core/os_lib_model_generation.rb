@@ -1199,7 +1199,7 @@ module OsLib_ModelGeneration
     # set wall boundary condtions to adiabatic if using make_mid_story_surfaces_adiabatic prior to windows being made
     if bar_hash[:make_mid_story_surfaces_adiabatic]
 
-      runner.registerInfo("Finding non-exterior walls and setting boundary condition too adiabatic")
+      runner.registerInfo("Finding non-exterior walls and setting boundary condition to adiabatic")
 
       # need to organize by story incase top story is partial story
       story_bounding = {}
@@ -1234,6 +1234,7 @@ module OsLib_ModelGeneration
         # todo - may need to look at aidiabiatc constructions in downstream measure. Some may be exterior party wall others may be interior walls
         v[:spaces].each do |space|
           space.surfaces.each do |space_surface|
+            next if not space_surface.surfaceType == "Wall"
             surface_bounding_box = OpenStudio::BoundingBox.new
             surface_bounding_box.addPoints(space.transformation * space_surface.vertices)
             surface_on_outside = false

@@ -1146,9 +1146,10 @@ module OsLib_ModelGeneration
               spaces_temp = OpenStudio::Model::SpaceVector.new
               spaces_temp << space_a
               spaces_temp << space_b
+              # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
               # intersect and sort
-              OpenStudio::Model.intersectSurfaces(spaces_temp)
-              OpenStudio::Model.matchSurfaces(spaces_temp)
+              # OpenStudio::Model.intersectSurfaces(spaces_temp)
+              # OpenStudio::Model.matchSurfaces(spaces_temp)
             end
           end
           runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
@@ -1172,9 +1173,11 @@ module OsLib_ModelGeneration
           story.spaces.sort.each do |space|
             story_spaces << space
           end
-          OpenStudio::Model.intersectSurfaces(story_spaces)
-          OpenStudio::Model.matchSurfaces(story_spaces)
-          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
+          # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+          # intersect and sort
+          # OpenStudio::Model.intersectSurfaces(story_spaces)
+          # OpenStudio::Model.matchSurfaces(story_spaces)
+          #runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
         end
       end
 
@@ -1191,6 +1194,66 @@ module OsLib_ModelGeneration
             next if surface.surfaceType != 'Wall'
             next if surface.outsideBoundaryCondition != 'Outdoors'
             surface.setOutsideBoundaryCondition('Ground')
+          end
+        end
+      end
+    end
+
+    # set wall boundary condtions to adiabatic if using make_mid_story_surfaces_adiabatic prior to windows being made
+    if bar_hash[:make_mid_story_surfaces_adiabatic]
+
+      runner.registerInfo("Finding non-exterior walls and setting boundary condition to adiabatic")
+
+      # need to organize by story incase top story is partial story
+      story_bounding = {}
+
+      # gather new spaces by story
+      new_spaces.each do |space|
+        story = space.buildingStory.get
+          if story_bounding.has_key?(story)
+            story_bounding[story][:spaces] << space
+          else
+            story_bounding[story] = {:spaces => [space]}
+          end
+      end
+
+      # get bounding box for each story
+      story_bounding.each do |story,v|
+
+        # get bounding_box
+        bounding_box = OpenStudio::BoundingBox.new
+        v[:spaces].each do |space|
+          space.surfaces.each do |space_surface|
+            bounding_box.addPoints(space.transformation * space_surface.vertices)
+          end
+        end
+        min_x = bounding_box.minX.get
+        min_y = bounding_box.minY.get
+        max_x = bounding_box.maxX.get
+        max_y = bounding_box.maxY.get
+        ext_wall_toll = 0.01
+
+        # check surfaces again against min/max and change to adiabatic if not fully on one min or max x or y
+        # todo - may need to look at aidiabiatc constructions in downstream measure. Some may be exterior party wall others may be interior walls
+        v[:spaces].each do |space|
+          space.surfaces.each do |space_surface|
+            next if not space_surface.surfaceType == "Wall"
+            surface_bounding_box = OpenStudio::BoundingBox.new
+            surface_bounding_box.addPoints(space.transformation * space_surface.vertices)
+            surface_on_outside = false
+            # check xmin
+            if (surface_bounding_box.minX.get - min_x).abs < ext_wall_toll && (surface_bounding_box.maxX.get - min_x).abs < ext_wall_toll then surface_on_outside = true end
+            # check xmax
+            if (surface_bounding_box.minX.get - max_x).abs < ext_wall_toll && (surface_bounding_box.maxX.get - max_x).abs < ext_wall_toll then surface_on_outside = true end
+            # check ymin
+            if (surface_bounding_box.minY.get - min_y).abs < ext_wall_toll && (surface_bounding_box.maxY.get - min_y).abs < ext_wall_toll then surface_on_outside = true end
+            # check ymax
+            if (surface_bounding_box.minY.get - max_y).abs < ext_wall_toll && (surface_bounding_box.maxY.get - max_y).abs < ext_wall_toll then surface_on_outside = true end
+
+            # change if not exterior
+            if !surface_on_outside
+              space_surface.setOutsideBoundaryCondition("Adiabatic")
+            end
           end
         end
       end
@@ -1700,9 +1763,6 @@ module OsLib_ModelGeneration
     end
     fraction = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => 1.0, 'min_eq_bool' => true, 'max_eq_bool' => true, 'arg_array' => fraction_args)
 
-    positive_args = ['total_bldg_floor_area']
-    positive = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => nil, 'min_eq_bool' => false, 'max_eq_bool' => false, 'arg_array' => positive_args)
-
     one_or_greater_args = ['num_stories_above_grade']
     one_or_greater = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 1.0, 'max' => nil, 'min_eq_bool' => true, 'max_eq_bool' => false, 'arg_array' => one_or_greater_args)
 
@@ -1713,13 +1773,13 @@ module OsLib_ModelGeneration
                     'party_wall_stories_south',
                     'party_wall_stories_east',
                     'party_wall_stories_west',
+                    'total_bldg_floor_area',
                     'single_floor_area',
                     'bar_width']
     non_neg = OsLib_HelperMethods.checkDoubleAndIntegerArguments(runner, user_arguments, 'min' => 0.0, 'max' => nil, 'min_eq_bool' => true, 'max_eq_bool' => false, 'arg_array' => non_neg_args)
 
     # return false if any errors fail
     if !fraction then return false end
-    if !positive then return false end
     return false if !one_or_greater
     return false if !non_neg
 
@@ -1818,10 +1878,6 @@ module OsLib_ModelGeneration
       args = bar_arg_check_setup(model,runner,user_arguments,false) # false stops it from checking args on used in bar_from_building_type_ratios
       if !args then return false end
 
-      # identify primary building type for building form defaults
-      primary_building_type = "PrimarySchool" # see what building type represents the most floro area
-      building_form_defaults = building_form_defaults(primary_building_type)
-
       # process arg into hash
       space_type_hash_name = {}
       args['space_type_hash_string'][0..-1].split(/, /).each { |entry| entryMap = entry.split(/=>/); value_str = entryMap[1]; space_type_hash_name[entryMap[0].strip[0..-1].to_s] = value_str.nil? ? '' : value_str.strip[0..-1].to_f }
@@ -1869,6 +1925,11 @@ module OsLib_ModelGeneration
         building_type_fraction_of_building += ratio
       end
 
+      # identify primary building type for building form defaults
+      primary_building_type = building_type_hash.keys.first # update to choose building with highest ratio
+      runner.registerInfo("Creating bar with space type ratio proided as argument.")
+      runner.registerInfo("Using building type from first ratio #{primary_building_type} as the primary building type. This is used for building form defaults.")
+
       # todo - confirm if this will get normalized up/down later of if I should fix or stop here instead of just a warning
       if building_type_fraction_of_building > 1.0
         runner.registerWarning("Sum of Space Type Ratio of #{building_type_fraction_of_building} is greater than the expected value of 1.0")
@@ -1880,6 +1941,8 @@ module OsLib_ModelGeneration
 
       # if aspect ratio, story height or wwr have argument value of 0 then use smart building type defaults
       primary_building_type = args['bldg_type_a']
+      runner.registerInfo("Creating bar space type ratios by building type based on ratios from prototype models.")
+      runner.registerInfo("#{primary_building_type} will be used for building form defaults.")
 
     end
 
@@ -2515,7 +2578,7 @@ module OsLib_ModelGeneration
     runner.registerValue('ew_wall_area_ip', wall_ew_ip, 'ft^2')
     # for now using perimeter of ground floor and average story area (building area / num_stories)
     runner.registerValue('floor_area_to_perim_ratio', model.getBuilding.floorArea / (OsLib_Geometry.calculate_perimeter(model) * num_stories))
-    runner.registerValue('bar_width', OpenStudio.convert(bars['primary'][:width], 'm', 'ft').get, 'ft')
+    runner.registerValue('bar_width_output', OpenStudio.convert(bars['primary'][:width], 'm', 'ft').get, 'ft')
 
     if args['party_wall_fraction'] > 0 || args['party_wall_stories_north'] > 0 || args['party_wall_stories_south'] > 0 || args['party_wall_stories_east'] > 0 || args['party_wall_stories_west'] > 0
       runner.registerInfo('Target facade area by orientation not validated when party walls are applied')

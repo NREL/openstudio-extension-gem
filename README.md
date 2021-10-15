@@ -10,10 +10,10 @@ Derivative extension gems should include this gem to access common functionality
 * OpenStudio CLI functionality such as list_measures and update_measures
 * adding documentation and license files to measures
 * adding core resource files to measures
-* pushing measures to BCL
+* correct structure for contributing content to the Building Component Library (BCL)
 
 Extension gems will contain a small group of related measures. Each extension gem will be the unique location to find these measures, and will be responsible for
-testing and maintaining the measures as well as pushing them to BCL. 
+testing and maintaining the measures as well as indexing them on BCL. 
 
 ## Usage
 
@@ -31,7 +31,7 @@ Each OpenStudio extension gem should define its own module name to ensure that t
 
 ## Installation
 
-To use the latest version of this and other extension gems, you will need Ruby 2.7.x and OpenStudio 3.1.0 or greater.  
+To use the latest version of this and other extension gems, you will need Ruby 2.7.x and OpenStudio 3.1.0 or greater.  For earlier versions, view the [compatibility matrix](#compatibility-matrix) below.
 
 ### Windows Installation
 Install Ruby with Devkit using the [RubyInstaller](https://rubyinstaller.org/downloads/archives/) for [Ruby 2.7.2 (x64)](
@@ -81,6 +81,14 @@ the OpenStudio Application you just downloaded (replace 3.1.0 with the version y
 ```
 export RUBYLIB=/Applications/OpenStudio-3.1.0/Ruby
 ```
+## Compatibility Matrix
+
+|OpenStudio Extension Gem|OpenStudio|Ruby|
+|:--------------:|:----------:|:--------:|
+| 0.4.0 - 0.4.4  | 3.2      | 2.7    |
+| 0.3.0 - 0.3.2  | 3.1      | 2.5    |
+| 0.2.0 - 0.2.6  | 3.0      | 2.5    |
+| 0.1.6 and below | 2.9 and below      | 2.2.4    |
 
 
 ## Contents
@@ -139,7 +147,7 @@ Note that this folder is for 'core' functionality; if a measure's requires a new
 Having a single repository for all measures, such as the OpenStudio-measures repo, can be cumbersome to test and keep up to date. 
 In this new framework, each extension gem will contain one or more related measures.  The gem will be the new 'home' of these measures, and the repo owner will be responsible for testing and keeping the measures up to date.
 
-In the short term, in order to preserve the PAT/OS App functionality, resource files will still be copied directly into the measures, and these measures will be pushed to BCL.
+In the short term, in order to preserve the PAT/OS App functionality, resource files will still be copied directly into the measures, and these measures will be indexed on the BCL.
 
 ### Rake Tasks
 
@@ -147,10 +155,7 @@ Common Rake Tasks that are available to derivative extension gems include:
 
 | Rake Task | Description |
 | --------- | ----------- |
-| openstudio:bcl:test_login            | Test BCL login |
 | openstudio:bcl:search_measures       | Search BCL |
-| openstudio:bcl:stage[reset]          | Copy the measures/components to a staging location |
-| openstudio:bcl:push                  | Upload measures from the staging location |
 | openstudio:change_log[start_date,end_date,apikey] | Print the change log from GitHub. Specify dates in yyyy-mm-dd format |
 | openstudio:list_measures             | List all measures in the calling gem |
 | openstudio:measures:add_license      | Add License File to measures in the calling gem |
@@ -210,12 +215,8 @@ The OpenStudio-extension gem can be used to easily initialize a new derivative e
 * All files and classes should have underscores (no dashes) and (lowercase snake_case)
 * Dashes should be used in module names
 
-### Pushing to BCL
-Use the rake tasks listed above to stage and push measures to BCL.  
-**Note of warning**: Use caution when pushing to the BCL.  Public and private measures could be pushed to BCL from within an extension gem, even though the extension gem repo may be private.
-
-TODO: Add warning to rake task and lists what gems will be pushed 
-TODO: Check that license files, etc. are present in each measure before pushing to BCL
+### Contributing measures to the BCL
+Register your extension gem repo with the [BCL Manifest](https://github.com/BuildingComponentLibrary/bcl-manifest) and [follow the instructions](https://github.com/BuildingComponentLibrary/bcl-manifest#contribute-content) to contribute content to the BCL.
 
 ## Include in a project
 
@@ -233,6 +234,10 @@ And then execute:
 Or install it yourself as:
 
     $ gem install 'openstudio-extension'
+
+# Contributing 
+
+Please review the [OpenStudio Contribution Policy](https://openstudio.net/openstudio-contribution-policy) if you would like to contribute code to this gem.
 
 # Releasing the gem
 

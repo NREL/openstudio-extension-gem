@@ -3263,8 +3263,17 @@ module OsLib_ModelGeneration
       # Infer the current hours of operation schedule for the building
       op_sch = standard.model_infer_hours_of_operation_building(model)
 
+      # setup hoo_var_method (should be hours or fractional)
+      if args.has_key?('hoo_var_method')
+        hoo_var_method = args['hoo_var_method']
+      else
+        # support measures that don't supply this argument
+        hoo_var_method = 'hours'
+      end
+
       # Convert existing schedules in the model to parametric schedules based on current hours of operation
-      standard.model_setup_parametric_schedules(model)
+      runner.registerInfo("Generating parametric schedules from ruleset schedules using #{hoo_var_method} variable method for hours of operation fromula.")
+      standard.model_setup_parametric_schedules(model, hoo_var_method: hoo_var_method)
 
       # Create start and end times from start time and duration supplied
       wkdy_start_time = nil
@@ -3360,11 +3369,11 @@ module OsLib_ModelGeneration
 
     # change night cycling control to "Thermostat" cycling and increase thermostat tolerance to 1.99999
     manager_night_cycles = model.getAvailabilityManagerNightCycles
-    
+    runner.registerInfo("Changing thermostat tollerance to 1.99999 for #{manager_night_cycles.size} night cycle manager objects.")
+
     manager_night_cycles.each do |night_cycle|
       night_cycle.setThermostatTolerance(1.9999)
       night_cycle.setCyclingRunTimeControlType("Thermostat")
-      runner.registerInfo(" night_cycle == #{night_cycle}")
     end
 
     # report final condition of model

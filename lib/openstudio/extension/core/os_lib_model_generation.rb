@@ -3023,9 +3023,9 @@ module OsLib_ModelGeneration
         if args['htg_src'] == 'NaturalGas' || args['htg_src'] == 'DistrictHeating'
           args['swh_src'] = 'NaturalGas' # If building has gas service, probably uses natural gas for SWH
         elsif args['htg_src'] == 'Electricity'
-          args['swh_src'] == 'Electricity' # If building is doing space heating with electricity, probably used for SWH
+          args['swh_src'] = 'Electricity' # If building is doing space heating with electricity, probably used for SWH
         elsif args['htg_src'] == 'DistrictAmbient'
-          args['swh_src'] == 'HeatPump' # If building has district ambient loop, it is fancy and probably uses HPs for SWH
+          args['swh_src'] = 'HeatPump' # If building has district ambient loop, it is fancy and probably uses HPs for SWH
         else
           args['swh_src'] = nil # Use inferences built into OpenStudio Standards for each building and space type
         end

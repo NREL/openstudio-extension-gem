@@ -3272,7 +3272,7 @@ module OsLib_ModelGeneration
       end
 
       # Convert existing schedules in the model to parametric schedules based on current hours of operation
-      runner.registerInfo("Generating parametric schedules from ruleset schedules using #{hoo_var_method} hours of operation fromula variable method.")
+      runner.registerInfo("Generating parametric schedules from ruleset schedules using #{hoo_var_method} variable method for hours of operation fromula.")
       standard.model_setup_parametric_schedules(model, hoo_var_method: hoo_var_method)
 
       # Create start and end times from start time and duration supplied

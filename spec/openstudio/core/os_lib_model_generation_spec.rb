@@ -441,12 +441,13 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_thermostat', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_hvac', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_refrigeration', true); arg.setValue(true); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wkdy_op_hrs', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wkdy_op_hrs', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wkdy_op_hrs_start_time', true); arg.setValue(8.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wkdy_op_hrs_duration', true); arg.setValue(8.0); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wknd_op_hrs', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wknd_op_hrs', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wknd_op_hrs_start_time', true); arg.setValue(8.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wknd_op_hrs_duration', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('hoo_var_method', true); arg.setValue('fractional'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('unmet_hours_tolerance', true); arg.setValue(1.0); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('remove_objects', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg

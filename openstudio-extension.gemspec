@@ -38,6 +38,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'openstudio-standards', '~> 0.2.13' # for os_lib unit tests
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
-
-
 end

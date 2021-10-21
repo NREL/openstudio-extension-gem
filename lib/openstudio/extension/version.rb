@@ -35,6 +35,6 @@
 
 module OpenStudio
   module Extension
-    VERSION = '0.4.4'.freeze
+    VERSION = '0.5.0'.freeze
   end
 end

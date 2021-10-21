@@ -147,7 +147,6 @@ module OpenStudio
           end
 
           namespace 'bcl' do
-            
             # for custom search, populate env var: bcl_search_keyword
             desc 'Search BCL'
             task :search_measures do

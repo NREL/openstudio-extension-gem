@@ -43,7 +43,7 @@ require 'openstudio-standards'
 require 'openstudio/measure/ShowRunnerOutput'
 
 # use this flag only when testing locally too turn of create_typical portion of tests when testing geometry generatioon
-run_create_typical = true  # should commit as true, only false for testing.
+run_create_typical = true # should commit as true, only false for testing.
 
 RSpec.describe 'Bar Methods' do # include from building type ratios, space type ratios, and from building
   context 'bar_from_empty' do
@@ -78,9 +78,9 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # [openstudio.model.YearDescription] <1> 'UseWeatherFile' is not yet a supported option for YearDescription
       @model.getYearDescription.setCalendarYear(2021)
 
-	  # create an instance of a runner with OSW
-      target_path = File.expand_path("../../files", File.dirname(__FILE__))
-      osw_path = OpenStudio::Path.new(target_path + '/model_test.osw')
+      # create an instance of a runner with OSW
+      target_path = File.expand_path('../../files', File.dirname(__FILE__))
+      osw_path = OpenStudio::Path.new("#{target_path}/model_test.osw")
       osw = OpenStudio::WorkflowJSON.load(osw_path).get
       @runner = OpenStudio::Measure::OSRunner.new(osw)
     end
@@ -456,7 +456,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           # new optional method argument that measures can add if they want load and use haystakc JSOn file
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('haystack_file', true); arg.setValue('SmallOffice_model.json'); args << arg
 
-
           return args
         end
 
@@ -741,7 +740,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
     # test bar_from_building_type_ratios method and typical_building_from_model
     # same as bar_from_building_type_ratios_hos_intersect_test but not using make_mid_story_surfaces_adiabatic
     it 'bar_from_building_type_ratios_hos_intersect2_test runs' do
-      skip "is skipped"
+      skip 'is skipped'
       # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatioHosInt2_Test < OpenStudio::Measure::ModelMeasure
         # resource file modules
@@ -908,7 +907,6 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       # confirm it failed and stopped with bad argument instead of running and getting ruby error
       expect(result.value.valueName).to eq 'Success'
     end
-
   end
 
   # TODO: - add context with bar from non empty or running bar methods twice on same model

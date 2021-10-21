@@ -17,6 +17,7 @@
 /lib/measures/.rubocop*
 /lib/measures/staged
 /lib/measures/staged/*
+.DS_Store
 
 # rspec failure tracking
 .rspec_status

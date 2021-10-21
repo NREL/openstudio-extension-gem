@@ -1,5 +1,17 @@
 # OpenStudio Extension Gem
 
+## Version 0.5.0
+
+* Update OpenStudio Workflow Gem to 2.3.0 (support for epJSON)
+
+- Fixed [#133]( https://github.com/NREL/openstudio-extension-gem/pull/133 ), cleanup readme and rework BCL tasks
+- Fixed [#135]( https://github.com/NREL/openstudio-extension-gem/pull/135 ), Intersect tests 072021
+- Fixed [#136]( https://github.com/NREL/openstudio-extension-gem/pull/136 ), Osm from haystack
+- Fixed [#137]( https://github.com/NREL/openstudio-extension-gem/issues/137 ), Edge case error in hospital bar
+- Fixed [#138]( https://github.com/NREL/openstudio-extension-gem/issues/138 ), os_lib_model_generation does not assign SWH type correctly
+- Fixed [#139]( https://github.com/NREL/openstudio-extension-gem/pull/139 ), fix swh_src assignment operators
+- Fixed [#142]( https://github.com/NREL/openstudio-extension-gem/pull/142 ), added arg for hoo_var_method and updated test to use it
+
 ## Version 0.4.4
 
 * Update BCL gem to version 0.7.1 which upgrades REXML and Spreadsheet with security patches

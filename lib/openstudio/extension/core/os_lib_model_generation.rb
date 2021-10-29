@@ -1146,13 +1146,13 @@ module OsLib_ModelGeneration
               spaces_temp = OpenStudio::Model::SpaceVector.new
               spaces_temp << space_a
               spaces_temp << space_b
-              # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+              # attempt to intersect and match walls on a story, but later secondary match will look for missted matches and turn them to adiabaitc
               # intersect and sort
-              # OpenStudio::Model.intersectSurfaces(spaces_temp)
-              # OpenStudio::Model.matchSurfaces(spaces_temp)
+              OpenStudio::Model.intersectSurfaces(spaces_temp)
+              OpenStudio::Model.matchSurfaces(spaces_temp)
             end
           end
-          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
+          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry. Diagnstoic intersection and matching done a in paris of spaces.")
         end
       end
 
@@ -1173,11 +1173,11 @@ module OsLib_ModelGeneration
           story.spaces.sort.each do |space|
             story_spaces << space
           end
-          # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+          # attempt to intersect and match walls on a story, but later secondary match will look for missted matches and turn them to adiabaitc
           # intersect and sort
-          # OpenStudio::Model.intersectSurfaces(story_spaces)
-          # OpenStudio::Model.matchSurfaces(story_spaces)
-          #runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
+          OpenStudio::Model.intersectSurfaces(story_spaces)
+          OpenStudio::Model.matchSurfaces(story_spaces)
+          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
         end
       end
 

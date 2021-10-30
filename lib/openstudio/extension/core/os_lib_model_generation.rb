@@ -1240,7 +1240,7 @@ module OsLib_ModelGeneration
         v[:spaces].each do |space|
           space.surfaces.each do |space_surface|
             next if not space_surface.surfaceType == "Wall"
-            next if space_surface.outsideBoundaryCondition == "Surface" # if if found a match leave it alone, don't chagne to adiabiatc
+            next if space_surface.outsideBoundaryCondition == "Surface" # if if found a match leave it alone, don't change to adiabiatc
             surface_bounding_box = OpenStudio::BoundingBox.new
             surface_bounding_box.addPoints(space.transformation * space_surface.vertices)
             surface_on_outside = false
@@ -1256,6 +1256,7 @@ module OsLib_ModelGeneration
             # change if not exterior
             if !surface_on_outside
               space_surface.setOutsideBoundaryCondition("Adiabatic")
+              missed_match_count += 1
             end
           end
         end

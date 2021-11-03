@@ -1,5 +1,9 @@
 # OpenStudio Extension Gem
 
+## Version 0.5.1
+
+* Fix adjancent surface matching 
+
 ## Version 0.5.0
 
 * Update OpenStudio Workflow Gem to 2.3.0 (support for epJSON)

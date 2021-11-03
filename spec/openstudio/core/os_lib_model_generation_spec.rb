@@ -210,7 +210,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('bottom_story_ground_exposed_floor', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('top_story_exterior_exposed_roof', true); arg.setValue(true); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('story_multiplier', true); arg.setValue('Basements Ground Mid Top'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeStringArgument('bar_division_method', true); arg.setValue('Multiple Space Types - Individual Stories Sliced'); args << arg

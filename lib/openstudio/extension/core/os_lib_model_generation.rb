@@ -1146,13 +1146,13 @@ module OsLib_ModelGeneration
               spaces_temp = OpenStudio::Model::SpaceVector.new
               spaces_temp << space_a
               spaces_temp << space_b
-              # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+              # attempt to intersect and match walls on a story, but later secondary match will look for missted matches and turn them to adiabaitc
               # intersect and sort
-              # OpenStudio::Model.intersectSurfaces(spaces_temp)
-              # OpenStudio::Model.matchSurfaces(spaces_temp)
+              OpenStudio::Model.intersectSurfaces(spaces_temp)
+              OpenStudio::Model.matchSurfaces(spaces_temp)
             end
           end
-          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
+          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry. Diagnstoic intersection and matching done a in paris of spaces.")
         end
       end
 
@@ -1173,11 +1173,11 @@ module OsLib_ModelGeneration
           story.spaces.sort.each do |space|
             story_spaces << space
           end
-          # disable until enhanced intersectio nand matching, will make walls adiabatic and exterior within create_bar workflow
+          # attempt to intersect and match walls on a story, but later secondary match will look for missted matches and turn them to adiabaitc
           # intersect and sort
-          # OpenStudio::Model.intersectSurfaces(story_spaces)
-          # OpenStudio::Model.matchSurfaces(story_spaces)
-          #runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
+          OpenStudio::Model.intersectSurfaces(story_spaces)
+          OpenStudio::Model.matchSurfaces(story_spaces)
+          runner.registerInfo("Intersecting and matching surfaces in story #{story.name}, this will create additional geometry.")
         end
       end
 
@@ -1205,7 +1205,9 @@ module OsLib_ModelGeneration
       runner.registerInfo("Finding non-exterior walls and setting boundary condition to adiabatic")
 
       # need to organize by story incase top story is partial story
+      # should also be only for a single bar
       story_bounding = {}
+      missed_match_count = 0
 
       # gather new spaces by story
       new_spaces.each do |space|
@@ -1238,6 +1240,7 @@ module OsLib_ModelGeneration
         v[:spaces].each do |space|
           space.surfaces.each do |space_surface|
             next if not space_surface.surfaceType == "Wall"
+            next if space_surface.outsideBoundaryCondition == "Surface" # if if found a match leave it alone, don't change to adiabiatc
             surface_bounding_box = OpenStudio::BoundingBox.new
             surface_bounding_box.addPoints(space.transformation * space_surface.vertices)
             surface_on_outside = false
@@ -1253,10 +1256,16 @@ module OsLib_ModelGeneration
             # change if not exterior
             if !surface_on_outside
               space_surface.setOutsideBoundaryCondition("Adiabatic")
+              missed_match_count += 1
             end
           end
         end
       end
+
+      if missed_match_count > 0
+        runner.registerInfo("#{missed_match_count} surfaces that were exterior appear to be interior walls and had boundary condition chagned to adiabiatic.")
+      end
+
     end
 
     # sort stories (by name for now but need better way)

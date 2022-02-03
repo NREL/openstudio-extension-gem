@@ -740,7 +740,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
     # test bar_from_building_type_ratios method and typical_building_from_model
     # same as bar_from_building_type_ratios_hos_intersect_test but not using make_mid_story_surfaces_adiabatic
     it 'bar_from_building_type_ratios_hos_intersect2_test runs' do
-      skip 'is skipped'
+      #skip 'is skipped'
       # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatioHosInt2_Test < OpenStudio::Measure::ModelMeasure
         # resource file modules

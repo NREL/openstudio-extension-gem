@@ -901,7 +901,7 @@ module OsLib_ModelGeneration
 
   # create_bar(runner,model,bar_hash)
   # measures using this method should include OsLibGeometry and OsLibHelperMethods
-  def create_bar(runner, model, bar_hash, story_multiplier_method = 'Basements Ground Mid Top')
+  def create_bar(runner, model, bar_hash, story_multiplier_method = 'Basements Ground Mid Top', diagnostic_intersect = true, diagnostic_match = true)
     # warn about site shading
     if !model.getSite.shadingSurfaceGroups.empty?
       runner.registerWarning('The model has one or more site shading surafces. New geometry may not be positioned where expected, it will be centered over the center of the original geometry.')
@@ -1053,9 +1053,6 @@ module OsLib_ModelGeneration
       spaces << space
     end
 
-    # flag for intersection and matching type
-    diagnostic_intersect = true
-
     # only intersect if make_mid_story_surfaces_adiabatic false
     if diagnostic_intersect
 
@@ -1199,8 +1196,8 @@ module OsLib_ModelGeneration
       end
     end
 
-    # set wall boundary condtions to adiabatic if using make_mid_story_surfaces_adiabatic prior to windows being made
-    if bar_hash[:make_mid_story_surfaces_adiabatic]
+    # now runs on flag instead of only when make_mid_story_surfaces_adiabatic is true
+    if diagnostic_match
 
       runner.registerInfo("Finding non-exterior walls and setting boundary condition to adiabatic")
 
@@ -1255,7 +1252,7 @@ module OsLib_ModelGeneration
 
             # change if not exterior
             if !surface_on_outside
-              space_surface.setOutsideBoundaryCondition("Adiabatic")
+              space_surface.setOutsideBoundaryCondition('Adiabatic')
               missed_match_count += 1
             end
           end
@@ -1263,7 +1260,7 @@ module OsLib_ModelGeneration
       end
 
       if missed_match_count > 0
-        runner.registerInfo("#{missed_match_count} surfaces that were exterior appear to be interior walls and had boundary condition chagned to adiabiatic.")
+        runner.registerWarning("#{missed_match_count} surfaces that were exterior appear to be interior walls and had boundary condition changed to adiabiatic.")
       end
 
     end
@@ -1469,7 +1466,7 @@ module OsLib_ModelGeneration
     return bar
   end
 
-  def bar_hash_setup_run(runner, model, args, length, width, floor_height_si, center_of_footprint, space_types_hash, num_stories)
+  def bar_hash_setup_run(runner, model, args, length, width, floor_height_si, center_of_footprint, space_types_hash, num_stories, diagnostic_match = true)
     # create envelope
     # populate bar_hash and create envelope with data from envelope_data_hash and user arguments
     bar_hash = {}
@@ -1678,8 +1675,16 @@ module OsLib_ModelGeneration
         runner.registerError('Ground exposed floor or Roof area is larger than footprint, likely inter-floor surface matching and intersection error.')
         return false
       else
-        runner.registerInfo('Ground exposed floor or Roof area is larger than footprint, likely inter-floor surface matching and intersection error, altering impacted surfaces boundary condition to be adiabatic.')
-        match_error = true
+
+        # end measure with error or fix
+        if diagnostic_match
+          runner.registerInfo('Ground exposed floor or Roof area is larger than footprint, likely inter-floor surface matching and intersection error, altering impacted surfaces boundary condition to be adiabatic. See warning log for surface count')
+          match_error = true
+        else
+          runner.registerError('Ground exposed floor or Roof area is larger than footprint, likely inter-floor surface matching and intersection error, altering impacted surfaces boundary condition to be adiabatic.')
+          return false          
+        end
+
       end
     else
       match_error = false
@@ -1706,6 +1711,9 @@ module OsLib_ModelGeneration
         end
       end
 
+      # set flag for log
+      missed_floor_match_count = 0
+
       # change boundary condition and intersection as needed.
       new_spaces.each do |space|
         if space.buildingStory.get.nominalZCoordinate.get > bottom_story
@@ -1713,6 +1721,7 @@ module OsLib_ModelGeneration
           space.surfaces.each do |surface|
             next if !(surface.surfaceType == 'Floor' && surface.outsideBoundaryCondition == 'Ground')
             surface.setOutsideBoundaryCondition('Adiabatic')
+            missed_floor_match_count += 1
           end
         end
         if space.buildingStory.get.nominalZCoordinate.get < top_story
@@ -1720,9 +1729,15 @@ module OsLib_ModelGeneration
           space.surfaces.each do |surface|
             next if !(surface.surfaceType == 'RoofCeiling' && surface.outsideBoundaryCondition == 'Outdoors')
             surface.setOutsideBoundaryCondition('Adiabatic')
+            missed_floor_match_count += 1
           end
         end
       end
+
+      if missed_floor_match_count > 0
+        runner.registerWarning("#{missed_floor_match_count} surfaces that were exterior appear to be interior floor/ceilings and had boundary condition changed to adiabiatic.")
+      end
+
     end
   end
 
@@ -1879,7 +1894,7 @@ module OsLib_ModelGeneration
   # bar_from_space_type_ratios
   # used for varieties of measures that create bar from space type or building type ratios
   # args and building_type_hash should both be nil or neither shoould be nill
-  def bar_from_space_type_ratios(model, runner, user_arguments, args = nil, building_type_hash = nil)
+  def bar_from_space_type_ratios(model, runner, user_arguments, args = nil, building_type_hash = nil, diagnostic_intersect = true, diagnostic_match = true)
 
     # do not setup arguments if they were already passed in to this method
     if args.nil?

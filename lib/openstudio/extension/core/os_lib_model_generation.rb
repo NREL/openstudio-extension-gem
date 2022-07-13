@@ -646,7 +646,7 @@ module OsLib_ModelGeneration
       hash['Cafe'] = { ratio: 0.0103, space_type_gen: true, default: false }
       hash['CleanWork'] = { ratio: 0.0071, space_type_gen: true, default: false }
       hash['Conference'] = { ratio: 0.0082, space_type_gen: true, default: false }
-      hash['DresingRoom'] = { ratio: 0.0021, space_type_gen: true, default: false }
+      hash['DressingRoom'] = { ratio: 0.0021, space_type_gen: true, default: false }
       hash['Elec/MechRoom'] = { ratio: 0.0109, space_type_gen: true, default: false }
       hash['ElevatorPumpRoom'] = { ratio: 0.0022, space_type_gen: true, default: false }
       hash['Exam'] = { ratio: 0.1029, space_type_gen: true, default: true }
@@ -3439,9 +3439,6 @@ module OsLib_ModelGeneration
     # mapping building_type name is needed for a few methods
     lookup_building_type = standard.model_get_lookup_name(building_type)
 
-    # remap small medium and large office to office
-    if building_type.include?('Office') then building_type = 'Office' end
-
     # get array of new space types
     space_types_new = []
 
@@ -3457,14 +3454,14 @@ module OsLib_ModelGeneration
 
         # create space type
         space_type = OpenStudio::Model::SpaceType.new(model)
-        space_type.setStandardsBuildingType(building_type)
+        space_type.setStandardsBuildingType(lookup_building_type)
         space_type.setStandardsSpaceType(space_type_name)
-        space_type.setName("#{building_type} #{space_type_name}")
+        space_type.setName("#{lookup_building_type} #{space_type_name}")
 
         # add to array of new space types
         space_types_new << space_type
 
-        # add internal loads (the nil check isn't ncessary, but I will keep it in as a warning instad of an error)
+        # add internal loads (the nil check isn't necessary, but I will keep it in as a warning instad of an error)
         test = standard.space_type_apply_internal_loads(space_type, true, true, true, true, true, true)
         if test.nil?
           runner.registerWarning("Could not add loads for #{space_type.name}. Not expected for #{template} #{lookup_building_type}")

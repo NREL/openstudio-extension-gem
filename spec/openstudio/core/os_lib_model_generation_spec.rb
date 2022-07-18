@@ -1234,6 +1234,112 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
     end
 
+    # wizard_test_retail_standalone
+    it 'wizard_test_retail_standalone runs' do
+      # define the measure class for wizard
+      class SpaceTypeAndConstructionSetWizard_Test < OpenStudio::Measure::ModelMeasure
+        # resource file modules
+        include OsLib_HelperMethods
+        include OsLib_ModelGeneration
+
+        # define the arguments that the user will input
+        def arguments(model)
+          # create arguments`
+          args = OpenStudio::Measure::OSArgumentVector.new
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('building_type', get_doe_building_types, true); arg.setValue('RetailStandalone'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2004'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('climate_zone', get_doe_climate_zones(true), true); arg.setValue('ASHRAE 169-2013-5A'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('create_space_types', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('create_construction_set', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('set_building_defaults', true); arg.setValue(true); args << arg
+
+          return args
+        end
+
+        # define what happens when the measure is run
+        def run(model, runner, user_arguments)
+          # method run from os_lib_model_generation.rb
+          result = wizard(model, runner, user_arguments)
+        end
+      end
+
+      # get the measure (using measure beacuse these methods take in measure arguments)
+      unit_test = SpaceTypeAndConstructionSetWizard_Test.new
+
+      # get arguments
+      arguments = unit_test.arguments(@model)
+      argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
+
+      # run the unit_test
+      unit_test.run(@model, @runner, argument_map)
+      result = @runner.result
+
+      # show the output
+      puts 'method results for wizard method on RetailStandalone.'
+      show_output(result)
+
+      # save the model to test output directory
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/wizard_retail_standalone.osm")
+      @model.save(output_file_path, true)
+
+      # confirm it worked and is populated with internal loads
+      expect(result.value.valueName).to eq 'Success'
+      expect(result.warnings.size).to eq 0
+    end
+
+    # wizard_test_retail_stripmall
+    it 'wizard_test_retail_stripmall runs' do
+      # define the measure class for wizard
+      class SpaceTypeAndConstructionSetWizard_Test < OpenStudio::Measure::ModelMeasure
+        # resource file modules
+        include OsLib_HelperMethods
+        include OsLib_ModelGeneration
+
+        # define the arguments that the user will input
+        def arguments(model)
+          # create arguments`
+          args = OpenStudio::Measure::OSArgumentVector.new
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('building_type', get_doe_building_types, true); arg.setValue('RetailStripmall'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2007'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('climate_zone', get_doe_climate_zones(true), true); arg.setValue('ASHRAE 169-2013-5A'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('create_space_types', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('create_construction_set', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('set_building_defaults', true); arg.setValue(true); args << arg
+
+          return args
+        end
+
+        # define what happens when the measure is run
+        def run(model, runner, user_arguments)
+          # method run from os_lib_model_generation.rb
+          result = wizard(model, runner, user_arguments)
+        end
+      end
+
+      # get the measure (using measure beacuse these methods take in measure arguments)
+      unit_test = SpaceTypeAndConstructionSetWizard_Test.new
+
+      # get arguments
+      arguments = unit_test.arguments(@model)
+      argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
+
+      # run the unit_test
+      unit_test.run(@model, @runner, argument_map)
+      result = @runner.result
+
+      # show the output
+      puts 'method results for wizard method on RetailStripmall.'
+      show_output(result)
+
+      # save the model to test output directory
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/wizard_retail_stripmall.osm")
+      @model.save(output_file_path, true)
+
+      # confirm it worked and is populated with internal loads
+      expect(result.value.valueName).to eq 'Success'
+      expect(result.warnings.size).to eq 0
+    end
+
   end
 
   # TODO: - add context with bar from non empty or running bar methods twice on same model

@@ -1236,6 +1236,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
     # wizard_test_retail_standalone
     it 'wizard_test_retail_standalone runs' do
+      skip 'is skipped' # remove skip when https://github.com/NREL/openstudio-standards/issues/1343 fix is in installer.
       # define the measure class for wizard
       class SpaceTypeAndConstructionSetWizard_Test < OpenStudio::Measure::ModelMeasure
         # resource file modules

@@ -2815,7 +2815,7 @@ module OsLib_ModelGeneration
 
     # validate climate zone
     if !args.key?('climate_zone') || args['climate_zone'] == 'Lookup From Model'
-      climate_zone = standard.model_get_building_climate_zone_and_building_type(model)['climate_zone']
+      climate_zone = standard.model_get_building_properties(model)['climate_zone']
       runner.registerInfo("Using climate zone #{climate_zone} from model")
     else
       climate_zone = args['climate_zone']

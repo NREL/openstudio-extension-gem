@@ -1,5 +1,12 @@
 # OpenStudio Extension Gem
 
+## Version 0.6.0
+
+* Fixed [#150]( https://github.com/NREL/openstudio-extension-gem/pull/150 ), Fixed Outpatient DressingRoom name
+* Adding in new DOE templates `ComStock 90.1-2016` and `ComStock 90.1-2019`
+* Adding in new DOE Building Types `Courthouse` and `College`
+* Upgrade developer dependency to openstudio-standards gem to `~> 0.2.17`
+
 ## Version 0.5.1
 
 * Fix adjancent surface matching 

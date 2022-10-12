@@ -89,6 +89,8 @@ module OsLib_ModelGeneration
     array << 'LargeDataCenterHighITE'
     array << 'SmallDataCenterLowITE'
     array << 'SmallDataCenterHighITE'
+    array << 'Courthouse'
+    array << 'College'
 
     return array
   end
@@ -169,6 +171,8 @@ module OsLib_ModelGeneration
     array << 'ComStock 90.1-2007'
     array << 'ComStock 90.1-2010'
     array << 'ComStock 90.1-2013'
+    array << 'ComStock 90.1-2016'
+    array << 'ComStock 90.1-2019'
     if extended
       # array << '189.1-2009' # if turn this on need to update space_type_array for RetailStripmall
       array << 'NREL ZNE Ready 2017'
@@ -699,6 +703,44 @@ module OsLib_ModelGeneration
       hash['ComputerRoom'] = { ratio: 1.0, space_type_gen: true, default: true }
     elsif building_type == 'SmallDataCenterLowITE'
       hash['ComputerRoom'] = { ratio: 1.0, space_type_gen: true, default: true }
+    elsif building_type == 'Courthouse'
+      hash['Break Room'] = { ratio: 0.0067, space_type_gen: true, default: false }
+      hash['Cell'] = { ratio: 0.0731, space_type_gen: true, default: false }
+      hash['Conference'] = { ratio: 0.0203, space_type_gen: true, default: false }
+      hash['Corridor'] = { ratio: 0.0829, space_type_gen: true, default: false }
+      hash['Courtroom'] = { ratio: 0.1137, space_type_gen: true, default: false }
+      hash['Courtroom Waiting'] = { ratio: 0.051, space_type_gen: true, default: false }
+      hash['Elevator Lobby'] = { ratio: 0.0085, space_type_gen: true, default: false }
+      hash['Elevator Shaft'] = { ratio: 0.0047, space_type_gen: true, default: false }
+      hash['Entrance Lobby'] = { ratio: 0.0299, space_type_gen: true, default: false }
+      hash['Judges Chamber'] = { ratio: 0.0261, space_type_gen: true, default: false }
+      hash['Jury Assembly'] = { ratio: 0.0355, space_type_gen: true, default: false }
+      hash['Jury Deliberation'] = { ratio: 0.0133, space_type_gen: true, default: false }
+      hash['Library'] = { ratio: 0.0302, space_type_gen: true, default: false }
+      hash['Office'] = { ratio: 0.1930, space_type_gen: true, default: true }
+      hash['Parking'] = { ratio: 0.1083, space_type_gen: true, default: false }
+      hash['Restrooms'] = { ratio: 0.04, space_type_gen: true, default: false }
+      hash['Security Screening'] = { ratio: 0.0132, space_type_gen: true, default: false }
+      hash['Service Shaft'] = { ratio: 0.0019, space_type_gen: true, default: false }
+      hash['Stairs'] = { ratio: 0.0111, space_type_gen: true, default: false }
+      hash['Storage'] = { ratio: 0.0882, space_type_gen: true, default: false }
+      hash['Utility'] = { ratio: 0.0484, space_type_gen: true, default: false }
+    elsif building_type == 'College'
+      hash['College - Art Classroom'] = { ratio: 0.1868, space_type_gen: true, default: false }
+      hash['College - Classroom'] = { ratio: 0.2348, space_type_gen: true, default: true }
+      hash['College - Conference'] = { ratio: 0.0215, space_type_gen: true, default: false }
+      hash['College - Corridor'] = { ratio: 0.0716, space_type_gen: true, default: false }
+      hash['College - Elevator Shaft'] = { ratio: 0.0074, space_type_gen: true, default: false }
+      hash['College - Entrance Lobby'] = { ratio: 0.0117, space_type_gen: true, default: false }
+      hash['College - Laboratory'] = { ratio: 0.0843, space_type_gen: true, default: false }
+      hash['College - Lecture Hall'] = { ratio: 0.0421, space_type_gen: true, default: false }
+      hash['College - Lounge'] = { ratio: 0.028, space_type_gen: true, default: false }
+      hash['College - Media Center'] = { ratio: 0.0421, space_type_gen: true, default: false }
+      hash['College - Office'] = { ratio: 0.1894, space_type_gen: true, default: false }
+      hash['College - Restroom'] = { ratio: 0.0363, space_type_gen: true, default: false }
+      hash['College - Stairs'] = { ratio: 0.0272, space_type_gen: true, default: false }
+      hash['College - Storage'] = { ratio: 0.0117, space_type_gen: true, default: false }
+      hash['College - Utility'] = { ratio: 0.0051, space_type_gen: true, default: false }
       # DEER Prototypes
     elsif building_type == 'Asm'
       hash['Auditorium'] = { ratio: 0.7658, space_type_gen: true, default: true }

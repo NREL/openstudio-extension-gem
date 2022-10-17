@@ -1667,8 +1667,8 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       expect(result.warnings.size).to eq 0
     end
 
-    # wizard_test_college
-    it 'wizard_college runs' do
+    # wizard_test_courthouse
+    it 'wizard_courthouse runs' do
       # define the measure class for wizard
       class SpaceTypeAndConstructionSetWizard_Test < OpenStudio::Measure::ModelMeasure
         # resource file modules
@@ -1734,13 +1734,13 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           args = OpenStudio::Measure::OSArgumentVector.new
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('building_type', get_doe_building_types, true); arg.setValue('College'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('ComStock 90.1-2016'); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('climate_zone', get_doe_climate_zones(true), true); arg.setValue('ASHRAE 169-2013-#=3B'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('climate_zone', get_doe_climate_zones(true), true); arg.setValue('ASHRAE 169-2013-3B'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('create_space_types', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('create_construction_set', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('set_building_defaults', true); arg.setValue(true); args << arg
 
           return args
-        end
+        end   
 
         # define what happens when the measure is run
         def run(model, runner, user_arguments)

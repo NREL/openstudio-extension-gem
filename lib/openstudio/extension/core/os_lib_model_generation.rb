@@ -379,6 +379,10 @@ module OsLib_ModelGeneration
     hash['SmallDataCenterLowITE'] = { aspect_ratio: 1.5, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
     hash['SmallDataCenterHighITE'] = { aspect_ratio: 1.5, wwr: 0.0, typical_story: 14.0, perim_mult: 1.0 }
 
+    # Add Courthouse and Education
+    hash['Courthouse'] = { aspect_ratio: 2.06, wwr: 0.18, typical_story: 16.0, perim_mult: 1.0 }
+    hash['College'] = { aspect_ratio: 2.5, wwr: 0.037, typical_story: 13.0, perim_mult: 1.0 }
+
     # DEER Prototypes
     hash['Asm'] = { aspect_ratio: 1.0, wwr: 0.19, typical_story: 15.0 }
     hash['ECC'] = { aspect_ratio: 4.0, wwr: 0.25, typical_story: 13.0 }

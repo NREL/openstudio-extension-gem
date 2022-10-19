@@ -286,10 +286,10 @@ module OsLib_QAQC
       # DX Cooling Coils (Single Speed)
       @model.getCoilCoolingDXSingleSpeeds.each do |equip|
         # Get the design coil capacity
-        if equip.ratedTotalCoolingCapacity.is_initialized
-          dsn_pwr = equip.ratedTotalCoolingCapacity.get
-        elsif equip.autosizedRatedTotalCoolingCapacity.is_initialized
-          dsn_pwr = equip.autosizedRatedTotalCoolingCapacity.get
+        if equip.grossRatedTotalCoolingCapacity.is_initialized
+          dsn_pwr = equip.grossRatedTotalCoolingCapacity.get
+        elsif equip.autosizedGrossRatedTotalCoolingCapacity.is_initialized
+          dsn_pwr = equip.autosizedGrossRatedTotalCoolingCapacity.get
         else
           check_elems << OpenStudio::Attribute.new('flag', "Could not determine capacity for #{equip.name}, cannot check part load ratios.")
           next

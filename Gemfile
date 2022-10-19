@@ -6,3 +6,5 @@ source 'http://rubygems.org'
 # gem 'openstudio-standards', github: 'NREL/openstudio-standards', branch: 'fix/901_2016_2019_properties' # for os_lib unit tests
 
 gemspec
+
+gem 'openstudio-standards', '= 0.2.17.rc1', :github => 'NREL/openstudio-standards', :ref => '3.5.0_changes'

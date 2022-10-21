@@ -29,13 +29,13 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '~> 2.7.0'
 
   spec.add_dependency 'bcl', '~> 0.7.1'
-  spec.add_dependency 'bundler', '>= 2.1.0'
+  spec.add_dependency 'bundler', '~> 2.1.0'
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   spec.add_dependency 'openstudio_measure_tester', '~> 0.3.1'
   spec.add_dependency 'openstudio-workflow', '~> 2.3.0'
   spec.add_dependency 'parallel', '~> 1.19.1'
 
-  spec.add_development_dependency 'openstudio-standards', '~> 0.2.17.rc1' # for os_lib unit tests
+  spec.add_development_dependency 'openstudio-standards', '~> 0.2.17.rc2' # for os_lib unit tests
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
 end

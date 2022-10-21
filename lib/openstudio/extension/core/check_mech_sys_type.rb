@@ -85,7 +85,7 @@ module OsLib_QAQC
       if use_old_gem_code
         climate_zone = @model.get_building_climate_zone_and_building_type['climate_zone']
       else
-        climate_zone = std.model_get_building_climate_zone_and_building_type(@model)['climate_zone']
+        climate_zone = std.model_get_building_properties(@model)['climate_zone']
       end
 
       if use_old_gem_code

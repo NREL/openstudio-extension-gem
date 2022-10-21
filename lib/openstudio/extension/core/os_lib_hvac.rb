@@ -821,7 +821,7 @@ module OsLib_HVAC
         # create air loop fan
         if options['primaryHVAC']['fan'] == 'Variable'
           # create variable speed fan and set system sizing accordingly
-          sizing_system.setMinimumSystemAirFlowRatio(0.3) # DCV
+          sizing_system.setCentralHeatingMaximumSystemAirFlowRatio(0.3) # DCV
           # variable speed fan
           fan = OpenStudio::Model::FanVariableVolume.new(model, model.alwaysOnDiscreteSchedule)
           fan.setFanEfficiency(0.69)
@@ -832,7 +832,7 @@ module OsLib_HVAC
           fan.setMotorInAirstreamFraction(1.0)
           air_loop_comps << fan
         else
-          sizing_system.setMinimumSystemAirFlowRatio(1.0) # No DCV
+          sizing_system.setCentralHeatingMaximumSystemAirFlowRatio(1.0) # No DCV
           # constant speed fan
           fan = OpenStudio::Model::FanConstantVolume.new(model, model.alwaysOnDiscreteSchedule)
           fan.setFanEfficiency(0.6)
@@ -1084,13 +1084,13 @@ module OsLib_HVAC
         sizing_system.setTypeofLoadtoSizeOn('Sensible') # PSZ
         sizing_system.setAllOutdoorAirinCooling(false) # PSZ
         sizing_system.setAllOutdoorAirinHeating(false) # PSZ
-        sizing_system.setMinimumSystemAirFlowRatio(1.0) # Constant volume fan
+        sizing_system.setCentralHeatingMaximumSystemAirFlowRatio(1.0) # Constant volume fan
         air_loop_comps = []
         # set availability schedule (HVAC operation schedule)
         airloop_secondary.setAvailabilitySchedule(options['hvac_schedule'])
         if options['secondaryHVAC']['fan'] == 'Variable'
           # create variable speed fan and set system sizing accordingly
-          sizing_system.setMinimumSystemAirFlowRatio(0.3) # DCV
+          sizing_system.setCentralHeatingMaximumSystemAirFlowRatio(0.3) # DCV
           # variable speed fan
           fan = OpenStudio::Model::FanVariableVolume.new(model, model.alwaysOnDiscreteSchedule)
           fan.setFanEfficiency(0.69)
@@ -1101,7 +1101,7 @@ module OsLib_HVAC
           fan.setMotorInAirstreamFraction(1.0)
           air_loop_comps << fan
         else
-          sizing_system.setMinimumSystemAirFlowRatio(1.0) # No DCV
+          sizing_system.setCentralHeatingMaximumSystemAirFlowRatio(1.0) # No DCV
           # constant speed fan
           fan = OpenStudio::Model::FanConstantVolume.new(model, model.alwaysOnDiscreteSchedule)
           fan.setFanEfficiency(0.6)
@@ -1352,36 +1352,58 @@ module OsLib_HVAC
           # create cooling coil and connect to heat pump loop
           cooling_coil = OpenStudio::Model::CoilCoolingWaterToAirHeatPumpEquationFit.new(model)
           cooling_coil.setRatedCoolingCoefficientofPerformance(6.45)
-          cooling_coil.setTotalCoolingCapacityCoefficient1(-9.149069561)
-          cooling_coil.setTotalCoolingCapacityCoefficient2(10.87814026)
-          cooling_coil.setTotalCoolingCapacityCoefficient3(-1.718780157)
-          cooling_coil.setTotalCoolingCapacityCoefficient4(0.746414818)
-          cooling_coil.setTotalCoolingCapacityCoefficient5(0.0)
-          cooling_coil.setSensibleCoolingCapacityCoefficient1(-5.462690012)
-          cooling_coil.setSensibleCoolingCapacityCoefficient2(17.95968138)
-          cooling_coil.setSensibleCoolingCapacityCoefficient3(-11.87818402)
-          cooling_coil.setSensibleCoolingCapacityCoefficient4(-0.980163419)
-          cooling_coil.setSensibleCoolingCapacityCoefficient5(0.767285761)
-          cooling_coil.setSensibleCoolingCapacityCoefficient6(0.0)
-          cooling_coil.setCoolingPowerConsumptionCoefficient1(-3.205409884)
-          cooling_coil.setCoolingPowerConsumptionCoefficient2(-0.976409399)
-          cooling_coil.setCoolingPowerConsumptionCoefficient3(3.97892546)
-          cooling_coil.setCoolingPowerConsumptionCoefficient4(0.938181818)
-          cooling_coil.setCoolingPowerConsumptionCoefficient5(0.0)
+
+          curve = OpenStudio::Model::CurveQuadLinear.new(model)
+          curve.setName("#{cooling_coil.name}_tot_clg_cap_curve")
+          curve.setCoefficient1Constant(-9.149069561)
+          curve.setCoefficient2w(10.87814026)
+          curve.setCoefficient3x(-1.718780157)
+          curve.setCoefficient4y(0.746414818)
+          curve.setCoefficient5z(0.0)
+          cooling_coil.setTotalCoolingCapacityCurve(curve)
+
+          curve = OpenStudio::Model::CurveQuintLinear.new(model)
+          curve.setName("#{cooling_coil.name}_sens_clg_cap_curve")
+          curve.setCoefficient1Constant(-5.462690012)
+          curve.setCoefficient2v(17.95968138)
+          curve.setCoefficient3w(-11.87818402)
+          curve.setCoefficient4x(-0.980163419)
+          curve.setCoefficient5y(0.767285761)
+          curve.setCoefficient6z(0.0)
+          cooling_coil.setSensibleCoolingCapacityCurve(curve)
+
+          curve = OpenStudio::Model::CurveQuadLinear.new(model)
+          curve.setName("#{cooling_coil.name}_clg_pwr_consu_curve")
+          curve.setCoefficient1Constant(-3.205409884)
+          curve.setCoefficient2w(-0.976409399)
+          curve.setCoefficient3x(3.97892546)
+          curve.setCoefficient4y(0.938181818)
+          curve.setCoefficient5z(0.0)
+          cooling_coil.setCoolingPowerConsumptionCurve(curve)
+
           options['heat_pump_loop'].addDemandBranchForComponent(cooling_coil)
           # create heating coil and connect to heat pump loop
           heating_coil = OpenStudio::Model::CoilHeatingWaterToAirHeatPumpEquationFit.new(model)
           heating_coil.setRatedHeatingCoefficientofPerformance(4.0)
-          heating_coil.setHeatingCapacityCoefficient1(-1.361311959)
-          heating_coil.setHeatingCapacityCoefficient2(-2.471798046)
-          heating_coil.setHeatingCapacityCoefficient3(4.173164514)
-          heating_coil.setHeatingCapacityCoefficient4(0.640757401)
-          heating_coil.setHeatingCapacityCoefficient5(0.0)
-          heating_coil.setHeatingPowerConsumptionCoefficient1(-2.176941116)
-          heating_coil.setHeatingPowerConsumptionCoefficient2(0.832114286)
-          heating_coil.setHeatingPowerConsumptionCoefficient3(1.570743399)
-          heating_coil.setHeatingPowerConsumptionCoefficient4(0.690793651)
-          heating_coil.setHeatingPowerConsumptionCoefficient5(0.0)
+
+          curve = OpenStudio::Model::CurveQuadLinear.new(model)
+          curve.setName("#{heating_coil.name}_htg_cap_curve")
+          curve.setCoefficient1Constant(-1.361311959)
+          curve.setCoefficient2w(-2.471798046)
+          curve.setCoefficient3x(4.173164514)
+          curve.setCoefficient4y(0.640757401)
+          curve.setCoefficient5z(0.0)
+          heating_coil.setHeatingCapacityCurve(curve)
+
+          curve = OpenStudio::Model::CurveQuadLinear.new(model)
+          curve.setName("#{heating_coil.name}_htg_pwr_consu_curve")
+          curve.setCoefficient1Constant(-2.176941116)
+          curve.setCoefficient2w(0.832114286)
+          curve.setCoefficient3x(1.570743399)
+          curve.setCoefficient4y(0.690793651)
+          curve.setCoefficient5z(0.0)
+          heating_coil.setHeatingPowerConsumptionCurve(curve)
+
           options['heat_pump_loop'].addDemandBranchForComponent(heating_coil)
           # create supplemental heating coil
           supplemental_heating_coil = OpenStudio::Model::CoilHeatingElectric.new(model, model.alwaysOnDiscreteSchedule)

@@ -1665,7 +1665,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
           arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('exterior_lighting_zone', ['3 - All Other Areas'], true); arg.setValue('3 - All Other Areas'); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_constructions', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_space_type_loads', true); arg.setValue(true); args << arg
-          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_elevators', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_elevators', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_internal_mass', true); arg.setValue(true); args << arg
           arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_exterior_lights', true); arg.setValue(false); args << arg
           arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('onsite_parking_fraction', true); arg.setValue(1.0); args << arg

@@ -1,4 +1,8 @@
-# OpenStudio Extension Gem
+# OpenStudio(R) Extension Gem
+
+## Version 0.6.1
+
+* Updating to new licensing format and updating copyrights
 
 ## Version 0.6.0
 

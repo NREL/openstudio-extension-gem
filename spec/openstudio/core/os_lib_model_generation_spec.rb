@@ -1276,11 +1276,10 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result = @runner.result
 
       # show the output
-      puts 'method results for bar_from_building_type_ratios method with retail_stripmall inputs that results in missing internal loads with OpenStudio 3.4.'
       show_output(result)
 
       # save the model to test output directory
-      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_retail_stripmall_1.osm")
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_college_1.osm")
       @model.save(output_file_path, true)
 
       # confirm it failed and stopped with bad argument instead of running and getting ruby error
@@ -1358,7 +1357,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         show_output(result_typical)
 
         # save the model to test output directory
-        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_retail_stripmall_2.osm")
+        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_college_2.osm")
         @model.save(output_file_path, true)
       end
 
@@ -1367,7 +1366,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
 
     end
 
-    # test retail_courthouse
+    # test courthouse
     it 'bar_from_building_type_ratios_courthouse_test runs' do
       # define the measure class for bar_from_building_type_ratios
       class BarFromBuildingTypeRatioHosInt3_Test < OpenStudio::Measure::ModelMeasure
@@ -1439,11 +1438,11 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       result = @runner.result
 
       # show the output
-      puts 'method results for bar_from_building_type_ratios method with retail_stripmall inputs that results in missing internal loads with OpenStudio 3.4.'
+      puts 'method results for bar_from_building_type_ratios method with courthouse inputs that results in missing internal loads with OpenStudio 3.4.'
       show_output(result)
 
       # save the model to test output directory
-      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_retail_stripmall_1.osm")
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_courthouse_1.osm")
       @model.save(output_file_path, true)
 
       # confirm it failed and stopped with bad argument instead of running and getting ruby error
@@ -1521,7 +1520,7 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
         show_output(result_typical)
 
         # save the model to test output directory
-        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_retail_stripmall_2.osm")
+        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_courthouse_2.osm")
         @model.save(output_file_path, true)
       end
 
@@ -1529,6 +1528,168 @@ RSpec.describe 'Bar Methods' do # include from building type ratios, space type 
       expect(result.value.valueName).to eq 'Success'      
 
     end    
+
+    # test laboratory
+    it 'bar_from_building_type_ratios_laboratory_test runs' do
+      # define the measure class for bar_from_building_type_ratios
+      class BarFromBuildingTypeRatioHosInt3_Test < OpenStudio::Measure::ModelMeasure
+        # resource file modules
+        include OsLib_HelperMethods
+        include OsLib_Geometry
+        include OsLib_ModelGeneration
+        include OsLib_ModelSimplification
+
+        # define the arguments that the user will input
+        def arguments(model)
+          # create arguments`
+          args = OpenStudio::Measure::OSArgumentVector.new
+          # all but 4-5 of these to have defaults so full set of arguments
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_a', get_doe_building_types, true); arg.setValue('Laboratory'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_b', get_doe_building_types, true); arg.setValue('SmallOffice'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_c', get_doe_building_types, true); arg.setValue('SmallOffice'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('bldg_type_d', get_doe_building_types, true); arg.setValue('SmallOffice'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_b_fract_bldg_area', true); arg.setValue(0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_c_fract_bldg_area', true); arg.setValue(0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bldg_type_d_fract_bldg_area', true); arg.setValue(0); args << arg
+
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2004'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('total_bldg_floor_area', true); arg.setValue(72000.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('single_floor_area', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('floor_height', true); arg.setValue(12.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('num_stories_above_grade', true); arg.setValue(2.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('num_stories_below_grade', true); arg.setValue(0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('building_rotation', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('ns_to_ew_ratio', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('perim_mult', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_width', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('bar_sep_dist_mult', true); arg.setValue(0.5); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wwr', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('party_wall_fraction', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_north', true); arg.setValue(1.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_south', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_east', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeIntegerArgument('party_wall_stories_west', true); arg.setValue(0.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('custom_height_bar', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('bottom_story_ground_exposed_floor', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('top_story_exterior_exposed_roof', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('make_mid_story_surfaces_adiabatic', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('story_multiplier', true); arg.setValue('None'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('bar_division_method', true); arg.setValue('Multiple Space Types - Individual Stories Sliced'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('double_loaded_corridor', true); arg.setValue('Primary Space Type'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeStringArgument('space_type_sort_logic', true); arg.setValue('Building Type > Size'); args << arg
+
+          return args
+        end
+
+        # define what happens when the measure is run
+        def run(model, runner, user_arguments)
+          # method run from os_lib_model_generation.rb
+          result = bar_from_building_type_ratios(model, runner, user_arguments)
+        end
+      end
+
+      # get the measure (using measure beacuse these methods take in measure arguments)
+      unit_test = BarFromBuildingTypeRatioHosInt3_Test.new
+
+      # get arguments
+      arguments = unit_test.arguments(@model)
+      argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
+
+      # run the unit_test
+      unit_test.run(@model, @runner, argument_map)
+      result = @runner.result
+
+      # show the output
+      show_output(result)
+
+      # save the model to test output directory
+      output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_laboratory.osm")
+      @model.save(output_file_path, true)
+
+      # confirm it failed and stopped with bad argument instead of running and getting ruby error
+      expect(result.value.valueName).to eq 'Success'
+
+      # define the measure class for typical_building_from_model
+      class TypicalBuildingFromModel_Test < OpenStudio::Measure::ModelMeasure
+        # resource file modules
+        include OsLib_HelperMethods
+        include OsLib_Geometry
+        include OsLib_ModelGeneration
+        include OsLib_ModelSimplification
+
+        # define the arguments that the user will input
+        def arguments(model)
+          # create arguments
+          #  need to include double and integer args so method to check doesnt fail,
+          # try to dynamically create these in the future
+          args = OpenStudio::Measure::OSArgumentVector.new
+
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('template', get_doe_templates(true), true); arg.setValue('90.1-2010'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('system_type', ['Inferred'], true); arg.setValue('Inferred'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('hvac_delivery_type', ['Forced Air'], true); arg.setValue('Forced Air'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('htg_src', ['NaturalGas'], true); arg.setValue('NaturalGas'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('clg_src', ['Electricity'], true); arg.setValue('Electricity'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('swh_src', ['Inferred'], true); arg.setValue('Inferred'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('kitchen_makeup', ['Adjacent'], true); arg.setValue('Adjacent'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeChoiceArgument('exterior_lighting_zone', ['3 - All Other Areas'], true); arg.setValue('3 - All Other Areas'); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_constructions', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_space_type_loads', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_elevators', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_internal_mass', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_exterior_lights', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('onsite_parking_fraction', true); arg.setValue(1.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_exhaust', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_swh', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_thermostat', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_hvac', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('add_refrigeration', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wkdy_op_hrs', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wkdy_op_hrs_start_time', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wkdy_op_hrs_duration', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('modify_wknd_op_hrs', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wknd_op_hrs_start_time', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('wknd_op_hrs_duration', true); arg.setValue(8.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeDoubleArgument('unmet_hours_tolerance', true); arg.setValue(1.0); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('remove_objects', true); arg.setValue(true); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('use_upstream_args', true); arg.setValue(false); args << arg
+          arg = OpenStudio::Measure::OSArgument.makeBoolArgument('enable_dst', true); arg.setValue(true); args << arg
+
+          return args
+        end
+
+        # define what happens when the measure is run
+        def run(model, runner, user_arguments)
+          # method run from os_lib_model_generation.rb
+          result = typical_building_from_model(model, runner, user_arguments)
+        end
+      end
+
+      # get the measure (using measure beacuse these methods take in measure arguments)
+      unit_test_typical = TypicalBuildingFromModel_Test.new
+
+      # get arguments
+      arguments_typical = unit_test_typical.arguments(@model)
+      argument_map_typical = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments_typical)
+
+      if run_create_typical
+        # run the unit_test
+        unit_test_typical.run(@model, @runner, argument_map_typical)
+        result_typical = @runner.result
+
+        # show the output
+        puts 'method results for typical_building_from_model method. This will also show output from earlier bar method'
+        show_output(result_typical)
+
+        # save the model to test output directory
+        output_file_path = OpenStudio::Path.new("#{File.dirname(__FILE__)}/output/bar_from_building_type_ratios_laboratory_2.osm")
+        @model.save(output_file_path, true)
+      end
+
+      # confirm it ran correctly
+      expect(result.value.valueName).to eq 'Success'      
+
+    end  
 
     # wizard_test_retail_standalone
     it 'wizard_test_retail_standalone runs' do

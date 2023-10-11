@@ -190,7 +190,6 @@ The following table contains all current extension gems.
 | OpenStudio AEDG Gem | openstudio-aedg | https://github.com/NREL/openstudio-aedg-gem | 
 | OpenStudio Calibration Gem | openstudio-calibration | https://github.com/NREL/openstudio-calibration-gem |
 | OpenStudio EE Gem | openstudio-ee | https://github.com/NREL/openstudio-ee-gem | 
-| OpenStudio District Systems Gem | openstudio-district-systems | https://github.com/NREL/openstudio-district-systems-gem | 
 | OpenStudio Load Flexibility Measures Gem | openstudio-load-flexibility-measures | https://github.com/NREL/openstudio-load-flexibility-measures-gem |
 | URBANopt Core Gem | urbanopt-core | https://github.com/urbanopt/urbanopt-core-gem |
 | URBANopt GeoJSON Gem | urbanopt-geojson | https://github.com/urbanopt/urbanopt-geojson-gem | 

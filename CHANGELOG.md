@@ -1,5 +1,11 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.7.0
+
+* Fixed [#156]( https://github.com/NREL/openstudio-extension-gem/pull/156 ), Adding test for lab building type
+* Fixed [#165]( https://github.com/NREL/openstudio-extension-gem/pull/165 ), Remove district systems gem
+* Upgrade developer dependency to openstudio-standards gem to `~> 0.5.0`
+
 ## Version 0.6.1
 
 * Updating to new licensing format and updating copyrights

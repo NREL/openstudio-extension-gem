@@ -203,7 +203,8 @@ module OsLib_HelperMethods
                 msg.logChannel.include?('runmanager') || # RunManager messages
                 msg.logChannel.include?('setFileExtension') || # .ddy extension unexpected
                 msg.logChannel.include?('Translator') || # Forward translator and geometry translator
-                msg.logMessage.include?('UseWeatherFile') # 'UseWeatherFile' is not yet a supported option for YearDescription
+                msg.logMessage.include?('UseWeatherFile') || # 'UseWeatherFile' is not yet a supported option for YearDescription
+                msg.logMessage.include?('has multiple parents') # 'has multiple parents' is thrown for various types of curves if used in multiple objects
 
         # Report the message in the correct way
         if msg.logLevel == OpenStudio::Info

@@ -95,7 +95,6 @@ module OpenStudio
               raise "Failed to run command 'bundle -v', check that bundle is installed"
             end
 
-            # TODO: check that ruby version is correct
 
             # check existing config
             needs_config = true

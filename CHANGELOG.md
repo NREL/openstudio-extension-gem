@@ -1,5 +1,13 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.7.1
+
+* Fixed [#169]( https://github.com/NREL/openstudio-extension-gem/pull/169 ), Replace --verbose flag to --loglevel inorder to run CI.
+* Fixed [#171]( https://github.com/NREL/openstudio-extension-gem/pull/171 ), Remove bundle flag
+* Fixed [#172]( https://github.com/NREL/openstudio-extension-gem/pull/172 ), useless commit, to trigger the CI
+* Fixed [#173]( https://github.com/NREL/openstudio-extension-gem/pull/173 ), Remove bundle flag to run in ci with new commit.
+* Fixed [#174]( https://github.com/NREL/openstudio-extension-gem/pull/174 ), Bump os-standards to 0.5.0
+
 ## Version 0.7.0
 
 * Fixed [#156]( https://github.com/NREL/openstudio-extension-gem/pull/156 ), Adding test for lab building type

@@ -43,10 +43,13 @@ module OpenStudio
       end
 
       def self.get_local_bundle_config_path(dirname)
-        if (bundle_install_path = Bundler.configured_bundle_path.explicit_path)
+        # Bundler.settings reads from pwd, and I can't test with this...
+        bundler_settings = Bundler::Settings.new(File.join(dirname, '.bundle'))
+
+        if (bundle_install_path = bundler_settings.path.explicit_path)
           puts "Defaulting bundle_install_path to bundle's local config value: '#{bundle_install_path}'"
         else
-          puts "Defaulting to .bundle/install (and ignoring system wide: Bundler.configured_bundle_path.base_path=#{Bundler.configured_bundle_path.base_path})"
+          puts "Defaulting to .bundle/install (and ignoring system wide: Bundler.configured_bundle_path.base_path=#{bundler_settings.path.base_path})"
           bundle_install_path = File.join(dirname, '.bundle/install/')
         end
 

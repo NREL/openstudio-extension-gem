@@ -3,6 +3,7 @@
 # See also https://openstudio.net/license
 # *******************************************************************************
 
+require 'bundler'
 require 'json'
 require 'parallel'
 
@@ -42,16 +43,13 @@ module OpenStudio
       end
 
       def self.get_local_bundle_config_path(dirname)
-        bundle_install_path = File.join(dirname, '.bundle/install/')
-        local_bundle_config =  File.join(dirname, '.bundle/config')
-        if File.exist?(local_bundle_config)
-          config = YAML.load_file(local_bundle_config)
-          if config['BUNDLE_PATH']
-            bundle_install_path = config['BUNDLE_PATH']
-            puts "Defaulting bundle_install_path to bundle's local config value: '#{bundle_install_path}'"
-            puts "  From: #{local_bundle_config}"
-          end
+        if (bundle_install_path = Bundler.configured_bundle_path.explicit_path)
+          puts "Defaulting bundle_install_path to bundle's local config value: '#{bundle_install_path}'"
+        else
+          puts "Defaulting to .bundle/install (and ignoring system wide: Bundler.configured_bundle_path.base_path=#{Bundler.configured_bundle_path.base_path})"
+          bundle_install_path = File.join(dirname, '.bundle/install/')
         end
+
         return bundle_install_path
       end
 

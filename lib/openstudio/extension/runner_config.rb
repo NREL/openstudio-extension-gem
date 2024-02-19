@@ -4,6 +4,7 @@
 # *******************************************************************************
 
 require 'json'
+require 'parallel'
 
 module OpenStudio
   module Extension
@@ -40,17 +41,31 @@ module OpenStudio
         @data[name.to_sym] = value
       end
 
+      def self.get_local_bundle_config_path(dirname)
+        bundle_install_path = File.join(dirname, '.bundle/install/')
+        local_bundle_config =  File.join(dirname, '.bundle/config')
+        if File.exist?(local_bundle_config)
+          config = YAML.load_file(local_bundle_config)
+          if config['BUNDLE_PATH']
+            bundle_install_path = config['BUNDLE_PATH']
+            puts "Defaulting bundle_install_path to bundle's local config value: '#{bundle_install_path}'"
+            puts "  From: #{local_bundle_config}"
+          end
+        end
+        return bundle_install_path
+      end
+
       ##
       # Return the default runner configuration
-      def self.default_config
+      def self.default_config(dirname)
         return {
           file_version: '0.1.0',
           max_datapoints: 1E9.to_i,
-          num_parallel: 2,
+          num_parallel: Parallel.processor_count,
           run_simulations: true,
           verbose: false,
           gemfile_path: '',
-          bundle_install_path: ''
+          bundle_install_path: get_local_bundle_config_path(dirname),
         }
       end
 
@@ -60,11 +75,18 @@ module OpenStudio
       #
       #  @param [String] dirname Directory where runner.conf file is stored, typically the root of the extension.
       def self.init(dirname)
-        File.open(File.join(dirname, FILENAME), 'w') do |f|
-          f << JSON.pretty_generate(default_config)
+        runner_conf_file = File.join(dirname, FILENAME)
+        if File.exist?(runner_conf_file)
+          puts "runner.conf already exists, will be overwritten, previous config:"
+          puts File.read(runner_conf_file)
         end
 
-        return default_config
+        config = default_config(dirname)
+        File.open(runner_conf_file, 'w') do |f|
+          f << JSON.pretty_generate(config)
+        end
+
+        return config
       end
 
       ##

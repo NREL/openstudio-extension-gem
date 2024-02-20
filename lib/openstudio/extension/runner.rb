@@ -541,12 +541,15 @@ module OpenStudio
           { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
           { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
+        # This is the bundle deployment folder
+        excluded_subfolders = ['vendor'].map{|d| "#{root_dir}/vendor/bundle"}
+
 
         puts "Encoding.default_external = #{Encoding.default_external}"
         puts "Encoding.default_internal = #{Encoding.default_internal}"
 
         paths.each do |path|
-          Dir[path[:glob]].each do |dir_file|
+          Dir[path[:glob]].reject{|f| excluded_subfolders.any?{|d| f[d]} }.each do |dir_file|
             puts "Updating license in file #{dir_file}"
             f = File.read(dir_file)
             if f.match?(path[:regex])

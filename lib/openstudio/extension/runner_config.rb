@@ -13,6 +13,8 @@ module OpenStudio
     class RunnerConfig
       FILENAME = 'runner.conf'.freeze
 
+      DEFAULT_NPROC = Parallel.processor_count - 1
+
       ##
       # Class to store configuration of the runner options.
       ##
@@ -63,7 +65,7 @@ module OpenStudio
         return {
           file_version: '0.1.0',
           max_datapoints: 1E9.to_i,
-          num_parallel: Parallel.processor_count,
+          num_parallel: DEFAULT_NPROC,
           run_simulations: true,
           verbose: false,
           gemfile_path: '',

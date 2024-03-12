@@ -19,7 +19,8 @@ RSpec.describe OpenStudio::Extension::RunnerConfig do
   it 'has defaults' do
     defaults = OpenStudio::Extension::RunnerConfig.default_config(@test_folder)
     expect(defaults[:max_datapoints]).to eq 1E9.to_i
-    expect(defaults[:num_parallel]).to eq Parallel.processor_count
+    expect(defaults[:num_parallel]).to eq OpenStudio::Extension::RunnerConfig::DEFAULT_NPROC
+    expect(defaults[:num_parallel]).to be_between(Parallel.processor_count - 1, Parallel.processor_count)
     expect(defaults[:run_simulations]).to eq true
     expect(defaults[:verbose]).to eq false
     expect(defaults[:gemfile_path]).to eq ''
@@ -33,7 +34,7 @@ RSpec.describe OpenStudio::Extension::RunnerConfig do
     File.write(File.join(@test_folder, 'Gemfile'), "source 'http://rubygems.org'")
     defaults = OpenStudio::Extension::RunnerConfig.default_config(@test_folder)
     expect(defaults[:max_datapoints]).to eq 1E9.to_i
-    expect(defaults[:num_parallel]).to eq Parallel.processor_count
+    expect(defaults[:num_parallel]).to eq OpenStudio::Extension::RunnerConfig::DEFAULT_NPROC
     expect(defaults[:run_simulations]).to eq true
     expect(defaults[:verbose]).to eq false
     expect(defaults[:gemfile_path]).to eq ''

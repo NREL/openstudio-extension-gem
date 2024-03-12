@@ -4,6 +4,7 @@
 # *******************************************************************************
 
 require 'bundler'
+require 'fileutils'
 require 'json'
 require 'parallel'
 
@@ -78,8 +79,9 @@ module OpenStudio
       def self.init(dirname)
         runner_conf_file = File.join(dirname, FILENAME)
         if File.exist?(runner_conf_file)
-          puts "runner.conf already exists, will be overwritten, previous config:"
+          puts "runner.conf already exists, saving a runner.conf.bak, previous config:"
           puts File.read(runner_conf_file)
+          FileUtils.cp(runner_conf_file, "#{FILENAME}.bak")
         end
 
         config = default_config(dirname)

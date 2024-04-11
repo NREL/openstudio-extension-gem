@@ -41,13 +41,14 @@ module OpenStudio
 
         # if the dirname contains a runner.conf file, then use the config file to specify the parameters
 
-        @options = OpenStudio::Extension::RunnerConfig.default_config
+        @options = OpenStudio::Extension::RunnerConfig.default_config(dirname)
         # ORDER of PRECEDENCE: default config < runner.conf file < options passed in directly
         if File.exist?(File.join(dirname, OpenStudio::Extension::RunnerConfig::FILENAME))
           puts 'Using runner options from runner.conf file'
           runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
-          # use the default values overriden with runner.conf values
-          @options = @options.merge(runner_config.options)
+          # use the default values overriden with runner.conf values where not
+          # nil nor empty strings
+          @options = @options.merge(runner_config.options.reject{|k, v| v.nil? || (v.kind_of?(String) && v === '')})
         end
 
         if !options.empty?
@@ -99,12 +100,12 @@ module OpenStudio
 
             # check existing config
             needs_config = true
-            if File.exist?('./.bundle/config') # checking wrt gemfile_dir
-              puts 'config exists'
+            if conf_bpath = Bundler.configured_bundle_path.explicit_path
+              puts 'bundler config exists'
               needs_config = false
-              config = YAML.load_file('./.bundle/config')
 
-              if config['BUNDLE_PATH'] != @bundle_install_path
+              if conf_bpath != @bundle_install_path
+                raise "Detected mistmatch between bundle's configured path #{conf_bpath} and runner configuration #{@bundle_install_path}"
                 needs_config = true
               end
 
@@ -540,12 +541,15 @@ module OpenStudio
           { glob: "#{root_dir}/**/*.html.erb", license: erb_header_text, regex: erb_regex },
           { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
+        # This is the bundle deployment folder
+        excluded_subfolders = ['vendor'].map{|d| "#{root_dir}/vendor/bundle"}
+
 
         puts "Encoding.default_external = #{Encoding.default_external}"
         puts "Encoding.default_internal = #{Encoding.default_internal}"
 
         paths.each do |path|
-          Dir[path[:glob]].each do |dir_file|
+          Dir[path[:glob]].reject{|f| excluded_subfolders.any?{|d| f[d]} }.each do |dir_file|
             puts "Updating license in file #{dir_file}"
             f = File.read(dir_file)
             if f.match?(path[:regex])

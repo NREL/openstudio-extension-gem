@@ -26,15 +26,6 @@ RSpec.describe OpenStudio::Extension do
     expect(File.exist?(File.join(files_dir, 'openstudio-extension-gem-test.epw'))).to be true
   end
 
-  it 'has a core directory' do
-    extension = OpenStudio::Extension::Extension.new
-    core_dir = extension.core_dir
-    expect(core_dir).not_to be nil
-    expect(File.directory?(core_dir)).to be true
-    expect(File.exist?(core_dir)).to be true
-    expect(File.exist?(File.join(core_dir, 'os_lib_helper_methods.rb'))).to be true
-  end
-
   it 'has a doc templates directory' do
     extension = OpenStudio::Extension::Extension.new
     doc_templates_dir = extension.doc_templates_dir

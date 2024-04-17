@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '~> 3.2'
+  spec.required_ruby_version = '~> 3.2.2'
 
   spec.add_dependency 'bcl', '~> 0.8.0'
   # This only runs on the builders' machine

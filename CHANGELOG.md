@@ -4,6 +4,8 @@
 
 * [#184]( https://github.com/NREL/openstudio-extension-gem/pull/184 ), Removing model methods and model method spec tests. Most model methods moved to openstudio-standards-gem, others moved to OpenStudio C++.
 
+* Update dependencies to support Ruby 3.2.2 / OpenStudio 3.8.0
+
 ## Version 0.7.1
 
 * Fixed [#169]( https://github.com/NREL/openstudio-extension-gem/pull/169 ), Replace --verbose flag to --loglevel inorder to run CI.

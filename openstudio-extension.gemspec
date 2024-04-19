@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'bcl', '~> 0.8.0'
   # This only runs on the builders' machine
-  spec.add_dependency 'bundler', '~> 2.5.5'
+  spec.add_dependency 'bundler', '2.4.10'
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   spec.add_dependency 'openstudio_measure_tester', '~> 0.4.0'
   spec.add_dependency 'openstudio-workflow', '~> 2.4.0'

@@ -34,7 +34,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   #spec.add_dependency 'openstudio_measure_tester', :git => 'https://github.com/NREL/OpenStudio-measure-tester-gem.git'
   #spec.add_dependency 'openstudio-workflow', :git => 'https://github.com/NREL/OpenStudio-workflow-gem.git'
-  spec.add_dependency 'parallel', '~> 1.19.1'
+  spec.add_dependency 'parallel', '1.19.1'
+  spec.add_dependency 'addressable', '2.8.1'
 
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'

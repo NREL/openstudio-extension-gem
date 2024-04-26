@@ -166,6 +166,7 @@ module OpenStudio
         new_env['BUNDLE_BIN_PATH'] = nil
         new_env['RUBYLIB'] = nil
         new_env['RUBYOPT'] = nil
+        new_env['BUNDLER_SETUP'] = nil
 
         # DLM: preserve GEM_HOME and GEM_PATH set by current bundle because we are not supporting bundle
         # requires to ruby gems will work, will fail if we require a native gem

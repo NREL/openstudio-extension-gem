@@ -3,12 +3,17 @@
 # See also https://openstudio.net/license
 # *******************************************************************************
 
+require 'bundler'
+require 'fileutils'
 require 'json'
+require 'parallel'
 
 module OpenStudio
   module Extension
     class RunnerConfig
       FILENAME = 'runner.conf'.freeze
+
+      DEFAULT_NPROC = Parallel.processor_count - 1
 
       ##
       # Class to store configuration of the runner options.
@@ -40,17 +45,31 @@ module OpenStudio
         @data[name.to_sym] = value
       end
 
+      def self.get_local_bundle_config_path(dirname)
+        # Bundler.settings reads from pwd, and I can't test with this...
+        bundler_settings = Bundler::Settings.new(File.join(dirname, '.bundle'))
+
+        if (bundle_install_path = bundler_settings.path.explicit_path)
+          puts "Defaulting bundle_install_path to bundle's local config value: '#{bundle_install_path}'"
+        else
+          puts "Defaulting to .bundle/install (and ignoring system wide: Bundler.configured_bundle_path.base_path=#{bundler_settings.path.base_path})"
+          bundle_install_path = File.join(dirname, '.bundle/install/')
+        end
+
+        return bundle_install_path
+      end
+
       ##
       # Return the default runner configuration
-      def self.default_config
+      def self.default_config(dirname)
         return {
           file_version: '0.1.0',
           max_datapoints: 1E9.to_i,
-          num_parallel: 2,
+          num_parallel: DEFAULT_NPROC,
           run_simulations: true,
           verbose: false,
           gemfile_path: '',
-          bundle_install_path: ''
+          bundle_install_path: get_local_bundle_config_path(dirname),
         }
       end
 
@@ -60,11 +79,19 @@ module OpenStudio
       #
       #  @param [String] dirname Directory where runner.conf file is stored, typically the root of the extension.
       def self.init(dirname)
-        File.open(File.join(dirname, FILENAME), 'w') do |f|
-          f << JSON.pretty_generate(default_config)
+        runner_conf_file = File.join(dirname, FILENAME)
+        if File.exist?(runner_conf_file)
+          puts "runner.conf already exists, saving a runner.conf.bak, previous config:"
+          puts File.read(runner_conf_file)
+          FileUtils.cp(runner_conf_file, "#{FILENAME}.bak")
         end
 
-        return default_config
+        config = default_config(dirname)
+        File.open(runner_conf_file, 'w') do |f|
+          f << JSON.pretty_generate(config)
+        end
+
+        return config
       end
 
       ##

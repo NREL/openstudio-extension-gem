@@ -551,6 +551,12 @@ module OpenStudio
         paths.each do |path|
           Dir[path[:glob]].reject{|f| excluded_subfolders.any?{|d| f[d]} }.each do |dir_file|
             puts "Updating license in file #{dir_file}"
+
+            if dir_file.include?('zlib')
+              puts "Skipping lib folder with path #{dir_file}"
+              next
+            end
+
             f = File.read(dir_file)
             if f.match?(path[:regex])
               puts '  License found -- updating'

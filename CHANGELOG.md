@@ -1,5 +1,9 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.8.1
+
+* [#190]( https://github.com/NREL/openstudio-extension-gem/pull/190), Don't raise error when bundle path mismatch occurs
+
 ## Version 0.8.0
 
 * [#184]( https://github.com/NREL/openstudio-extension-gem/pull/184 ), Removing model methods and model method spec tests. Most model methods moved to openstudio-standards-gem, others moved to OpenStudio C++.

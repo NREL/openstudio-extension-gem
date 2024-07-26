@@ -105,7 +105,7 @@ module OpenStudio
               needs_config = false
 
               if conf_bpath != @bundle_install_path
-                puts "Detected mistmatch between bundle's configured path #{conf_bpath} and runner configuration #{@bundle_install_path}"
+                puts "Detected mismatch between bundle's configured path #{conf_bpath} and runner configuration #{@bundle_install_path}"
                 needs_config = true
               end
 

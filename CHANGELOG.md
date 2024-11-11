@@ -1,5 +1,9 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.8.2
+
+* [#192]( https://github.com/NREL/openstudio-extension-gem/pull/192), Pinned regexp_parser version
+
 ## Version 0.8.1
 
 * [#190]( https://github.com/NREL/openstudio-extension-gem/pull/190), Don't raise error when bundle path mismatch occurs

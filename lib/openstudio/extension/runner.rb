@@ -3,7 +3,10 @@
 # See also https://openstudio.net/license
 # *******************************************************************************
 
-require 'bundler'
+# Check if Bundler is already loaded
+if !defined?(Bundler)
+  require 'bundler'
+end
 require 'fileutils'
 require 'json'
 require 'open3'

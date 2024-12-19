@@ -11,10 +11,13 @@ require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
-require 'openstudio/extension/rake_task'
-require 'openstudio/extension'
-rake_task = OpenStudio::Extension::RakeTask.new
-rake_task.set_extension_class(OpenStudio::Extension::Extension, 'nrel/openstudio-extension-gem')
+# Only load extension tasks if we're not installing
+unless ARGV.include?('install')
+  require 'openstudio/extension/rake_task'
+  require 'openstudio/extension'
+  rake_task = OpenStudio::Extension::RakeTask.new
+  rake_task.set_extension_class(OpenStudio::Extension::Extension, 'nrel/openstudio-extension-gem')
+end
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new

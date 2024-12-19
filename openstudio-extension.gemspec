@@ -30,7 +30,8 @@ Gem::Specification.new do |spec|
   # This only runs on the builders' machine
   # spec.add_dependency 'bundler', '~> 2.1.0' if RUBY_VERSION[0] == "2"
   # spec.add_dependency 'bundler', '~> 2.4.10' if RUBY_VERSION[0] == "3"
-  spec.extensions << "ext/mkrf_conf.rb" unless ENV['NO_EXT']
+  # spec.extensions << "ext/mkrf_conf.rb" unless ENV['NO_EXT']
+  spec.add_dependency 'bundler', '~> 2.4.10'
 
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   spec.add_dependency 'openstudio_measure_tester', '~> 0.4.0'

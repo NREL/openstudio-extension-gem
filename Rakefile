@@ -3,7 +3,10 @@
 # See also https://openstudio.net/license
 # *******************************************************************************
 
-require 'bundler/gem_tasks'
+if !defined?(Bundler)
+  require 'bundler/gem_tasks'
+end
+
 require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)

@@ -33,8 +33,8 @@ Gem::Specification.new do |spec|
   spec.extensions << "ext/mkrf_conf.rb" unless ENV['NO_EXT']
 
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
-  spec.add_dependency 'openstudio_measure_tester', '~> 0.3.1'
-  spec.add_dependency 'openstudio-workflow', '~> 2.3.0'
+  spec.add_dependency 'openstudio_measure_tester', '~> 0.4.0'
+  spec.add_dependency 'openstudio-workflow', '~> 2.4.0'
   spec.add_dependency 'parallel', '~> 1.19.1'
 
   spec.add_development_dependency 'openstudio-standards', '~> 0.5.0' # for os_lib unit tests

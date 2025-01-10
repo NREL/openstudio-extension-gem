@@ -1,5 +1,8 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.8.3
+* [#199]( https://github.com/NREL/openstudio-extension-gem/pull/199), Patch for bundler conflict issue
+
 ## Version 0.8.2
 
 * [#192]( https://github.com/NREL/openstudio-extension-gem/pull/192), Pinned regexp_parser version

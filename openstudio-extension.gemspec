@@ -34,8 +34,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'octokit', '~> 4.18.0' # for change logs
   spec.add_dependency 'openstudio_measure_tester', '~> 0.4.0'
   spec.add_dependency 'openstudio-workflow', '~> 2.4.0'
+  # parallel, regexp_parser, and addressable versions are pinned to avoid test_with_openstudio errors
   spec.add_dependency 'parallel', '~> 1.19.1'
   spec.add_dependency 'regexp_parser', '2.9.0'
+  spec.add_dependency 'addressable', '2.8.1'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
 end

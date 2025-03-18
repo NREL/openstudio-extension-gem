@@ -146,6 +146,7 @@ module OpenStudio
 
             puts "needs_update = #{needs_update}"
             if needs_update
+              puts 'Running bundle install. cowabunga'
               run_command('bundle install', get_clean_env)
             end
           ensure

@@ -146,7 +146,7 @@ module OpenStudio
 
             puts "needs_update = #{needs_update}"
             if needs_update
-              run_command('bundle update', get_clean_env)
+              run_command('bundle install', get_clean_env)
             end
           ensure
             Dir.chdir(@original_dir)

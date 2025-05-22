@@ -1,5 +1,8 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.9.0
+* Updating dependencies for OpenStudio 3.10
+
 ## Version 0.8.3
 * [#199]( https://github.com/NREL/openstudio-extension-gem/pull/199), Patch for bundler conflict issue
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-if !defined?(Bundler)
+# if !defined?(Bundler)
   require 'bundler/setup'
-end
+# end
 require 'openstudio/extension'
 
 # You can add fixtures and/or initialization code here to make experimenting

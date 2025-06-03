@@ -4,9 +4,9 @@
 # *******************************************************************************
 
 # Check if Bundler is already loaded
-if !defined?(Bundler)
+# if !defined?(Bundler)
   require 'bundler'
-end
+# end
 require 'fileutils'
 require 'json'
 require 'open3'

@@ -8,5 +8,3 @@ source 'http://rubygems.org'
 gemspec
 
 # gem 'openstudio-standards', '= 0.2.17.rc1', :github => 'NREL/openstudio-standards', :ref => '3.5.0_changes'
-
-gem 'bcl-gem', :github => 'NREL/bcl-gem', :ref => 'faraday'

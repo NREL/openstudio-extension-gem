@@ -1,5 +1,8 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.9.1
+* Updating faraday to 1.10.4 to remove deprecation notice
+
 ## Version 0.9.0
 * Updating dependencies for OpenStudio 3.10
 

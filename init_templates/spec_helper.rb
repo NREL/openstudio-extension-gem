@@ -3,9 +3,7 @@
 # See also https://openstudio.net/license
 # *******************************************************************************
 
-if !defined?(Bundler)
-  require 'bundler/setup'
-end
+require 'bundler/setup'
 require 'openstudio/GEM_NAME_UNDERSCORES'
 
 RSpec.configure do |config|

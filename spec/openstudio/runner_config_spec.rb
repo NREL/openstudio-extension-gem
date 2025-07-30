@@ -8,7 +8,7 @@ require 'parallel'
 
 RSpec.describe OpenStudio::Extension::RunnerConfig do
   before :each do
-    @test_folder = File.join(File.dirname(__FILE__), "test_defaults")
+    @test_folder = File.join(File.dirname(__FILE__), 'test_defaults')
     if File.exist?(@test_folder)
       FileUtils.rm_rf(@test_folder)
     end

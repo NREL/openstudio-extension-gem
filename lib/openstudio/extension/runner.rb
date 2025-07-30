@@ -9,7 +9,6 @@ require 'json'
 require 'open3'
 require 'openstudio'
 require 'yaml'
-require 'fileutils'
 require 'parallel'
 require 'bcl'
 
@@ -48,7 +47,7 @@ module OpenStudio
           runner_config = OpenStudio::Extension::RunnerConfig.new(dirname)
           # use the default values overriden with runner.conf values where not
           # nil nor empty strings
-          @options = @options.merge(runner_config.options.reject{|k, v| v.nil? || (v.kind_of?(String) && v === '')})
+          @options = @options.merge(runner_config.options.reject { |k, v| v.nil? || (v.is_a?(String) && v == '') })
         end
 
         if !options.empty?
@@ -61,8 +60,8 @@ module OpenStudio
         @dirname = File.absolute_path(dirname)
 
         # use passed options, otherwise assume @dirname
-        @gemfile_path = !@options.key?(:gemfile_path) || @options[:gemfile_path] === '' ? File.join(@dirname, 'Gemfile') : @options[:gemfile_path]
-        @bundle_install_path = !@options.key?(:bundle_install_path) || @options[:bundle_install_path] === '' ? File.join(@dirname, '.bundle/install/') : @options[:bundle_install_path]
+        @gemfile_path = !@options.key?(:gemfile_path) || @options[:gemfile_path] == '' ? File.join(@dirname, 'Gemfile') : @options[:gemfile_path]
+        @bundle_install_path = !@options.key?(:bundle_install_path) || @options[:bundle_install_path] == '' ? File.join(@dirname, '.bundle/install/') : @options[:bundle_install_path]
         @original_dir = Dir.pwd
 
         # gemfile directory
@@ -100,7 +99,7 @@ module OpenStudio
 
             # check existing config
             needs_config = true
-            if conf_bpath = Bundler.configured_bundle_path.explicit_path
+            if (conf_bpath = Bundler.configured_bundle_path.explicit_path)
               puts 'bundler config exists'
               needs_config = false
 
@@ -362,7 +361,7 @@ module OpenStudio
         puts "#{measures.length} MEASURES FOUND"
         measures.each do |measure|
           name = measure.split('/')[-2]
-          puts name.to_s
+          puts name
         end
       end
 
@@ -497,9 +496,9 @@ module OpenStudio
           FileUtils.cp(File.join(doc_templates_dir, 'LICENSE.md'), File.join(root_dir, 'LICENSE.md'))
         end
 
-        ruby_regex = /^\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*$/mi
-        erb_regex = /^<%\s*\#\s?[\#\*]{12,}.*copyright.*?\#\s?[\#\*]{12,}\s*%>$/mi
-        js_regex = /^\/\* @preserve.*copyright.*?\*\//mi
+        ruby_regex = /^\#\s?[\#*]{12,}.*copyright.*?\#\s?[\#*]{12,}\s*$/mi
+        erb_regex = /^<%\s*\#\s?[\#*]{12,}.*copyright.*?\#\s?[\#*]{12,}\s*%>$/mi
+        js_regex = %r{^/\* @preserve.*copyright.*?\*/}mi
 
         filename = File.join(doc_templates_dir, 'copyright_ruby.txt')
         puts "Copyright file path: #{filename}"
@@ -542,14 +541,13 @@ module OpenStudio
           { glob: "#{root_dir}/**/*.js.erb", license: js_header_text, regex: js_regex }
         ]
         # This is the bundle deployment folder
-        excluded_subfolders = ['vendor'].map{|d| "#{root_dir}/vendor/bundle"}
-
+        excluded_subfolders = ['vendor'].map { |d| "#{root_dir}/vendor/bundle" }
 
         puts "Encoding.default_external = #{Encoding.default_external}"
         puts "Encoding.default_internal = #{Encoding.default_internal}"
 
         paths.each do |path|
-          Dir[path[:glob]].reject{|f| excluded_subfolders.any?{|d| f[d]} }.each do |dir_file|
+          Dir[path[:glob]].reject { |f| excluded_subfolders.any? { |d| f[d] } }.each do |dir_file|
             puts "Updating license in file #{dir_file}"
             f = File.read(dir_file)
             if f.match?(path[:regex])

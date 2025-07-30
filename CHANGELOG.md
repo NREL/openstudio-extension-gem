@@ -1,4 +1,6 @@
 # OpenStudio(R) Extension Gem
+## Version 0.9.2
+* Updating LICENSE.md in doc_templates to use 2025 for the year
 
 ## Version 0.9.1
 * Updating faraday to 1.10.4 to remove deprecation notice

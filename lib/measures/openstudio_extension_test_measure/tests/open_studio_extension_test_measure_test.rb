@@ -16,7 +16,7 @@ class OpenStudioExtensionTestMeasureTest < Minitest::Test
   # def teardown
   # end
 
-  def test_OpenStudioExtensionTestMeasure
+  def test_open_studio_extension_test_measure
     # create an instance of the measure
     measure = OpenStudioExtensionTestMeasure.new
 

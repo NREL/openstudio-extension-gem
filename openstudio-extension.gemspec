@@ -1,6 +1,5 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-# Define version directly to avoid circular dependency during gemspec evaluation
 require 'openstudio/extension/version'
 
 Gem::Specification.new do |spec|
@@ -27,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '~> 3.2.2'
+  spec.required_ruby_version = '>= 3.2.2'
 
   spec.add_dependency 'bcl', '~> 0.9.1'
   # This only runs on the builders' machine

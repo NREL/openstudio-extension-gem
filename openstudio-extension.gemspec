@@ -1,5 +1,6 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+# Define version directly to avoid circular dependency during gemspec evaluation
 require 'openstudio/extension/version'
 
 Gem::Specification.new do |spec|
@@ -35,10 +36,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'openstudio_measure_tester', '~> 0.5.0'
   spec.add_dependency 'openstudio-workflow', '~> 2.5.0'
   # parallel, regexp_parser, and addressable versions are pinned to avoid test_with_openstudio errors
+  spec.add_dependency 'addressable', '2.8.1'
   spec.add_dependency 'parallel', '~> 1.19.1'
   spec.add_dependency 'regexp_parser', '2.9.0'
-  spec.add_dependency 'addressable', '2.8.1'
   spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rubocop', '1.50'
   spec.add_development_dependency 'rspec', '~> 3.9'
+  spec.add_development_dependency 'rubocop', '1.50'
 end

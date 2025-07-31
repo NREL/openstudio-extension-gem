@@ -14,6 +14,7 @@ module OpenStudio
       attr_accessor :name, :measures_dir, :core_dir, :doc_templates_dir, :files_dir
 
       def initialize(*args, &task_block)
+        super
         @name = args.shift || :openstudio
 
         setup_subtasks(@name)
@@ -124,11 +125,7 @@ module OpenStudio
               bcl = ::BCL::ComponentMethods.new
 
               # check for env var specifying keyword first
-              if ENV['bcl_search_keyword']
-                keyword = ENV['bcl_search_keyword']
-              else
-                keyword = 'Space'
-              end
+              keyword = ENV['bcl_search_keyword'] || 'Space'
               num_results = 10
               # bcl.search params: search_string, filter_string, return_all_results?
               puts "searching BCL measures for keyword: #{keyword}"

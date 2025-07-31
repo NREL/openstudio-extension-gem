@@ -58,7 +58,7 @@
       <checksum>A21A3ED2</checksum>
     </file>
     <file>
-      <filename>open_studio_extension_test_measure_test.rb</filename>
+      <filename>OpenStudioExtensionTestMeasure_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
       <checksum>5F2C8B43</checksum>

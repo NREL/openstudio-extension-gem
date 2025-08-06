@@ -56,9 +56,10 @@ module OpenStudio
       # DLM: consider calling Bundler.require in this method
       # do not call Bundler.require when requiring this file, only when calling this method
       result = []
-     
+
       ObjectSpace.each_object(::Class) do |obj|
         next if !obj.ancestors.include?(OpenStudio::Extension::Extension)
+
         result << obj
       end
 

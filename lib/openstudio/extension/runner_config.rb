@@ -69,7 +69,7 @@ module OpenStudio
           run_simulations: true,
           verbose: false,
           gemfile_path: '',
-          bundle_install_path: get_local_bundle_config_path(dirname),
+          bundle_install_path: get_local_bundle_config_path(dirname)
         }
       end
 
@@ -81,7 +81,7 @@ module OpenStudio
       def self.init(dirname)
         runner_conf_file = File.join(dirname, FILENAME)
         if File.exist?(runner_conf_file)
-          puts "runner.conf already exists, saving a runner.conf.bak, previous config:"
+          puts 'runner.conf already exists, saving a runner.conf.bak, previous config:'
           puts File.read(runner_conf_file)
           FileUtils.cp(runner_conf_file, "#{FILENAME}.bak")
         end

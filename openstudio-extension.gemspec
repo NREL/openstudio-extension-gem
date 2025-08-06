@@ -1,5 +1,6 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+# Define version directly to avoid circular dependency during gemspec evaluation
 require 'openstudio/extension/version'
 
 Gem::Specification.new do |spec|

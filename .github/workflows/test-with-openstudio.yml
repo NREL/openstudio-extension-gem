@@ -1,0 +1,50 @@
+# Test with OpenStudio container
+name: test_with_openstudio
+on: push
+
+jobs:
+  test-gems-latest:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: ${{ github.ref_name }}
+      BUILD_NUMBER: ${{ github.run_number }}
+      DEPLOY_PATH: ${{ github.repository }}/${{ github.ref_name }}/${{ github.run_number }} # Path for S3 deployment
+      S3_BUCKET: ext-gem-dashboard
+
+    container: # Define the Docker container for the job. All subsequent steps run inside it.
+      image: nrel/openstudio:3.10.0
+      options: -u root -e "LANG=en_US.UTF-8" # These options are passed to the 'docker run' command internally
+
+    steps:
+      - name: Checkout Repository
+        # The repository will be checked out inside the 'nrel/openstudio:3.10.0' container
+        uses: actions/checkout@v4 # Use v4 for better security and features
+        with:
+          submodules: true # Set to true if your repository uses Git submodules
+
+      - name: Verify Environment and Run Measures
+        # All 'run' commands in this job now execute inside the specified Docker container.
+        shell: bash # Specify the shell if needed, though bash is default for Ubuntu runners
+        run: |
+          # Fix git ownership issue in container
+          git config --global --add safe.directory /__w/openstudio-load-flexibility-measures-gem/openstudio-load-flexibility-measures-gem
+          
+          echo "OpenStudio Version: $(openstudio --version)"
+          echo "Ruby Version: $(ruby -v)"
+          echo "Listing OpenStudio Gems: $(openstudio gem_list)"
+          
+          # Install dependencies before running tests
+          echo "Installing gem dependencies..."
+          bundle install
+          
+          echo "Running spec tests..."
+          rake spec
+          echo "Running measures with verbose output:"
+          # This command will execute within the container.
+          # Ensure that './lib/measures' is the correct path relative to the checkout.
+          openstudio --verbose measure -r ./lib/measures
+
+          # The output for 'test' should now be generated directly into the workspace
+          # within the container, which is mounted from the host.
+          # No 'docker cp' is needed as the workspace is shared.
+          ls -al ./test # Verify the output directory exists and contains files

@@ -4,6 +4,7 @@
 * Updated to OpenStudio 3.11 and relaxed dependencies
 
 ## Version 0.9.4
+* Updated to OpenStudio 3.11
 * Updated runner to run bundle install instead of bundle update
 
 ## Version 0.9.3

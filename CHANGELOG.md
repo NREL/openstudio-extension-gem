@@ -1,5 +1,8 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.9.4
+* Updated runner to run bundle install instead of bundle update
+
 ## Version 0.9.3
 * Corrected the gemfile to remove rubocop-performance
 

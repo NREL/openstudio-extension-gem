@@ -1,5 +1,12 @@
 # OpenStudio(R) Extension Gem
 
+
+## Version 0.9.5
+* Updated to OpenStudio 3.11 and relaxed dependencies
+
+## Version 0.9.4
+* Updated to OpenStudio 3.11
+
 ## Version 0.9.3
 * Corrected the gemfile to remove rubocop-performance
 

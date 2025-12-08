@@ -1,5 +1,9 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.9.6
+
+* Pin back ruby package dependencies
+
 ## Version 0.9.5
 * Updated to OpenStudio 3.11 and relaxed dependencies
 

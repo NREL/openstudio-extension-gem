@@ -200,19 +200,39 @@ module OpenStudio
         begin
           Dir.chdir(@gemfile_dir)
           # DLM: using popen3 here can result in deadlocks
-          stdout_str, stderr_str, status = Open3.capture3(env, command)
-          if status.success?
-            # puts "Command completed successfully"
-            # puts "stdout: #{stdout_str}"
-            # puts "stderr: #{stderr_str}"
-            # STDOUT.flush
-            result = true
+          # Use unbundled environment for bundle commands to avoid nested bundler conflicts
+          if command.match?(/\bbundle\b/)
+            Bundler.with_unbundled_env do
+              stdout_str, stderr_str, status = Open3.capture3(env, command)
+              if status.success?
+                # puts "Command completed successfully"
+                # puts "stdout: #{stdout_str}"
+                # puts "stderr: #{stderr_str}"
+                # STDOUT.flush
+                result = true
+              else
+                puts "Error running command: '#{command}'"
+                puts "stdout: #{stdout_str}"
+                puts "stderr: #{stderr_str}"
+                $stdout.flush
+                result = false
+              end
+            end
           else
-            puts "Error running command: '#{command}'"
-            puts "stdout: #{stdout_str}"
-            puts "stderr: #{stderr_str}"
-            $stdout.flush
-            result = false
+            stdout_str, stderr_str, status = Open3.capture3(env, command)
+            if status.success?
+              # puts "Command completed successfully"
+              # puts "stdout: #{stdout_str}"
+              # puts "stderr: #{stderr_str}"
+              # STDOUT.flush
+              result = true
+            else
+              puts "Error running command: '#{command}'"
+              puts "stdout: #{stdout_str}"
+              puts "stderr: #{stderr_str}"
+              $stdout.flush
+              result = false
+            end
           end
         ensure
           Dir.chdir(original_dir)

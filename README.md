@@ -85,6 +85,7 @@ export RUBYLIB=/Applications/OpenStudio-3.1.0/Ruby
 
 |OpenStudio Extension Gem|OpenStudio|Ruby|
 |:--------------:|:----------:|:--------:|
+| 0.9.6          | 3.11     | 3.2.2  |
 | 0.9.5          | 3.11     | 3.2.2  |
 | 0.9.4          | 3.11     | 3.2.2  |
 | 0.9.3          | 3.10     | 3.2.2  |

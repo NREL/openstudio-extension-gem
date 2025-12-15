@@ -20,7 +20,13 @@ Gem::Specification.new do |spec|
     'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
   }
 
-  spec.files = `git ls-files -z`.split("\x0").reject do |f|
+  files = `git ls-files -z`.split("\x0")
+  if files.empty?
+    files = Dir.glob('**/*', File::FNM_DOTMATCH).select do |f|
+      File.file?(f) && !f.match(%r{^(\.git|\.bundle|pkg|coverage|doc|_yardoc|\.yardoc)/}) && !f.match(%r{^Gemfile\.lock$})
+    end
+  end
+  spec.files = files.reject do |f|
     f.match(%r{^(test|lib.measures.*tests|spec|features)/})
   end
   spec.bindir = 'exe'
@@ -42,5 +48,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'regexp_parser', '2.9.0'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.9'
-  spec.add_development_dependency 'rubocop', '1.50'
+  spec.add_development_dependency 'rubocop', '>= 1.50.0'
+  spec.add_development_dependency 'rubocop-performance'
 end

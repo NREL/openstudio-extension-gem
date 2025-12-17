@@ -20,13 +20,7 @@ Gem::Specification.new do |spec|
     'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
   }
 
-  files = `git ls-files -z`.split("\x0")
-  if files.empty?
-    files = Dir.glob('**/*', File::FNM_DOTMATCH).select do |f|
-      File.file?(f) && !f.match(%r{^(\.git|\.bundle|pkg|coverage|doc|_yardoc|\.yardoc)/}) && !f.match(%r{^Gemfile\.lock$})
-    end
-  end
-  spec.files = files.reject do |f|
+  spec.files = Dir.glob('**/*').reject do |f|
     f.match(%r{^(test|lib.measures.*tests|spec|features)/})
   end
   spec.bindir = 'exe'

@@ -1,5 +1,9 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.9.7
+
+* Removed parser dependency
+
 ## Version 0.9.6
 
 * Pin back ruby package dependencies

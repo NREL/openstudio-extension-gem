@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
   }
 
-  spec.files = Dir.glob("**/*").reject do |f|
+  spec.files = Dir.glob('**/*').reject do |f|
     f.match(%r{^(test|lib.measures.*tests|spec|features)/})
   end
   spec.bindir = 'exe'

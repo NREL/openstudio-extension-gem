@@ -1,5 +1,27 @@
 # OpenStudio(R) Extension Gem
 
+## Version 0.9.7
+
+* Removed parser dependency
+
+## Version 0.9.6
+
+* Pin back ruby package dependencies
+
+## Version 0.9.5
+* Updated to OpenStudio 3.11 and relaxed dependencies
+
+## Version 0.9.4
+* Updated to OpenStudio 3.11
+* Updated runner to run bundle install instead of bundle update
+
+## Version 0.9.3
+* Corrected the gemfile to remove rubocop-performance
+
+## Version 0.9.2
+* Updating LICENSE.md in doc_templates to use 2025 for the year
+* Fixed some rubocop offenses
+
 ## Version 0.9.1
 * Updating faraday to 1.10.4 to remove deprecation notice
 

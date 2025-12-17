@@ -89,10 +89,10 @@ class ChangeLog
       end
     end
 
-    @closed_issues.sort! { |x, y| x.number <=> y.number }
-    @new_issues.sort! { |x, y| x.number <=> y.number }
-    @accepted_pull_requests.sort! { |x, y| x.number <=> y.number }
-    @total_open_pull_requests.sort! { |x, y| x.number <=> y.number }
+    @closed_issues.sort_by!(&:number)
+    @new_issues.sort_by!(&:number)
+    @accepted_pull_requests.sort_by!(&:number)
+    @total_open_pull_requests.sort_by!(&:number)
   rescue StandardError => e
     puts e.message
     ChangeLog.help
@@ -122,6 +122,6 @@ class ChangeLog
     puts "\nAccepted Pull Requests: #{@accepted_pull_requests.length}"
     @accepted_pull_requests.each { |issue| puts print_issue(issue) }
 
-    puts "\nAll Open Issues: #{@total_open_issues.length} (" + @total_open_issues.map { |issue| "\##{issue.number}" }.join(', ') + ')'
+    puts "\nAll Open Issues: #{@total_open_issues.length} (#{@total_open_issues.map { |issue| "\##{issue.number}" }.join(', ')})"
   end
 end

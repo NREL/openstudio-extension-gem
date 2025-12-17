@@ -3,8 +3,6 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 # Define version directly to avoid circular dependency during gemspec evaluation
 require 'openstudio/extension/version'
 
-files = `git ls-files -z`.split("\x0")
-
 Gem::Specification.new do |spec|
   spec.name          = 'openstudio-extension'
   spec.version       = OpenStudio::Extension::VERSION
@@ -22,7 +20,7 @@ Gem::Specification.new do |spec|
     'source_code_uri' => "https://github.com/NREL/openstudio-extension-gem/tree/v#{spec.version}"
   }
 
-  spec.files = files.reject do |f|
+  spec.files = Dir.glob("**/*").reject do |f|
     f.match(%r{^(test|lib.measures.*tests|spec|features)/})
   end
   spec.bindir = 'exe'
